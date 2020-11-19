@@ -1,12 +1,7 @@
-import { flatMap } from 'lodash';
 import { reporter } from './reporter';
 import { MigrationEmitter } from './migrationEmitter';
-import { runTask } from './runTask';
-import type { Options, Task, Pattern, Transform, FileToChange } from './types';
-import fs from 'fs-extra';
-
-type RunMigration = () => void;
-
+import type { Options, Task, Pattern, Transform, RunMigration } from './types';
+import { createRunMigration } from './runMigration';
 type RegisterTask = (
   taskName: string,
   pattern: Pattern,
@@ -29,15 +24,5 @@ export const createMigration: CreateMigration = (options, migration) => {
 
   migration(registerTask);
 
-  return () => {
-    const filesToChange: Array<FileToChange> = flatMap(tasks, (task) =>
-      runTask(task, options, migrationEmitter)
-    );
-
-    // console.log(filesToChange);
-    filesToChange.forEach(({ originalFile, newFile }) => {
-      fs.removeSync(originalFile.path);
-      fs.writeFileSync(newFile.path, newFile.source);
-    });
-  };
+  return createRunMigration(options, tasks, migrationEmitter);
 };

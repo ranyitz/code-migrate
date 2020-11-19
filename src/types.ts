@@ -8,6 +8,8 @@ export type Transform = ({
   source: string;
 }) => {};
 
+export type RunMigration = () => void;
+
 export type Options = { cwd: string };
 
 export type Task = { name: string; pattern: Pattern; transformFn: Transform };
