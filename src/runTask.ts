@@ -16,7 +16,10 @@ export function runTask(
   options: Options,
   migrationEmitter: MigrationEmitter
 ): Array<FileToChange> {
-  const fileNames = globby.sync(task.pattern, { cwd: options.cwd });
+  const fileNames = globby.sync(task.pattern, {
+    cwd: options.cwd,
+    gitignore: true,
+  });
 
   if (!fileNames) {
     migrationEmitter.emit('');

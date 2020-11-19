@@ -9,7 +9,7 @@ type RegisterTask = (
   transformFn: Transform
 ) => void;
 
-type Migration = (registerTask: RegisterTask) => void;
+export type Migration = (registerTask: RegisterTask) => void;
 
 type CreateMigration = (options: Options, migration: Migration) => RunMigration;
 

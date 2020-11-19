@@ -6,9 +6,10 @@ const runMigration = createMigration(
     cwd: path.join(__dirname, '../sample-project'),
   },
   (task) => {
-    task('update the version of foo', 'package.json', ({ source }) => {
+    task('Update the version of foo', 'package.json', ({ source }) => {
       const pkg = JSON.parse(source);
       pkg.dependencies.baz = '2.0.0';
+      // throw new Error('faols!');
       return { source };
       // return { source: JSON.stringify(pkg, null, 2) };
     });

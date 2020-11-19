@@ -2,23 +2,6 @@ import { EventEmitter } from 'events';
 import type { Task, File } from './types';
 
 type EventPayload = { task: Task };
-export type TransformEventPaylod = EventPayload & { file: File; error?: Error };
-
-export class MigrationEmitter extends EventEmitter {
-  emitTransformEvent(
-    eventName: TransformEvent,
-    payload: TransformEventPaylod
-  ): void {
-    this.emit(eventName, payload);
-  }
-
-  onTransformEvent(
-    eventName: TransformEvent,
-    fn: (payload: TransformEventPaylod) => void
-  ): void {
-    this.on(eventName, fn);
-  }
-}
 
 type TransformEvent =
   | 'transform-start'
@@ -26,4 +9,40 @@ type TransformEvent =
   | 'transform-fail'
   | 'transform-success-noop';
 
-export type MigrationEmitterEvent = TransformEvent;
+export type TransformEventPayload = EventPayload & {
+  file: File;
+  error?: Error;
+};
+
+type TaskEvent = 'task-start';
+
+export type TaskEventPayload = EventPayload & { task: Task };
+
+export type MigrationEmitterEvent = TransformEvent | TaskEvent;
+
+export class MigrationEmitter extends EventEmitter {
+  emitTransformEvent(
+    eventName: TransformEvent,
+    payload: TransformEventPayload
+  ): void {
+    this.emit(eventName, payload);
+  }
+
+  onTransformEvent(
+    eventName: TransformEvent,
+    fn: (payload: TransformEventPayload) => void
+  ): void {
+    this.on(eventName, fn);
+  }
+
+  emitTaskEvent(eventName: TaskEvent, payload: TaskEventPayload): void {
+    this.emit(eventName, payload);
+  }
+
+  onTaskEvent(
+    eventName: TaskEvent,
+    fn: (payload: TaskEventPayload) => void
+  ): void {
+    this.on(eventName, fn);
+  }
+}

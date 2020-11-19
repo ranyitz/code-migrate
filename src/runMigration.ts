@@ -9,9 +9,12 @@ export const createRunMigration = (
   tasks: Array<Task>,
   migrationEmitter: MigrationEmitter
 ): RunMigration => () => {
-  const filesToChange: Array<FileToChange> = flatMap(tasks, (task) =>
-    runTask(task, options, migrationEmitter)
-  );
+  const filesToChange: Array<FileToChange> = flatMap(tasks, (task) => {
+    migrationEmitter.emitTaskEvent('task-start', { task });
+    const fileToChange = runTask(task, options, migrationEmitter);
+
+    return fileToChange;
+  });
 
   // TODO: Prompt should start migration
   filesToChange.forEach(({ originalFile, newFile }) => {
