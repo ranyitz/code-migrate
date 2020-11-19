@@ -12,6 +12,8 @@ type TransformEvent =
 export type TransformEventPayload = EventPayload & {
   file: File;
   error?: Error;
+  originalFile?: any;
+  newFile?: any;
 };
 
 type TaskEvent = 'task-start';

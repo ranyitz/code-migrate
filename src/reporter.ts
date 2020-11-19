@@ -11,9 +11,14 @@ export const reporter = (migrationEmitter: MigrationEmitter): void => {
     console.error(error);
   });
 
-  migrationEmitter.onTransformEvent('transform-success-change', ({ file }) => {
-    console.log(`${green('✔')} ${file.fileName}`);
-  });
+  migrationEmitter.onTransformEvent(
+    'transform-success-change',
+    ({ originalFile, newFile }) => {
+      console.log(
+        `${green('✔')} ${originalFile.fileName} -> ${newFile.fileName}`
+      );
+    }
+  );
 
   migrationEmitter.onTransformEvent('transform-success-noop', ({ file }) => {
     console.log(`${blue('noop')} ${file.fileName}`);

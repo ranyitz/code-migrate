@@ -50,16 +50,29 @@ export function runTask(
         return null;
       }
 
+      if (transformFile.fileName) {
+        // @ts-ignore
+        transformFile.path = path.join(options.cwd, transformFile.fileName);
+      }
+
       const newFile = { ...file, ...transformFile };
+
       const hasChanged = !isEqual(newFile, file);
 
       if (hasChanged) {
+        const fileToChange = {
+          originalFile: file,
+          newFile,
+        };
+
         migrationEmitter.emitTransformEvent('transform-success-change', {
           task,
-          file,
+          ...fileToChange,
+          // @ts-ignore
+          file: {},
         });
 
-        return { originalFile: file, newFile };
+        return fileToChange;
       }
 
       migrationEmitter.emitTransformEvent('transform-success-noop', {
