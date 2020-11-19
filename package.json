@@ -6,7 +6,8 @@
   "license": "MIT",
   "scripts": {
     "watch": "yarn tsc --watch --incremental",
-    "build": "yarn tsc"
+    "build": "yarn tsc",
+    "lint": "yarn lint"
   },
   "dependencies": {
     "fs-extra": "^9.0.1",
