@@ -2,6 +2,7 @@ import { reporter } from './reporter';
 import { MigrationEmitter } from './migrationEmitter';
 import type { Options, Task, Pattern, Transform, RunMigration } from './types';
 import { createRunMigration } from './runMigration';
+
 type RegisterTask = (
   taskName: string,
   pattern: Pattern,

@@ -10,6 +10,7 @@
     "lint": "yarn lint"
   },
   "dependencies": {
+    "chalk": "^4.1.0",
     "fs-extra": "^9.0.1",
     "globby": "^11.0.1",
     "lodash": "^4.17.20",
