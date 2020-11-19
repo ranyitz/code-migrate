@@ -24,8 +24,10 @@ export function runTask(
   }
 
   const files: Array<File> = fileNames.map((fileName) => {
-    const source = fs.readFileSync(path.join(options.cwd, fileName), 'utf-8');
-    return { source, fileName };
+    const absolutePath = path.join(options.cwd, fileName);
+    const source = fs.readFileSync(absolutePath, 'utf-8');
+
+    return { source, fileName, path: absolutePath };
   });
 
   const fileResults: Array<FileToChange> = files

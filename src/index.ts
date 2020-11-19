@@ -36,8 +36,8 @@ export const createMigration: CreateMigration = (options, migration) => {
 
     // console.log(filesToChange);
     filesToChange.forEach(({ originalFile, newFile }) => {
-      fs.removeSync(originalFile.fileName);
-      fs.writeFileSync(newFile.fileName, newFile.source);
+      fs.removeSync(originalFile.path);
+      fs.writeFileSync(newFile.path, newFile.source);
     });
   };
 };

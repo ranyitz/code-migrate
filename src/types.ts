@@ -14,7 +14,7 @@ export type Task = { name: string; pattern: Pattern; transformFn: Transform };
 
 export type TransformReturnValue = { source?: string; fileName?: string };
 
-export type File = { source: string; fileName: string };
+export type File = { source: string; fileName: string; path: string };
 
 export type FileToChange = {
   originalFile: File;
