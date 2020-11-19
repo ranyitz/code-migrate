@@ -1,0 +1,13 @@
+{
+  "name": "sample-project",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "devDependencies": {
+    "foo": "^1.0.0",
+    "bar": "~1.0.0"
+  },
+  "dependencies": {
+    "baz": "1.0.0"
+  }
+}
