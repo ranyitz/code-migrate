@@ -1,5 +1,5 @@
 import { EventEmitter } from 'events';
-import type { Task, File } from './index';
+import type { Task, File } from './types';
 
 type EventPayload = { task: Task };
 export type TransformEventPaylod = EventPayload & { file: File; error?: Error };
