@@ -2,10 +2,6 @@ import { MigrationEmitter } from './migrationEmitter';
 import { blue, green, red } from 'chalk';
 
 export const reporter = (migrationEmitter: MigrationEmitter): void => {
-  migrationEmitter.onTransformEvent('transform-start', ({ file }) => {
-    console.log('transformStart', file.fileName);
-  });
-
   migrationEmitter.onTransformEvent('transform-fail', ({ file, error }) => {
     console.log(`${red('X')} ${file.fileName}`);
     console.error(error);
