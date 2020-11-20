@@ -1,6 +1,9 @@
+import { flatMap } from 'lodash';
+import { runTask } from './tasks/runTask';
 import { MigrationEmitter } from './MigrationEmitter';
-import {
+import type {
   Options,
+  FileAction,
   RegisterCreateTask,
   RegisterRemoveTask,
   RegisterRenameTask,
@@ -8,6 +11,8 @@ import {
   Task,
 } from './types';
 import { isPattern } from './utils';
+import { executeFileAction } from './executeFileAction';
+import { reporter } from './reporter';
 
 export type RegisterTasks = {
   transform: RegisterTransformTask;
@@ -52,12 +57,31 @@ export class Migration {
     }
   };
 
-  getRegisterTaskMethods(): RegisterTasks {
-    return {
-      transform: this.transform,
-      rename: this.rename,
-      remove: this.remove,
-      create: this.create,
-    };
+  registerTaskMethods: RegisterTasks = {
+    transform: this.transform,
+    rename: this.rename,
+    remove: this.remove,
+    create: this.create,
+  };
+
+  run() {
+    const fileActions: Array<FileAction> = flatMap(this.tasks, (task) => {
+      this.events.emit('task-start', { task });
+
+      return runTask(task, this);
+    });
+
+    // TODO - Map all actions and ask regarding overrides on create
+    // TODO - Show dry-run
+    // TODO - Prompt should start migration
+    fileActions.forEach(executeFileAction);
+  }
+
+  static create(options: Options): Migration {
+    const migration = new Migration(options);
+
+    reporter(migration);
+
+    return migration;
   }
 }

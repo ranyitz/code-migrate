@@ -1,25 +1,7 @@
-import { flatMap } from 'lodash';
-import { runTask } from './tasks/runTask';
+import { FileAction } from './types';
 import fs from 'fs-extra';
-import type { FileAction, RunMigration } from './types';
-import { Migration } from './Migration';
 
-export const createRunMigration = (
-  migration: Migration
-): RunMigration => () => {
-  const fileActions: Array<FileAction> = flatMap(migration.tasks, (task) => {
-    migration.events.emit('task-start', { task });
-
-    return runTask(task, migration);
-  });
-
-  // TODO - Map all actions and ask regarding overrides on create
-  // TODO - Show dry-run
-  // TODO - Prompt should start migration
-  fileActions.forEach(executeFileAction);
-};
-
-function executeFileAction(fileAction: FileAction) {
+export function executeFileAction(fileAction: FileAction) {
   switch (fileAction.type) {
     case 'transform': {
       const { originalFile, newFile } = fileAction;

@@ -1,20 +1,21 @@
 import { resolveFixture } from './utils';
-import { testMigration } from './testMigration';
+import { createTestkit } from './createTestkit';
 
-test('should create a file based on another file', () => {
-  testMigration({
-    registerMigration: (tasks) => {
-      tasks.create(
-        'create another file with added an bar',
-        '*.json',
-        ({ fileName, source }) => {
-          return {
-            fileName: fileName.replace('foo', 'foo-bar'),
-            source: source.replace('bar', 'bar-bar'),
-          };
-        }
-      );
-    },
+test('create', () => {
+  const testkit = createTestkit({
     fixtures: resolveFixture('create'),
+  });
+
+  testkit.run(({ create }) => {
+    create(
+      'create another file with added an bar',
+      '*.json',
+      ({ fileName, source }) => {
+        return {
+          fileName: fileName.replace('foo', 'foo-bar'),
+          source: source.replace('bar', 'bar-bar'),
+        };
+      }
+    );
   });
 });

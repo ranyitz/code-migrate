@@ -1,11 +1,12 @@
 import { resolveFixture } from './utils';
-import { testMigration } from './testMigration';
+import { createTestkit } from './createTestkit';
 
-test('should remove all json files', () => {
-  testMigration({
-    registerMigration: (tasks) => {
-      tasks.remove('remove json files', '*.json');
-    },
+test('remove', () => {
+  const testkit = createTestkit({
     fixtures: resolveFixture('remove'),
+  });
+
+  testkit.run(({ remove }) => {
+    remove('remove json files', '*.json');
   });
 });
