@@ -1,26 +1,25 @@
-import { MigrationEmitter } from './migrationEmitter';
 import { blue, bold, green, red } from 'chalk';
+import { Migration } from './Migration';
 
-export const reporter = (migrationEmitter: MigrationEmitter): void => {
-  migrationEmitter.onTaskEvent('task-start', ({ task }) => {
+export const reporter = (migration: Migration): void => {
+  const { events } = migration;
+
+  events.on('task-start', ({ task }) => {
     console.log(bold(task.name));
   });
 
-  migrationEmitter.onTransformEvent('transform-fail', ({ file, error }) => {
+  events.on('transform-fail', ({ file, error }) => {
     console.log(`${red('X')} ${file.fileName}`);
     console.error(error);
   });
 
-  migrationEmitter.onTransformEvent(
-    'transform-success-change',
-    ({ originalFile, newFile }) => {
-      console.log(
-        `${green('✔')} ${originalFile.fileName} -> ${newFile.fileName}`
-      );
-    }
-  );
+  events.on('transform-success-change', ({ originalFile, newFile }) => {
+    console.log(
+      `${green('✔')} ${originalFile.fileName} -> ${newFile.fileName}`
+    );
+  });
 
-  migrationEmitter.onTransformEvent('transform-success-noop', ({ file }) => {
+  events.on('transform-success-noop', ({ file }) => {
     console.log(`${blue('noop')} ${file.fileName}`);
   });
 };

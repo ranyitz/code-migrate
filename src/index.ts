@@ -1,29 +1,24 @@
 import { reporter } from './reporter';
-import { MigrationEmitter } from './migrationEmitter';
-import type { Options, Task, Pattern, Transform, RunMigration } from './types';
-import { createRunMigration } from './runMigration';
+import type { Options, RunMigration } from './types';
+import { createRunMigration } from './createRunMigration';
+import { Migration, RegisterTasks } from './Migration';
 
-type RegisterTask = (
-  taskName: string,
-  pattern: Pattern,
-  transformFn: Transform
-) => void;
+type RegisterMigration = (registerTasks: RegisterTasks) => void;
 
-export type Migration = (registerTask: RegisterTask) => void;
+type CreateMigration = (
+  options: Options,
+  registerMigration: RegisterMigration
+) => RunMigration;
 
-type CreateMigration = (options: Options, migration: Migration) => RunMigration;
+export const createMigration: CreateMigration = (
+  options,
+  registerMigration
+) => {
+  const migration = new Migration(options);
 
-export const createMigration: CreateMigration = (options, migration) => {
-  const migrationEmitter = new MigrationEmitter();
-  reporter(migrationEmitter);
+  reporter(migration);
 
-  const tasks: Array<Task> = [];
+  registerMigration(migration.getRegisterTaskMethods());
 
-  const registerTask: RegisterTask = (name, pattern, transformFn) => {
-    tasks.push({ name, pattern, transformFn });
-  };
-
-  migration(registerTask);
-
-  return createRunMigration(options, tasks, migrationEmitter);
+  return createRunMigration(migration);
 };

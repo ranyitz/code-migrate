@@ -1,48 +1,59 @@
 import globby from 'globby';
 import path from 'path';
-import fs from 'fs-extra';
 import { isEqual } from 'lodash';
-import { MigrationEmitter } from './migrationEmitter';
+import { MigrationEmitter } from './MigrationEmitter';
 import type {
   Options,
   Task,
   FileToChange,
-  File,
   TransformReturnValue,
+  TransformTask,
+  RenameTask,
 } from './types';
+import { File, getFiles } from './File';
+import { isTruthy } from './utils';
+import { Migration } from './Migration';
 
-export function runTask(
-  task: Task,
-  options: Options,
-  migrationEmitter: MigrationEmitter
-): Array<FileToChange> {
-  const fileNames = globby.sync(task.pattern, {
-    cwd: options.cwd,
-    gitignore: true,
-  });
+export function runTask(task: Task, migration: Migration): Array<FileToChange> {
+  switch (task.type) {
+    case 'transform': {
+      return runTransformTask(task, migration);
+    }
 
-  if (!fileNames) {
-    migrationEmitter.emit('');
-    return [];
+    // case 'create': {
+    // }
+
+    // case 'delete': {
+    // }
+
+    // case 'rename': {
+    // return runRenameTask(task, options, migrationEmitter);
+    // }
+
+    default: {
+      throw new Error(`unknown task type "${task.type}"`);
+    }
   }
+}
 
-  const files: Array<File> = fileNames.map((fileName) => {
-    const absolutePath = path.join(options.cwd, fileName);
-    const source = fs.readFileSync(absolutePath, 'utf-8');
+export type RunTask<T extends Task> = (
+  task: T,
+  migration: Migration
+) => Array<FileToChange>;
 
-    return { source, fileName, path: absolutePath };
-  });
+const runTransformTask: RunTask<TransformTask> = (task, migration) => {
+  const files = getFiles(migration.options.cwd, task.pattern);
 
   const fileResults: Array<FileToChange> = files
     .map((file) => {
-      migrationEmitter.emitTransformEvent('transform-start', { file, task });
+      migration.events.emit('transform-start', { file, task });
 
-      let transformFile: TransformReturnValue = {};
+      let transformedFile: TransformReturnValue = {};
 
       try {
-        transformFile = task.transformFn(file);
+        transformedFile = task.fn(file);
       } catch (error) {
-        migrationEmitter.emitTransformEvent('transform-fail', {
+        migration.events.emit('transform-fail', {
           file,
           error,
           task,
@@ -50,39 +61,37 @@ export function runTask(
         return null;
       }
 
-      if (transformFile.fileName) {
-        // @ts-ignore
-        transformFile.path = path.join(options.cwd, transformFile.fileName);
-      }
+      const newFile = File.createFile({
+        cwd: migration.options.cwd,
+        fileName: transformedFile.fileName || file.fileName,
+        source: transformedFile.source || file.source,
+      });
 
-      const newFile = { ...file, ...transformFile };
+      const isRenamed = !isEqual(newFile.fileName, file.fileName);
+      const isModified = !isEqual(newFile.source, file.source);
 
-      const hasChanged = !isEqual(newFile, file);
-
-      if (hasChanged) {
+      if (isRenamed || isModified) {
         const fileToChange = {
           originalFile: file,
           newFile,
         };
 
-        migrationEmitter.emitTransformEvent('transform-success-change', {
+        migration.events.emit('transform-success-change', {
           task,
           ...fileToChange,
-          // @ts-ignore
-          file: {},
         });
 
         return fileToChange;
       }
 
-      migrationEmitter.emitTransformEvent('transform-success-noop', {
+      migration.events.emit('transform-success-noop', {
         task,
         file,
       });
 
       return null;
     })
-    .filter(Boolean) as Array<FileToChange>;
+    .filter(isTruthy);
 
   return fileResults;
-}
+};
