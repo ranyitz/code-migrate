@@ -20,6 +20,7 @@ const args = arg(
     '--help': Boolean,
     '--verbose': Boolean,
     '--cwd': String,
+    '--dry': Boolean,
 
     // Aliases
     '-v': '--version',
@@ -40,6 +41,7 @@ if (!migrationFile && args['--help']) {
       Options
       --version, -v   Version number
       --help, -h      Displays this message
+      --dry           Dry-run mode, does not modify files
       --cwd           Runs the migration on this directory [defaults to process.cwd()]
   `);
 
@@ -54,6 +56,7 @@ if (!fs.existsSync(migrationFileAbsolutePath)) {
       `couldn't find a migration file on "${migrationFileAbsolutePath}"`
     )
   );
+
   process.exit(1);
 }
 
@@ -83,4 +86,12 @@ tsNodeRegister({
 
 require(migrationFileAbsolutePath);
 
-migration.run();
+const fileActions = migration.prepare();
+
+if (args['--dry']) {
+  console.log(chalk.bold('dry-run mode, no files will be modified'));
+  console.log();
+  console.log(fileActions);
+} else {
+  migration.execute(fileActions);
+}

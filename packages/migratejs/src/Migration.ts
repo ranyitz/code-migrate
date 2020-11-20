@@ -64,17 +64,27 @@ export class Migration {
     create: this.create,
   };
 
-  run() {
+  prepare() {
     const fileActions: Array<FileAction> = flatMap(this.tasks, (task) => {
       this.events.emit('task-start', { task });
 
       return runTask(task, this);
     });
 
+    return fileActions;
+  }
+
+  execute(fileActions: Array<FileAction>) {
+    fileActions.forEach(executeFileAction);
+  }
+
+  run() {
+    const fileActions = this.prepare();
     // TODO - Map all actions and ask regarding overrides on create
     // TODO - Show dry-run
     // TODO - Prompt should start migration
-    fileActions.forEach(executeFileAction);
+
+    this.execute(fileActions);
   }
 
   static create(options: Options): Migration {
