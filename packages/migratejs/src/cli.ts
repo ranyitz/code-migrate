@@ -2,6 +2,7 @@ process.on('unhandledRejection', (error) => {
   throw error;
 });
 import arg from 'arg';
+import path from 'path';
 import chalk from 'chalk';
 import fs from 'fs-extra';
 import { Migration, RegisterTasks } from './Migration';
@@ -45,21 +46,26 @@ if (!migrationFile && args['--help']) {
   process.exit(0);
 }
 
-if (!fs.existsSync(migrationFile)) {
+const migrationFileAbsolutePath = path.join(process.cwd(), migrationFile);
+
+if (!fs.existsSync(migrationFileAbsolutePath)) {
   console.error(
-    chalk.red(`couldn't find a migration file on "${migrationFile}"`)
+    chalk.red(
+      `couldn't find a migration file on "${migrationFileAbsolutePath}"`
+    )
   );
   process.exit(1);
 }
 
 const customCwd = args['--cwd'];
+const cwdAbsolutePath = customCwd && path.join(process.cwd(), customCwd);
 
-if (customCwd && !fs.existsSync(customCwd)) {
-  console.error(chalk.red(`passed cwd "${customCwd}" does not exists`));
+if (cwdAbsolutePath && !fs.existsSync(cwdAbsolutePath)) {
+  console.error(chalk.red(`passed cwd "${cwdAbsolutePath}" does not exists`));
   process.exit(1);
 }
 
-const cwd = customCwd || process.cwd();
+const cwd = cwdAbsolutePath || process.cwd();
 
 const migration = Migration.create({ cwd });
 
@@ -75,6 +81,6 @@ tsNodeRegister({
   dir: cwd,
 });
 
-require(migrationFile);
+require(migrationFileAbsolutePath);
 
 migration.run();
