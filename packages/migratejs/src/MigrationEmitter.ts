@@ -83,9 +83,7 @@ interface MigrationEvents {
   ['remove-success-noop']: ({ file, task }: { file: File; task: Task }) => void;
 }
 
-export class MigrationEmitter extends (EventEmitter as new () => TypedEmitter<
-  MigrationEvents
->) {
+export class MigrationEmitter extends (EventEmitter as new () => TypedEmitter<MigrationEvents>) {
   migration: Migration;
 
   constructor(migration: Migration) {

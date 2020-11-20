@@ -1,4 +1,4 @@
-migrate('yoshi-bm-flow', ({ transform, rename, warn, exec }) => {
+migrate('yoshi-bm-flow', ({ transform, rename }) => {
   transform('move cdnPort from configuration to env var (CDN_PORT)');
   transform('yoshi-bm bin to yoshi-bm-flow');
   transform('replace imports from yoshi-bm-flow-runtime to yoshi-bm-flow');
