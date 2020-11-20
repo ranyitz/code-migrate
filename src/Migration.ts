@@ -7,6 +7,7 @@ import {
   RegisterTransformTask,
   Task,
 } from './types';
+import { isPattern } from './utils';
 
 export type RegisterTasks = {
   transform: RegisterTransformTask;
@@ -38,8 +39,17 @@ export class Migration {
     this.tasks.push({ type: 'delete', title, pattern });
   };
 
-  create: RegisterCreateTask = (title, createFn) => {
-    this.tasks.push({ type: 'create', title, fn: createFn });
+  create: RegisterCreateTask = (title, patternOrCreateFn, createFn) => {
+    if (isPattern(patternOrCreateFn)) {
+      this.tasks.push({
+        type: 'create',
+        title,
+        pattern: patternOrCreateFn,
+        fn: createFn,
+      });
+    } else {
+      this.tasks.push({ type: 'create', title, fn: patternOrCreateFn });
+    }
   };
 
   getRegisterTaskMethods(): RegisterTasks {

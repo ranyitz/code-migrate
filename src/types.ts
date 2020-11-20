@@ -1,5 +1,6 @@
 import type { File } from './File';
 import type {
+  CreateFn,
   CreateTask,
   DeleteTask,
   RenameFn,
@@ -8,11 +9,9 @@ import type {
   TransformTask,
 } from './tasks';
 
-export type Pattern = string;
+export type Pattern = string | string[];
 
 export type CreateReturnValue = { fileName: string; source: string };
-
-export type CreateFn = () => CreateReturnValue;
 
 export type RunMigration = () => void;
 
@@ -36,7 +35,11 @@ export type RegisterRenameTask = (
 
 export type RegisterDeleteTask = (title: string, pattern: Pattern) => void;
 
-export type RegisterCreateTask = (title: string, createFn: CreateFn) => void;
+export type RegisterCreateTask = (
+  title: string,
+  patternOrCreateFn: CreateFn | Pattern,
+  createFn: CreateFn
+) => void;
 
 export type FileAction =
   | {
