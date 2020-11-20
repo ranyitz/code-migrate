@@ -5,8 +5,10 @@
     "packages/*"
   ],
   "scripts": {
-    "watch": "yarn tsc -b --watch --incremental",
-    "build": "yarn tsc -b",
+    "build-clean": "rm -rf ./packages/*/build ./packages/*/tsconfig.tsbuildinfo",
+    "clean": "yarn build-clean && rm -rf ./packages/*/node_modules && rm -rf ./node_modules",
+    "watch": "yarn tsc -b --watch --incremental packages/migratejs",
+    "build": "yarn tsc -b packages/migratejs",
     "lint": "eslint .",
     "test": "jest"
   },
