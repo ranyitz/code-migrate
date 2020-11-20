@@ -1,5 +1,5 @@
 import { flatMap } from 'lodash';
-import { runTask } from './runTask';
+import { runTask } from './tasks/runTask';
 import fs from 'fs-extra';
 import type { FileToChange, RunMigration } from './types';
 import { Migration } from './Migration';
@@ -10,7 +10,7 @@ export const createRunMigration = (
   const filesToChange: Array<FileToChange> = flatMap(
     migration.tasks,
     (task) => {
-      migration.events.emitTaskStart({ task });
+      migration.events.emit('task-start', { task });
 
       return runTask(task, migration);
     }

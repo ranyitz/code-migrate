@@ -5,7 +5,7 @@ export const reporter = (migration: Migration): void => {
   const { events } = migration;
 
   events.on('task-start', ({ task }) => {
-    console.log(bold(task.name));
+    console.log(bold(task.title));
   });
 
   events.on('transform-fail', ({ file, error }) => {

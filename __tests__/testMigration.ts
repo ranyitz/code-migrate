@@ -1,16 +1,15 @@
 import path from 'path';
-import { Migration } from '../';
 import tempy from 'tempy';
 import fs from 'fs-extra';
-import { createMigration } from '../';
+import { createMigration, RegisterMigration } from '../';
 import globby from 'globby';
 import expect from 'expect';
 
 export const testMigration = ({
-  migration,
+  registerMigration,
   fixtures,
 }: {
-  migration: Migration;
+  registerMigration: RegisterMigration;
   fixtures: string;
 }): void => {
   const workingDir = tempy.directory();
@@ -19,7 +18,7 @@ export const testMigration = ({
 
   fs.copySync(beforeDirectory, workingDir);
 
-  const runMigration = createMigration({ cwd: workingDir }, migration);
+  const runMigration = createMigration({ cwd: workingDir }, registerMigration);
 
   runMigration();
 

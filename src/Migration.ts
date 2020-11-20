@@ -1,4 +1,4 @@
-import { EventEmitter } from 'events';
+import { MigrationEmitter } from './MigrationEmitter';
 import {
   Options,
   RegisterCreateTask,
@@ -50,21 +50,4 @@ export class Migration {
       create: this.create,
     };
   }
-}
-
-export class MigrationEmitter extends EventEmitter {
-  migration: Migration;
-
-  constructor(migration: Migration) {
-    super();
-    this.migration = migration;
-  }
-
-  emitTaskStart = (...args: any) => {
-    this.emit('task-start', ...args);
-  };
-
-  onTaskStart = (...args: any) => {
-    this.on('task-start', args);
-  };
 }

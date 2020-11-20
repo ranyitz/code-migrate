@@ -2,7 +2,7 @@ import path from 'path';
 import fs from 'fs-extra';
 import { Pattern } from './types';
 import globby from 'globby';
-
+import { isUndefined } from 'lodash';
 export class File {
   cwd: string;
   fileName: string;
@@ -28,15 +28,11 @@ export class File {
   }
 
   get source(): string {
-    if (!this._source) {
+    if (isUndefined(this._source)) {
       this._source = fs.readFileSync(this.path, 'utf-8');
     }
 
     return this._source;
-  }
-
-  static createFile(...args: any): File {
-    return new File(args);
   }
 }
 

@@ -5,7 +5,7 @@ import { Migration } from './Migration';
 import { Task } from './types';
 
 interface MigrationEvents {
-  ['task-start']: () => void;
+  ['task-start']: ({ task }: { task: Task }) => void;
   ['transform-start']: ({ file, task }: { file: File; task: Task }) => void;
   ['transform-success-change']: ({
     originalFile,
@@ -24,6 +24,26 @@ interface MigrationEvents {
     task: Task;
   }) => void;
   ['transform-fail']: ({
+    file,
+    error,
+    task,
+  }: {
+    file: File;
+    error: Error;
+    task: Task;
+  }) => void;
+  ['rename-start']: ({ file, task }: { file: File; task: Task }) => void;
+  ['rename-success-change']: ({
+    originalFile,
+    newFile,
+    task,
+  }: {
+    originalFile: File;
+    newFile: File;
+    task: Task;
+  }) => void;
+  ['rename-success-noop']: ({ file, task }: { file: File; task: Task }) => void;
+  ['rename-fail']: ({
     file,
     error,
     task,

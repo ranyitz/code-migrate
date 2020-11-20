@@ -1,47 +1,27 @@
-import globby from 'globby';
-import path from 'path';
 import { isEqual } from 'lodash';
-import { MigrationEmitter } from './MigrationEmitter';
-import type {
-  Options,
-  Task,
-  FileToChange,
-  TransformReturnValue,
-  TransformTask,
-  RenameTask,
-} from './types';
-import { File, getFiles } from './File';
-import { isTruthy } from './utils';
-import { Migration } from './Migration';
+import { File, getFiles } from '../File';
+import { RunTask } from './runTask';
+import { FileToChange, Pattern } from '../types';
+import { isTruthy } from '../utils';
 
-export function runTask(task: Task, migration: Migration): Array<FileToChange> {
-  switch (task.type) {
-    case 'transform': {
-      return runTransformTask(task, migration);
-    }
+export type TransformReturnValue = { source?: string; fileName?: string };
 
-    // case 'create': {
-    // }
+export type TransformFn = ({
+  fileName,
+  source,
+}: {
+  fileName: string;
+  source: string;
+}) => TransformReturnValue;
 
-    // case 'delete': {
-    // }
+export type TransformTask = {
+  type: 'transform';
+  title: string;
+  pattern: Pattern;
+  fn: TransformFn;
+};
 
-    // case 'rename': {
-    // return runRenameTask(task, options, migrationEmitter);
-    // }
-
-    default: {
-      throw new Error(`unknown task type "${task.type}"`);
-    }
-  }
-}
-
-export type RunTask<T extends Task> = (
-  task: T,
-  migration: Migration
-) => Array<FileToChange>;
-
-const runTransformTask: RunTask<TransformTask> = (task, migration) => {
+export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
   const files = getFiles(migration.options.cwd, task.pattern);
 
   const fileResults: Array<FileToChange> = files
@@ -61,16 +41,16 @@ const runTransformTask: RunTask<TransformTask> = (task, migration) => {
         return null;
       }
 
-      const newFile = File.createFile({
+      const newFile = new File({
         cwd: migration.options.cwd,
         fileName: transformedFile.fileName || file.fileName,
         source: transformedFile.source || file.source,
       });
 
       const isRenamed = !isEqual(newFile.fileName, file.fileName);
-      const isModified = !isEqual(newFile.source, file.source);
+      const isModified = isRenamed || !isEqual(newFile.source, file.source);
 
-      if (isRenamed || isModified) {
+      if (isModified) {
         const fileToChange = {
           originalFile: file,
           newFile,
