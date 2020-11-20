@@ -13,6 +13,6 @@ test('should change the fileName', () => {
         }
       );
     },
-    fixtures: resolveFixture('fileName'),
+    fixtures: resolveFixture('rename'),
   });
 });
