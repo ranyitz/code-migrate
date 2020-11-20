@@ -78,9 +78,9 @@ interface MigrationEvents {
     error: Error;
     task: Task;
   }) => void;
-  ['delete-start']: ({ file, task }: { file: File; task: Task }) => void;
-  ['delete-success']: ({ file, task }: { file: File; task: Task }) => void;
-  ['delete-success-noop']: ({ file, task }: { file: File; task: Task }) => void;
+  ['remove-start']: ({ file, task }: { file: File; task: Task }) => void;
+  ['remove-success']: ({ file, task }: { file: File; task: Task }) => void;
+  ['remove-success-noop']: ({ file, task }: { file: File; task: Task }) => void;
 }
 
 export class MigrationEmitter extends (EventEmitter as new () => TypedEmitter<

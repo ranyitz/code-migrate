@@ -2,7 +2,7 @@ import { MigrationEmitter } from './MigrationEmitter';
 import {
   Options,
   RegisterCreateTask,
-  RegisterDeleteTask,
+  RegisterRemoveTask,
   RegisterRenameTask,
   RegisterTransformTask,
   Task,
@@ -12,7 +12,7 @@ import { isPattern } from './utils';
 export type RegisterTasks = {
   transform: RegisterTransformTask;
   rename: RegisterRenameTask;
-  delete: RegisterDeleteTask;
+  remove: RegisterRemoveTask;
   create: RegisterCreateTask;
 };
 
@@ -35,8 +35,8 @@ export class Migration {
     this.tasks.push({ type: 'rename', title, pattern, fn: renameFn });
   };
 
-  delete: RegisterDeleteTask = (title, pattern) => {
-    this.tasks.push({ type: 'delete', title, pattern });
+  remove: RegisterRemoveTask = (title, pattern) => {
+    this.tasks.push({ type: 'remove', title, pattern });
   };
 
   create: RegisterCreateTask = (title, patternOrCreateFn, createFn) => {
@@ -56,7 +56,7 @@ export class Migration {
     return {
       transform: this.transform,
       rename: this.rename,
-      delete: this.delete,
+      remove: this.remove,
       create: this.create,
     };
   }

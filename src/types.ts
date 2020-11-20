@@ -2,7 +2,7 @@ import type { File } from './File';
 import type {
   CreateFn,
   CreateTask,
-  DeleteTask,
+  RemoveTask,
   RenameFn,
   RenameTask,
   TransformFn,
@@ -17,9 +17,9 @@ export type RunMigration = () => void;
 
 export type Options = { cwd: string };
 
-export type TaskType = 'transform' | 'rename' | 'delete' | 'create';
+export type TaskType = 'transform' | 'rename' | 'remove' | 'create';
 
-export type Task = TransformTask | RenameTask | DeleteTask | CreateTask;
+export type Task = TransformTask | RenameTask | RemoveTask | CreateTask;
 
 export type RegisterTransformTask = (
   title: string,
@@ -33,7 +33,7 @@ export type RegisterRenameTask = (
   renameFn: RenameFn
 ) => void;
 
-export type RegisterDeleteTask = (title: string, pattern: Pattern) => void;
+export type RegisterRemoveTask = (title: string, pattern: Pattern) => void;
 
 export type RegisterCreateTask = (
   title: string,
@@ -53,7 +53,7 @@ export type FileAction =
       newFilePath: string;
     }
   | {
-      type: 'delete';
+      type: 'remove';
       filePath: string;
     }
   | {

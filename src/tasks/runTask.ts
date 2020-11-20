@@ -3,7 +3,7 @@ import { Migration } from '../Migration';
 import { runTransformTask } from './transformTask';
 import { runRenameTask } from './renameTask';
 import { runCreateTask } from './createTask';
-import { runDeleteTask } from './deleteTask';
+import { runRemoveTask } from './removeTask';
 
 export function runTask(task: Task, migration: Migration): Array<FileAction> {
   let chosenRunTask: RunTask<any>;
@@ -19,8 +19,8 @@ export function runTask(task: Task, migration: Migration): Array<FileAction> {
       break;
     }
 
-    case 'delete': {
-      chosenRunTask = runDeleteTask;
+    case 'remove': {
+      chosenRunTask = runRemoveTask;
       break;
     }
 

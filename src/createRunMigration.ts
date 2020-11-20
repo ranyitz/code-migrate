@@ -17,11 +17,6 @@ export const createRunMigration = (
   // TODO - Show dry-run
   // TODO - Prompt should start migration
   fileActions.forEach(executeFileAction);
-
-  // fileActions.forEach(({ originalFile, newFile }) => {
-  //   fs.removeSync(originalFile.path);
-  //   fs.writeFileSync(newFile.path, newFile.source);
-  // });
 };
 
 function executeFileAction(fileAction: FileAction) {
@@ -39,7 +34,7 @@ function executeFileAction(fileAction: FileAction) {
       break;
     }
 
-    case 'delete': {
+    case 'remove': {
       fs.removeSync(fileAction.filePath);
       break;
     }

@@ -1,28 +1,27 @@
-import fs from 'fs-extra';
 import { getFiles } from '../File';
 import { RunTask } from './runTask';
 import { FileAction, Pattern } from '../types';
 import { isTruthy } from '../utils';
 
-export type DeleteReturnValue = { fileName?: string };
+export type RemoveReturnValue = { fileName?: string };
 
-export type DeleteFn = ({ fileName }: { fileName: string }) => void;
+export type RemoveFn = ({ fileName }: { fileName: string }) => void;
 
-export type DeleteTask = {
-  type: 'delete';
+export type RemoveTask = {
+  type: 'remove';
   title: string;
   pattern: Pattern;
 };
 
-export const runDeleteTask: RunTask<DeleteTask> = (task, migration) => {
+export const runRemoveTask: RunTask<RemoveTask> = (task, migration) => {
   const files = getFiles(migration.options.cwd, task.pattern);
 
   const fileResults: Array<FileAction> = files
     .map((file) => {
-      migration.events.emit('delete-start', { file, task });
+      migration.events.emit('remove-start', { file, task });
 
       if (!file.exists) {
-        migration.events.emit('delete-success-noop', {
+        migration.events.emit('remove-success-noop', {
           task,
           file,
         });
@@ -30,7 +29,7 @@ export const runDeleteTask: RunTask<DeleteTask> = (task, migration) => {
         return null;
       }
 
-      migration.events.emit('delete-success', {
+      migration.events.emit('remove-success', {
         task,
         file,
       });
