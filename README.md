@@ -8,7 +8,6 @@ Writing automatic migration is usually painfull and you need to take care of man
 
 ### Tasks
 * CLI
-* monorepo (migratejs/migratejs-tools)
 * exec (run commands)
 * warn/check ()
 * support dry-run mode

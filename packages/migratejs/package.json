@@ -11,11 +11,13 @@
     "test": "jest"
   },
   "dependencies": {
+    "arg": "^5.0.0",
     "chalk": "^4.1.0",
     "expect": "^26.6.2",
     "fs-extra": "^9.0.1",
     "globby": "^11.0.1",
-    "lodash": "^4.17.20"
+    "lodash": "^4.17.20",
+    "ts-node": "^9.0.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.4",
