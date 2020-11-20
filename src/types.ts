@@ -1,6 +1,14 @@
-export type Pattern = string;
 import type { File } from './File';
-import type { RenameFn, RenameTask, TransformFn, TransformTask } from './tasks';
+import type {
+  CreateTask,
+  DeleteTask,
+  RenameFn,
+  RenameTask,
+  TransformFn,
+  TransformTask,
+} from './tasks';
+
+export type Pattern = string;
 
 export type CreateReturnValue = { fileName: string; source: string };
 
@@ -11,18 +19,6 @@ export type RunMigration = () => void;
 export type Options = { cwd: string };
 
 export type TaskType = 'transform' | 'rename' | 'delete' | 'create';
-
-export type DeleteTask = {
-  type: 'delete';
-  title: string;
-  pattern: Pattern;
-};
-
-export type CreateTask = {
-  type: 'create';
-  title: string;
-  fn: CreateFn;
-};
 
 export type Task = TransformTask | RenameTask | DeleteTask | CreateTask;
 
@@ -42,7 +38,23 @@ export type RegisterDeleteTask = (title: string, pattern: Pattern) => void;
 
 export type RegisterCreateTask = (title: string, createFn: CreateFn) => void;
 
-export type FileToChange = {
-  originalFile: File;
-  newFile: File;
-};
+export type FileAction =
+  | {
+      type: 'transform';
+      originalFile: File;
+      newFile: File;
+    }
+  | {
+      type: 'rename';
+      originalFilePath: string;
+      newFilePath: string;
+    }
+  | {
+      type: 'delete';
+      filePath: string;
+    }
+  | {
+      type: 'create';
+      originalFile?: File;
+      newFile: File;
+    };

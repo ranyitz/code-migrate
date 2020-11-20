@@ -1,7 +1,7 @@
 import { isEqual } from 'lodash';
 import { File, getFiles } from '../File';
 import { RunTask } from './runTask';
-import { FileToChange, Pattern } from '../types';
+import { FileAction, Pattern } from '../types';
 import { isTruthy } from '../utils';
 
 export type TransformReturnValue = { source?: string; fileName?: string };
@@ -24,7 +24,7 @@ export type TransformTask = {
 export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
   const files = getFiles(migration.options.cwd, task.pattern);
 
-  const fileResults: Array<FileToChange> = files
+  const fileResults: Array<FileAction> = files
     .map((file) => {
       migration.events.emit('transform-start', { file, task });
 
@@ -51,17 +51,18 @@ export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
       const isModified = isRenamed || !isEqual(newFile.source, file.source);
 
       if (isModified) {
-        const fileToChange = {
+        const fileAction = {
           originalFile: file,
           newFile,
+          type: task.type,
         };
 
         migration.events.emit('transform-success-change', {
           task,
-          ...fileToChange,
+          ...fileAction,
         });
 
-        return fileToChange;
+        return fileAction;
       }
 
       migration.events.emit('transform-success-noop', {

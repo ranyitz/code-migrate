@@ -1,12 +1,14 @@
 import path from 'path';
-import fs from 'fs-extra';
+import fs, { Stats } from 'fs-extra';
 import { Pattern } from './types';
 import globby from 'globby';
 import { isUndefined } from 'lodash';
+
 export class File {
   cwd: string;
   fileName: string;
   _source: string | undefined;
+  _stats: Stats | null | undefined;
 
   constructor({
     cwd,
@@ -20,11 +22,33 @@ export class File {
     this.cwd = cwd;
     this.fileName = fileName;
     this._source = source;
+    this._stats = undefined;
   }
 
   get path(): string {
     // TODO: support ablsolute paths as well
     return path.join(this.cwd, this.fileName);
+  }
+
+  get stats() {
+    if (!this._stats) {
+      try {
+        this._stats = fs.lstatSync(this.path);
+      } catch (err) {
+        this._stats = null;
+      }
+    }
+
+    return this._stats;
+  }
+
+  get exists() {
+    // this.stats is null in case the file isn't exists
+    return !!this.stats;
+  }
+
+  get isDirectory() {
+    return !!this.stats?.isDirectory();
   }
 
   get source(): string {

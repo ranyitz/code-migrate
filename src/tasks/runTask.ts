@@ -1,31 +1,44 @@
-import type { Task, FileToChange } from '../types';
+import type { FileAction, Task } from '../types';
 import { Migration } from '../Migration';
 import { runTransformTask } from './transformTask';
 import { runRenameTask } from './renameTask';
+import { runCreateTask } from './createTask';
+import { runDeleteTask } from './deleteTask';
 
-export function runTask(task: Task, migration: Migration): Array<FileToChange> {
+export function runTask(task: Task, migration: Migration): Array<FileAction> {
+  let chosenRunTask: RunTask<any>;
+
   switch (task.type) {
     case 'transform': {
-      return runTransformTask(task, migration);
+      chosenRunTask = runTransformTask;
+      break;
     }
 
-    // case 'create': {
-    // }
+    case 'create': {
+      chosenRunTask = runCreateTask;
+      break;
+    }
 
-    // case 'delete': {
-    // }
+    case 'delete': {
+      chosenRunTask = runDeleteTask;
+      break;
+    }
 
     case 'rename': {
-      return runRenameTask(task, migration);
+      chosenRunTask = runRenameTask;
+      break;
     }
 
     default: {
+      // @ts-expect-error ts thinks that task is "never"
       throw new Error(`unknown task type "${task.type}"`);
     }
   }
+
+  return chosenRunTask(task, migration);
 }
 
 export type RunTask<T extends Task> = (
   task: T,
   migration: Migration
-) => Array<FileToChange>;
+) => Array<FileAction>;

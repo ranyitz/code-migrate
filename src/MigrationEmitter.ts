@@ -52,6 +52,35 @@ interface MigrationEvents {
     error: Error;
     task: Task;
   }) => void;
+  ['create-start']: ({ file, task }: { file?: File; task: Task }) => void;
+  ['create-success']: ({
+    newFile,
+    task,
+  }: {
+    newFile: File;
+    task: Task;
+  }) => void;
+  ['create-success-override']: ({
+    originalFile,
+    newFile,
+    task,
+  }: {
+    originalFile: File;
+    newFile: File;
+    task: Task;
+  }) => void;
+  ['create-fail']: ({
+    file,
+    error,
+    task,
+  }: {
+    file?: File;
+    error: Error;
+    task: Task;
+  }) => void;
+  ['delete-start']: ({ file, task }: { file: File; task: Task }) => void;
+  ['delete-success']: ({ file, task }: { file: File; task: Task }) => void;
+  ['delete-success-noop']: ({ file, task }: { file: File; task: Task }) => void;
 }
 
 export class MigrationEmitter extends (EventEmitter as new () => TypedEmitter<

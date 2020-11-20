@@ -1,7 +1,7 @@
 import { isEqual } from 'lodash';
 import { File, getFiles } from '../File';
 import { RunTask } from './runTask';
-import { FileToChange, Pattern } from '../types';
+import { FileAction, Pattern } from '../types';
 import { isTruthy } from '../utils';
 
 export type RenameReturnValue = { fileName?: string };
@@ -21,7 +21,7 @@ export type RenameTask = {
 export const runRenameTask: RunTask<RenameTask> = (task, migration) => {
   const files = getFiles(migration.options.cwd, task.pattern);
 
-  const fileResults: Array<FileToChange> = files
+  const fileResults: Array<FileAction> = files
     .map((file) => {
       migration.events.emit('rename-start', { file, task });
 
@@ -48,17 +48,17 @@ export const runRenameTask: RunTask<RenameTask> = (task, migration) => {
       const isRenamed = !isEqual(newFile.fileName, file.fileName);
 
       if (isRenamed) {
-        const fileToChange = {
-          originalFile: file,
-          newFile,
-        };
-
         migration.events.emit('rename-success-change', {
           task,
-          ...fileToChange,
+          originalFile: file,
+          newFile,
         });
 
-        return fileToChange;
+        return {
+          type: task.type,
+          originalFilePath: file.path,
+          newFilePath: newFile.path,
+        };
       }
 
       migration.events.emit('rename-success-noop', {
