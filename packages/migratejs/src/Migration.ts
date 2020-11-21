@@ -81,8 +81,6 @@ export class Migration {
   run() {
     const fileActions = this.prepare();
     // TODO - Map all actions and ask regarding overrides on create
-    // TODO - Show dry-run
-    // TODO - Prompt should start migration
 
     this.execute(fileActions);
   }
