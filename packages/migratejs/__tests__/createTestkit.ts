@@ -31,15 +31,17 @@ export const createTestkit = ({
   const workingDir = tempy.directory();
   const migration = Migration.create({ cwd: workingDir });
 
-  const beforeDirectory = path.join(fixtures, 'before');
-  const afterDirectory = path.join(fixtures, 'after');
+  const beforeDirectory = path.join(fixtures, '__before__');
+  const afterDirectory = path.join(fixtures, '__after__');
 
   if (!fs.existsSync(beforeDirectory)) {
-    throw new Error(`please create a "before" directory in ${fixtures}`);
+    throw new Error(`please create a "__before__" directory in ${fixtures}`);
   }
 
   if (!fs.existsSync(afterDirectory)) {
-    throw new Error(`please create a "after" directory in ${afterDirectory}`);
+    throw new Error(
+      `please create a "__after__" directory in ${afterDirectory}`
+    );
   }
 
   return {
