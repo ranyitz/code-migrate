@@ -87,7 +87,14 @@ export class MigrationTestkit {
     });
 
     expectedFiles.forEach((fileName) => {
-      expect(resultFiles).toContain(fileName);
+      try {
+        expect(resultFiles).toContain(fileName);
+      } catch (error) {
+        throw new Error(`
+Migration file: ${migrationFile}
+
+${error.toString()}`);
+      }
 
       const expectedFilePath = path.join(afterDirectory, fileName);
       const expectedFileContents = fs.readFileSync(expectedFilePath, 'utf-8');
@@ -98,6 +105,7 @@ export class MigrationTestkit {
         expect(resultFileContents).toBe(expectedFileContents);
       } catch (error) {
         throw new Error(`
+Migration file: ${migrationFile}
 Expected file: ${expectedFilePath}
 Recieved file: ${resultFilePath}
 

@@ -16,9 +16,7 @@ migrate('yoshi-flow-bm', ({ transform, rename }) => {
     'replace imports from yoshi-flow-bm-runtime to yoshi-flow-bm',
     ['**/*.ts', '**/*.tsx', '**/*.ts'],
     ({ source }) => {
-      return {
-        source: source.replace('yoshi-flow-bm-runtime', 'yoshi-flow-bm'),
-      };
+      return source.replace('yoshi-flow-bm-runtime', 'yoshi-flow-bm');
     }
   );
 
@@ -37,7 +35,7 @@ migrate('yoshi-flow-bm', ({ transform, rename }) => {
       cdnPort = config.cdnPort;
       delete config.cdnPort;
 
-      return { source: strigifyJson(config) };
+      return strigifyJson(config);
     }
   );
 
@@ -46,8 +44,7 @@ migrate('yoshi-flow-bm', ({ transform, rename }) => {
     fs.ensureFileSync('.env');
 
     transform('add CDN_PORT to .env', '.env', ({ source }) => {
-      source = source + `\nCDN_PORT=${cdnPort}`;
-      return { source };
+      return source + `\nCDN_PORT=${cdnPort}`;
     });
   }
   // });
@@ -59,7 +56,7 @@ migrate('yoshi-flow-bm', ({ transform, rename }) => {
       config.scripts![key] = value.replace('yoshi-bm', 'yoshi-flow-bm');
     }
 
-    return { source: strigifyJson(config) };
+    return strigifyJson(config);
   });
 
   transform('appDefId to appDefinitionId', 'application.json', ({ source }) => {
@@ -67,9 +64,17 @@ migrate('yoshi-flow-bm', ({ transform, rename }) => {
     config.appDefinitionId = config.appDefId;
     delete config.appDefId;
 
-    return { source: strigifyJson(config) };
+    return strigifyJson(config);
   });
-  // rename('useBILogger to useBi');
+
+  transform(
+    'useBILogger -> useBi',
+    ['**/*.ts', '**/*.tsx', '**/*.ts'],
+    ({ source }) => {
+      // TODO
+      return source;
+    }
+  );
 
   // TODO: exec('npm run lint --fix');
   // TODO: warn('legacyBundle is not supported');

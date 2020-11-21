@@ -502,8 +502,8 @@
         "affectsGlobalScope": false
       },
       "./src/tasks/transformtask.ts": {
-        "version": "b1c1764bfe7e2a6bf735e0aa8145fc9fb777418676956f92540633d1e10ad2d5",
-        "signature": "b6de67ff6cf76e65000e2d2c382f592a645865a02fb61dce59ecb202de6f8eb0",
+        "version": "9a7cbbda4f58807c27821ca94f8dcee682d8bd4f3783c115e8e752b711a6a192",
+        "signature": "9eb76925e672cac3239ae6f5bac92f781e476207d53642e1a7cadb9e40ce0006",
         "affectsGlobalScope": false
       },
       "./src/tasks/createtask.ts": {
@@ -646,7 +646,7 @@
         "signature": "e42457640f4d68a8a38227a89019b89ee2d043226e765321915ce42631985a63",
         "affectsGlobalScope": false
       },
-      "../../node_modules/arg/index.d.ts": {
+      "./node_modules/arg/index.d.ts": {
         "version": "826c50bb691e6295abcdd6bfdc5be664d63a963b803bc1437492bc04a8618fb4",
         "signature": "826c50bb691e6295abcdd6bfdc5be664d63a963b803bc1437492bc04a8618fb4",
         "affectsGlobalScope": false
@@ -1368,8 +1368,8 @@
         "../../node_modules/@types/fs-extra/index.d.ts",
         "../../node_modules/@types/node/path.d.ts",
         "../../node_modules/@types/prompts/index.d.ts",
-        "../../node_modules/arg/index.d.ts",
         "../../node_modules/chalk/index.d.ts",
+        "./node_modules/arg/index.d.ts",
         "./src/formatfileactions.ts",
         "./src/loadusermigrationfile.ts",
         "./src/migration.ts"
@@ -2145,7 +2145,6 @@
       "../../node_modules/@types/stack-utils/index.d.ts",
       "../../node_modules/@types/yargs-parser/index.d.ts",
       "../../node_modules/@types/yargs/index.d.ts",
-      "../../node_modules/arg/index.d.ts",
       "../../node_modules/chalk/index.d.ts",
       "../../node_modules/fast-glob/out/index.d.ts",
       "../../node_modules/fast-glob/out/managers/tasks.d.ts",
@@ -2196,6 +2195,7 @@
       "../../node_modules/typescript/lib/lib.scripthost.d.ts",
       "../../node_modules/typescript/lib/lib.webworker.importscripts.d.ts",
       "../../node_modules/typescript/lib/typescript.d.ts",
+      "./node_modules/arg/index.d.ts",
       "./src/cli.ts",
       "./src/executefileaction.ts",
       "./src/file.ts",

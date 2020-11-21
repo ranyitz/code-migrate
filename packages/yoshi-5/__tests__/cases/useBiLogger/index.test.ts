@@ -6,10 +6,10 @@ const testkit = createTestkit({
   migrationFile,
 });
 
-test('yoshi-flow-bm-runtime -> yoshi-flow-bm cjs', () => {
+test('useBiLogger cjs', () => {
   testkit.run({ fixtures: path.join(__dirname, 'cjs') });
 });
 
-test('yoshi-flow-bm-runtime -> yoshi-flow-bm esm', () => {
+test('useBiLogger esm', () => {
   testkit.run({ fixtures: path.join(__dirname, 'esm') });
 });

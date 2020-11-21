@@ -4,7 +4,7 @@ import { RunTask } from './runTask';
 import { FileAction, Pattern } from '../types';
 import { isTruthy } from '../utils';
 
-export type TransformReturnValue = { source?: string; fileName?: string };
+type TransformReturnValue = string;
 
 export type TransformFn = ({
   fileName,
@@ -28,10 +28,10 @@ export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
     .map((file) => {
       migration.events.emit('transform-start', { file, task });
 
-      let transformedFile: TransformReturnValue = {};
+      let transformedSource: TransformReturnValue;
 
       try {
-        transformedFile = task.fn(file);
+        transformedSource = task.fn(file);
       } catch (error) {
         migration.events.emit('transform-fail', {
           file,
@@ -43,8 +43,8 @@ export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
 
       const newFile = new File({
         cwd: migration.options.cwd,
-        fileName: transformedFile.fileName || file.fileName,
-        source: transformedFile.source || file.source,
+        fileName: file.fileName,
+        source: transformedSource,
       });
 
       const isRenamed = !isEqual(newFile.fileName, file.fileName);
