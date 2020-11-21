@@ -492,7 +492,7 @@
         "affectsGlobalScope": false
       },
       "./src/reporter.ts": {
-        "version": "841f1f2f1aafcfaee6ac8905c83ee497d667b24c3fff3c85169592a8aa00205b",
+        "version": "cc8a27be4860896882bd98b0c03bdd036cb47be5684b709c1f12db43d19f9f14",
         "signature": "9a20f21fa59467ab44ec347433cf0c4e3265c66bb49acef4006529bda4884cb8",
         "affectsGlobalScope": false
       },

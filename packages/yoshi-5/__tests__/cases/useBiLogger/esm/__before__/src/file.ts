@@ -1,3 +1,3 @@
-import { useBILogger } from 'yoshi-flow-bm';
+import { useExperiments, useBILogger } from 'yoshi-flow-bm';
 
-console.log(useBILogger);
+const biLoggerClient = useBILogger();

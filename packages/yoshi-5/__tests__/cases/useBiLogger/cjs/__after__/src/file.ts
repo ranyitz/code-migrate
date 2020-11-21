@@ -1,7 +1,7 @@
 /* eslint-disable */
 const {
-  useBILogger,
+  useBi,
   useExperiments
 } = require('yoshi-flow-bm');
 
-const biLoggerClient = useBILogger();
+const biLoggerClient = useBi();
