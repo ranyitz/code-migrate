@@ -1,4 +1,5 @@
 import { register as tsNodeRegister } from 'ts-node';
+import importFresh from 'import-fresh';
 import { Migrate, Migration } from './Migration';
 
 /**
@@ -23,5 +24,5 @@ export const loadUserMigrationFile = (
     dir: migration.options.cwd,
   });
 
-  require(migrationFile);
+  importFresh(migrationFile);
 };

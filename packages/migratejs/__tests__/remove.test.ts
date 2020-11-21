@@ -2,9 +2,7 @@ import { resolveFixture } from './utils';
 import { createTestkit } from './createTestkit';
 
 test('remove', () => {
-  const testkit = createTestkit({
-    fixtures: resolveFixture('remove'),
-  });
+  const testkit = createTestkit();
 
-  testkit.run();
+  testkit.run({ fixtures: resolveFixture('remove') });
 });

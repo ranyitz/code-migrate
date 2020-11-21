@@ -16,6 +16,7 @@
     "expect": "^26.6.2",
     "fs-extra": "^9.0.1",
     "globby": "^11.0.1",
+    "import-fresh": "^3.2.2",
     "lodash": "^4.17.20",
     "prompts": "^2.4.0",
     "ts-node": "^9.0.0"

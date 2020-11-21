@@ -1,10 +1,10 @@
 import { createTestkit } from '../../../../migratejs/__tests__/createTestkit';
+import { migrationFile } from '../../utils';
 
 const testkit = createTestkit({
-  fixtures: __dirname,
-  migrationFile: '../../../migration.ts',
+  migrationFile,
 });
 
 test('change module.json to application.json', () => {
-  testkit.run();
+  testkit.run({ fixtures: __dirname });
 });

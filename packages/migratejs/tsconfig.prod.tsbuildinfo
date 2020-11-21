@@ -676,8 +676,13 @@
         "signature": "6f7b7fc45b9db6c4fd19363bf1b1afcae94fd05122014b4d9809c6e1d8c6355e",
         "affectsGlobalScope": true
       },
+      "../../node_modules/import-fresh/index.d.ts": {
+        "version": "12321580d578772c69333aa5c810b21b6153d0d1caf819be6afcef39c3ff82e9",
+        "signature": "12321580d578772c69333aa5c810b21b6153d0d1caf819be6afcef39c3ff82e9",
+        "affectsGlobalScope": false
+      },
       "./src/loadusermigrationfile.ts": {
-        "version": "6c9a153a39953a89606b07277f46f6b2906f01e69c1919d47ccab59b227a88fc",
+        "version": "10a0d7e4f457d2201ae936b909e2e878fd561fbd9c6c161102cc5813c13f4b07",
         "signature": "7e91784f52aae7f71011e61a9697d115b99f12a2d87c8b24fa8bc20b58f61c9a",
         "affectsGlobalScope": false
       },
@@ -1388,6 +1393,7 @@
         "./src/migration.ts"
       ],
       "./src/loadusermigrationfile.ts": [
+        "../../node_modules/import-fresh/index.d.ts",
         "../../node_modules/ts-node/dist/index.d.ts",
         "./src/migration.ts"
       ],
@@ -2146,6 +2152,7 @@
       "../../node_modules/fast-glob/out/settings.d.ts",
       "../../node_modules/fast-glob/out/types/index.d.ts",
       "../../node_modules/globby/index.d.ts",
+      "../../node_modules/import-fresh/index.d.ts",
       "../../node_modules/jest-diff/build/cleanupsemantic.d.ts",
       "../../node_modules/jest-diff/build/difflines.d.ts",
       "../../node_modules/jest-diff/build/index.d.ts",
