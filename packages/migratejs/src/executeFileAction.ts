@@ -17,19 +17,19 @@ export function executeFileAction(fileAction: FileAction) {
     }
 
     case 'remove': {
-      fs.removeSync(fileAction.filePath);
+      fs.removeSync(fileAction.file.path);
       break;
     }
 
     case 'rename': {
-      const { originalFilePath, newFilePath } = fileAction;
-      fs.renameSync(originalFilePath, newFilePath);
+      const { originalFile, newFile } = fileAction;
+      fs.renameSync(originalFile.path, newFile.path);
       break;
     }
 
     default: {
       // @ts-expect-error ts thinks that task is "never"
-      throw new Error(`unknown fileAction type "${task.type}"`);
+      throw new Error(`unknown fileAction type "${fileAction.type}"`);
     }
   }
 }

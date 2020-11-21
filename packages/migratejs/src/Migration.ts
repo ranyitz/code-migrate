@@ -46,6 +46,13 @@ export class Migration {
 
   create: RegisterCreateTask = (title, patternOrCreateFn, createFn) => {
     if (isPattern(patternOrCreateFn)) {
+      if (!createFn) {
+        throw new Error(
+          `When using a pattern for the second argument of the createTask function
+You must supply a createFunction as the third argument`
+        );
+      }
+
       this.tasks.push({
         type: 'create',
         title,

@@ -5,21 +5,21 @@ export const reporter = (migration: Migration): void => {
   const { events } = migration;
 
   events.on('task-start', ({ task }) => {
-    console.log(bold(task.title));
+    // console.log(bold(task.title));
   });
 
   events.on('transform-fail', ({ file, error }) => {
-    console.log(`${red('X')} ${file.fileName}`);
-    console.error(error);
+    // console.log(`${red('X')} ${file.fileName}`);
+    // console.error(error);
   });
 
   events.on('transform-success-change', ({ originalFile, newFile }) => {
-    console.log(
-      `${green('✔')} ${originalFile.fileName} -> ${newFile.fileName}`
-    );
+    // console.log(
+    //   `${green('✔')} ${originalFile.fileName} -> ${newFile.fileName}`
+    // );
   });
 
   events.on('transform-success-noop', ({ file }) => {
-    console.log(`${blue('noop')} ${file.fileName}`);
+    // console.log(`${blue('noop')} ${file.fileName}`);
   });
 };

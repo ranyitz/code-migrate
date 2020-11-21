@@ -1,13 +1,15 @@
 process.on('unhandledRejection', (error) => {
   throw error;
 });
+
 import arg from 'arg';
 import path from 'path';
 import chalk from 'chalk';
+import prompts from 'prompts';
 import fs from 'fs-extra';
 import { Migration, RegisterTasks } from './Migration';
 import { register as tsNodeRegister } from 'ts-node';
-import prompts from 'prompts';
+import { formatFileActions } from './formatFileActions';
 
 export type Migrate = (
   title: string,
@@ -28,24 +30,30 @@ export type Migrate = (
       // Aliases
       '-v': '--version',
       '-h': '--help',
+      '-d': '--dry',
       '-y': '--yes',
     },
     {
-      permissive: true,
+      permissive: false,
     }
   );
+
+  if (args['--version']) {
+    console.log(require('../package.json').version);
+    process.exit(0);
+  }
 
   const migrationFile = args._[0];
 
   if (!migrationFile && args['--help']) {
     console.log(`
       Usage
-        $ migratejs <path/to/migration/file.[tj]s>
+        $ migratejs <path/to/migration.ts>
   
-        Options
+      Options
         --version, -v   Version number
         --help, -h      Displays this message
-        --dry           Dry-run mode, does not modify files
+        --dry, -d       Dry-run mode, does not modify files
         --yes, -y       Skip all confirmation prompts. Useful in CI to automatically answer the confirmation prompt
         --cwd           Runs the migration on this directory [defaults to process.cwd()]
     `);
@@ -96,12 +104,16 @@ export type Migrate = (
   if (args['--dry']) {
     console.log(chalk.bold('dry-run mode, no files will be modified'));
     console.log();
-    console.log(fileActions);
+    console.log(formatFileActions(fileActions));
 
     process.exit(0);
   }
 
   if (!args['--yes']) {
+    console.log();
+    console.log(formatFileActions(fileActions));
+    console.log();
+
     const response = await prompts({
       type: 'confirm',
       name: 'value',

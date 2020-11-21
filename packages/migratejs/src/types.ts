@@ -36,7 +36,7 @@ export type RegisterRemoveTask = (title: string, pattern: Pattern) => void;
 export type RegisterCreateTask = (
   title: string,
   patternOrCreateFn: CreateFn | Pattern,
-  createFn: CreateFn
+  createFn?: CreateFn
 ) => void;
 
 export type FileAction =
@@ -47,12 +47,12 @@ export type FileAction =
     }
   | {
       type: 'rename';
-      originalFilePath: string;
-      newFilePath: string;
+      originalFile: File;
+      newFile: File;
     }
   | {
       type: 'remove';
-      filePath: string;
+      file: File;
     }
   | {
       type: 'create';

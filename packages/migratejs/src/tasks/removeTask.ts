@@ -36,7 +36,7 @@ export const runRemoveTask: RunTask<RemoveTask> = (task, migration) => {
 
       return {
         type: task.type,
-        filePath: file.path,
+        file,
       };
     })
     .filter(isTruthy);

@@ -56,8 +56,8 @@ export const runRenameTask: RunTask<RenameTask> = (task, migration) => {
 
         return {
           type: task.type,
-          originalFilePath: file.path,
-          newFilePath: newFile.path,
+          originalFile: file,
+          newFile,
         };
       }
 
