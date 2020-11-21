@@ -1,9 +1,8 @@
 import fs from 'fs-extra';
 import os from 'os';
 import { PackageJson } from 'type-fest';
-import * as recast from 'recast';
-import { namedTypes as n, builders as b } from 'ast-types';
-import type { NodePath } from 'ast-types/lib/node-path';
+import { renameHook } from './renameHook';
+import { renamePackageImport } from './renamePackageImport';
 
 const strigifyJson = (object: Record<string, any>) =>
   JSON.stringify(object, null, 2).replace(/\n/g, os.EOL) + os.EOL;
@@ -18,36 +17,8 @@ migrate('yoshi-flow-bm', ({ transform, rename }) => {
   transform(
     'replace imports from yoshi-flow-bm-runtime to yoshi-flow-bm',
     ['**/*.ts', '**/*.tsx', '**/*.ts'],
-    ({ source }) => {
-      const ast = recast.parse(source);
-
-      recast.visit(ast, {
-        visitCallExpression: (path) => {
-          if (path.get('callee').value.name !== 'require') {
-            return false;
-          }
-
-          const argument = path.get('arguments', 0, 'value');
-
-          if (argument.value === 'yoshi-flow-bm-runtime') {
-            argument.replace('yoshi-flow-bm');
-          }
-
-          return false;
-        },
-        visitImportDeclaration: (path) => {
-          const source = path.get('source');
-
-          if (source.get('value').value === 'yoshi-flow-bm-runtime') {
-            source.replace(b.literal('yoshi-flow-bm'));
-          }
-
-          return false;
-        },
-      });
-
-      return recast.print(ast, { quote: 'single' }).code;
-    }
+    ({ source }) =>
+      renamePackageImport(source, 'yoshi-flow-bm-runtime', 'yoshi-flow-bm')
   );
 
   // TODO - add a way to create scopes for a single logical task
@@ -65,6 +36,7 @@ migrate('yoshi-flow-bm', ({ transform, rename }) => {
       cdnPort = config.cdnPort;
       delete config.cdnPort;
 
+      // stringify json for the user in case an object is passed
       return strigifyJson(config);
     }
   );
@@ -101,59 +73,11 @@ migrate('yoshi-flow-bm', ({ transform, rename }) => {
     return strigifyJson(config);
   });
 
-  // renameHook generic transform
   transform(
     'useBILogger -> useBi',
     ['**/*.ts', '**/*.tsx', '**/*.ts'],
     ({ source }) => {
-      const ast = recast.parse(source);
-
-      let importedBiLogger = false;
-
-      recast.visit(ast, {
-        visitCallExpression: (path) => {
-          if (path.get('callee').value.name !== 'require') {
-            return false;
-          }
-
-          path.parent.get('id', 'properties').map((property: NodePath<any>) => {
-            if (property.get('value').value.name === 'useBILogger') {
-              importedBiLogger = true;
-              property.replace(b.identifier('useBi'));
-            }
-          });
-
-          return false;
-        },
-        visitImportDeclaration: (path) => {
-          path.get('specifiers').map((specifier: NodePath<any>) => {
-            const imported = specifier.get('imported');
-
-            if (imported.value.name === 'useBILogger') {
-              importedBiLogger = true;
-              imported.replace(b.identifier('useBi'));
-            }
-          });
-
-          return false;
-        },
-      });
-
-      if (importedBiLogger) {
-        recast.visit(ast, {
-          visitCallExpression: (path) => {
-            const callee = path.get('callee');
-
-            if (callee.value.name === 'useBILogger') {
-              callee.replace(b.identifier('useBi'));
-            }
-
-            return false;
-          },
-        });
-      }
-
-      return recast.print(ast).code;
+      return renameHook(source, 'useBILogger', 'useBi');
     }
   );
 

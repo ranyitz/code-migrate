@@ -8,6 +8,8 @@ Writing automatic migration is usually painfull and you need to take care of man
 
 ### Tasks
 * exec (run commands)
+* stringify json for the user in case an object is passed
+* Create a full e2e test
 * warn/check ()
 * migratejs-tools (support ast related operations)
 * Separate testing from prod code
