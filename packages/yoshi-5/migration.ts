@@ -5,14 +5,22 @@ import { PackageJson } from 'type-fest';
 const strigifyJson = (object: Record<string, any>) =>
   JSON.stringify(object, null, 2).replace(/\n/g, os.EOL) + os.EOL;
 
-migrate('yoshi-bm-flow', ({ transform, rename }) => {
+migrate('yoshi-flow-bm', ({ transform, rename }) => {
   // This must be first because other migration steps relay on application.json
   rename('module.json to application.json', 'module.json', () => {
     return { fileName: `application.json` };
   });
 
   // This must be before any other codemods that relay on yoshi-flow-bm
-  // transform('replace imports from yoshi-flow-bm-runtime to yoshi-flow-bm');
+  transform(
+    'replace imports from yoshi-flow-bm-runtime to yoshi-flow-bm',
+    ['**/*.ts', '**/*.tsx', '**/*.ts'],
+    ({ source }) => {
+      return {
+        source: source.replace('yoshi-flow-bm-runtime', 'yoshi-flow-bm'),
+      };
+    }
+  );
 
   // TODO - add a way to create scopes for a single logical task
   // scope('move cdnPort from configuration to env var (CDN_PORT)', () => {
