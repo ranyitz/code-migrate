@@ -1,10 +1,10 @@
-import { isEqual } from 'lodash';
+import { isEqual, isObject } from 'lodash';
 import { File, getFiles } from '../File';
 import { RunTask } from './runTask';
 import { FileAction, Pattern } from '../types';
-import { isTruthy } from '../utils';
+import { isTruthy, strigifyJson } from '../utils';
 
-type TransformReturnValue = string;
+type TransformReturnValue = string | Record<string, any>;
 
 export type TransformFn = ({
   fileName,
@@ -41,10 +41,18 @@ export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
         return null;
       }
 
+      let source;
+
+      if (isObject(transformedSource)) {
+        source = strigifyJson(transformedSource);
+      } else {
+        source = transformedSource;
+      }
+
       const newFile = new File({
         cwd: migration.options.cwd,
         fileName: file.fileName,
-        source: transformedSource,
+        source,
       });
 
       const isRenamed = !isEqual(newFile.fileName, file.fileName);

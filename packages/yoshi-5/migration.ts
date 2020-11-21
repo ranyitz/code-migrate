@@ -1,11 +1,7 @@
 import fs from 'fs-extra';
-import os from 'os';
 import { PackageJson } from 'type-fest';
 import { renameHook } from './renameHook';
 import { renamePackageImport } from './renamePackageImport';
-
-const strigifyJson = (object: Record<string, any>) =>
-  JSON.stringify(object, null, 2).replace(/\n/g, os.EOL) + os.EOL;
 
 migrate('yoshi-flow-bm', ({ transform, rename }) => {
   // This must be first because other migration steps relay on application.json
@@ -36,8 +32,7 @@ migrate('yoshi-flow-bm', ({ transform, rename }) => {
       cdnPort = config.cdnPort;
       delete config.cdnPort;
 
-      // stringify json for the user in case an object is passed
-      return strigifyJson(config);
+      return config;
     }
   );
 
@@ -62,7 +57,7 @@ migrate('yoshi-flow-bm', ({ transform, rename }) => {
       config.scripts[key] = value.replace('yoshi-bm', 'yoshi-flow-bm');
     }
 
-    return strigifyJson(config);
+    return config;
   });
 
   transform('appDefId to appDefinitionId', 'application.json', ({ source }) => {
@@ -70,7 +65,7 @@ migrate('yoshi-flow-bm', ({ transform, rename }) => {
     config.appDefinitionId = config.appDefId;
     delete config.appDefId;
 
-    return strigifyJson(config);
+    return config;
   });
 
   transform(

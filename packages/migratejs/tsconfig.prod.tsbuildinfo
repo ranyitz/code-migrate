@@ -477,8 +477,8 @@
         "affectsGlobalScope": false
       },
       "./src/utils.ts": {
-        "version": "aa95bdf81274b13c03b4c8a79c3a893fec2d3ee45c783766fe2e8e2cc6d4761d",
-        "signature": "8c4e04ce395b9ff733becbbf89cb68e79b909a5c2c84905ad6365b6c9651b8fa",
+        "version": "a13c570596d946f061fa5811346870a738719c0999061c31ea202a69492c9be6",
+        "signature": "30b26640fbb50d15b4bdead15ceb80a1b2b529b398312243a1fd293c87a6e621",
         "affectsGlobalScope": false
       },
       "./src/executefileaction.ts": {
@@ -502,8 +502,8 @@
         "affectsGlobalScope": false
       },
       "./src/tasks/transformtask.ts": {
-        "version": "9a7cbbda4f58807c27821ca94f8dcee682d8bd4f3783c115e8e752b711a6a192",
-        "signature": "9eb76925e672cac3239ae6f5bac92f781e476207d53642e1a7cadb9e40ce0006",
+        "version": "bcda571ada348af07fc531f8c21a6fe85f271bde07692249c591afd89b99c21f",
+        "signature": "3cba4a206573fc0fdc20270fdc23a5adc5ea9a023a486f2b6accd79177b58ef2",
         "affectsGlobalScope": false
       },
       "./src/tasks/createtask.ts": {
@@ -1463,6 +1463,7 @@
       ],
       "./src/utils.ts": [
         "../../node_modules/@types/lodash/index.d.ts",
+        "../../node_modules/@types/node/os.d.ts",
         "./src/types.ts"
       ]
     },
