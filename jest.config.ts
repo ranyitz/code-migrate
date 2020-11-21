@@ -5,5 +5,6 @@
 
 export default {
   testEnvironment: 'node',
-  testMatch: ['**/__tests__/**/*.(test).[jt]s'],
+  testMatch: ['**/__tests__/**/*.test.ts'],
+  modulePathIgnorePatterns: ['build', 'fixtures'],
 };

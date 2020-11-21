@@ -10,8 +10,6 @@
     "forceConsistentCasingInFileNames": true
   },
   "exclude": [
-    "**/__tests__/**/*",
-    "**/__mocks__/**/*",
     "**/build/**/*"
   ]
 }

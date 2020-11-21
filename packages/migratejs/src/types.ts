@@ -2,6 +2,7 @@ import type { File } from './File';
 import type {
   CreateFn,
   CreateTask,
+  EmptyCreateFn,
   RemoveTask,
   RenameFn,
   RenameTask,
@@ -35,7 +36,7 @@ export type RegisterRemoveTask = (title: string, pattern: Pattern) => void;
 
 export type RegisterCreateTask = (
   title: string,
-  patternOrCreateFn: CreateFn | Pattern,
+  patternOrCreateFn: EmptyCreateFn | Pattern,
   createFn?: CreateFn
 ) => void;
 

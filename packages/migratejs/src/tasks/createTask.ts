@@ -5,19 +5,21 @@ import { isTruthy } from '../utils';
 
 export type CreateReturnValue = { source?: string; fileName?: string };
 
+export type EmptyCreateFn = () => CreateReturnValue;
+
 export type CreateFn = ({
   fileName,
   source,
 }: {
-  fileName?: string;
-  source?: string;
+  fileName: string;
+  source: string;
 }) => CreateReturnValue;
 
 export type CreateTask = {
   type: 'create';
   title: string;
   pattern?: Pattern;
-  fn: CreateFn;
+  fn: CreateFn | EmptyCreateFn;
 };
 
 export const runCreateTask: RunTask<CreateTask> = (task, migration) => {
@@ -37,7 +39,15 @@ export const runCreateTask: RunTask<CreateTask> = (task, migration) => {
     let createdFile: CreateReturnValue = {};
 
     try {
-      createdFile = task.fn({ fileName: file?.fileName, source: file?.source });
+      if (file) {
+        createdFile = task.fn({
+          fileName: file.fileName,
+          source: file.source,
+        });
+      } else {
+        // @ts-expect-error we know that in this case, this is an EmptyCreateFn
+        createdFile = task.fn();
+      }
     } catch (error) {
       migration.events.emit('create-fail', {
         file,

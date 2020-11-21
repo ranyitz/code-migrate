@@ -6,7 +6,5 @@ test('remove', () => {
     fixtures: resolveFixture('remove'),
   });
 
-  testkit.run(({ remove }) => {
-    remove('remove json files', '*.json');
-  });
+  testkit.run();
 });

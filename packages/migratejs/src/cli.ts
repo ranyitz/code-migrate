@@ -5,16 +5,11 @@ process.on('unhandledRejection', (error) => {
 import arg from 'arg';
 import path from 'path';
 import chalk from 'chalk';
-import prompts from 'prompts';
 import fs from 'fs-extra';
-import { Migration, RegisterTasks } from './Migration';
-import { register as tsNodeRegister } from 'ts-node';
+import prompts from 'prompts';
+import { Migrate, Migration } from './Migration';
 import { formatFileActions } from './formatFileActions';
-
-export type Migrate = (
-  title: string,
-  fn: (RegisterTasks: RegisterTasks) => void
-) => void;
+import { loadUserMigrationFile } from './loadUserMigrationFile';
 
 (async function () {
   const args = arg(
@@ -49,7 +44,7 @@ export type Migrate = (
     console.log(`
       Usage
         $ migratejs <path/to/migration.ts>
-  
+
       Options
         --version, -v   Version number
         --help, -h      Displays this message
@@ -85,19 +80,7 @@ export type Migrate = (
 
   const migration = Migration.create({ cwd });
 
-  const migrate: Migrate = (title, fn) => {
-    fn(migration.registerTaskMethods);
-  };
-
-  // @ts-expect-error not sure how to type this
-  globalThis.migrate = migrate;
-
-  tsNodeRegister({
-    transpileOnly: true,
-    dir: cwd,
-  });
-
-  require(migrationFileAbsolutePath);
+  loadUserMigrationFile(migration, migrationFileAbsolutePath);
 
   const fileActions = migration.prepare();
 

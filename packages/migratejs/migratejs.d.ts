@@ -1,1 +1,1 @@
-declare let migrate: import('./src/cli').Migrate;
+declare let migrate: import('./').Migrate;

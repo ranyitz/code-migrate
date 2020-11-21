@@ -3,16 +3,26 @@ import tempy from 'tempy';
 import fs from 'fs-extra';
 import globby from 'globby';
 import expect from 'expect';
-import { Migration, RegisterTasks } from '../';
+import { Migration } from '../';
+import { loadUserMigrationFile } from '../src/loadUserMigrationFile';
 
 type MigrationTestkit = {
-  run: (userFn: (registerTasks: RegisterTasks) => void) => void;
+  run: () => void;
 };
-
+/**
+ *
+ * @param options.fixtures an absolute path to a fixtures directory
+ * which contains \_\_before__ and \_\_after__ directories
+ * @param options.migrationFile an absolute path to a migration file or a relative path
+ * to the fixtures directory, defaults to migration.ts
+ *
+ */
 export const createTestkit = ({
   fixtures,
+  migrationFile = 'migration.ts',
 }: {
   fixtures: string;
+  migrationFile?: string;
 }): MigrationTestkit => {
   if (!fs.existsSync(fixtures)) {
     throw new Error(`fixture path ${fixtures} doesn't exist`);
@@ -33,10 +43,15 @@ export const createTestkit = ({
   }
 
   return {
-    run: (userFn) => {
+    run: () => {
       fs.copySync(beforeDirectory, workingDir);
 
-      userFn(migration.registerTaskMethods);
+      // join with fixtures directory in case of a relative path
+      if (!migrationFile || !path.isAbsolute(migrationFile)) {
+        migrationFile = path.join(fixtures, migrationFile);
+      }
+
+      loadUserMigrationFile(migration, migrationFile);
 
       migration.run();
 

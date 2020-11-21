@@ -1,8 +1,9 @@
 {
+  // Needed for the IDE
   "extends": "../../tsconfig.json",
   "compilerOptions": {
-    "outDir": "build",
-    "rootDir": "src",
+    "rootDir": "./",
+    "noEmit": true
   },
-  "include": ["src", "./migratejs.d.ts"]
+  "include": ["./migratejs.d.ts", "__tests__", "src"]
 }
