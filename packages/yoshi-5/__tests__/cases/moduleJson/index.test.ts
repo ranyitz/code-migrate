@@ -5,6 +5,6 @@ const testkit = createTestkit({
   migrationFile,
 });
 
-test('change module.json to application.json', () => {
+test('change .module.json to .application.json', () => {
   testkit.run({ fixtures: __dirname });
 });

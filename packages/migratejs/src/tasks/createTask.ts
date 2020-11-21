@@ -27,7 +27,7 @@ export const runCreateTask: RunTask<CreateTask> = (task, migration) => {
     return [createFile()].filter(isTruthy);
   }
 
-  const files = getFiles(migration.options.cwd, task.pattern);
+  const files = getFiles(migration.options.cwd, task.pattern, migration);
 
   const fileResults: Array<FileAction> = files.map(createFile).filter(isTruthy);
 
@@ -73,17 +73,20 @@ export const runCreateTask: RunTask<CreateTask> = (task, migration) => {
     const originalFile = new File({
       cwd: migration.options.cwd,
       fileName: createdFile.fileName,
+      migration,
     });
 
     const newFile = new File({
       cwd: migration.options.cwd,
       fileName: createdFile.fileName,
       source: createdFile.source,
+      migration,
     });
 
     const fileAction: FileAction = {
       newFile,
       type: task.type,
+      task,
     };
 
     if (originalFile.exists) {
@@ -92,17 +95,12 @@ export const runCreateTask: RunTask<CreateTask> = (task, migration) => {
       fileAction.originalFile = originalFile;
 
       // @ts-expect-error - we know that originalFile exists here
-      migration.events.emit('create-success-override', {
-        task,
-        ...fileAction,
-      });
+      migration.events.emit('create-success-override', fileAction);
     }
 
-    migration.events.emit('create-success', {
-      task,
-      ...fileAction,
-    });
+    migration.events.emit('create-success', fileAction);
 
+    migration.fs.writeFileSync(newFile.path, newFile.source);
     return fileAction;
   }
 };

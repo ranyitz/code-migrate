@@ -19,7 +19,7 @@ export type RenameTask = {
   fn: RenameFn;
 };
 export const runRenameTask: RunTask<RenameTask> = (task, migration) => {
-  const files = getFiles(migration.options.cwd, task.pattern);
+  const files = getFiles(migration.options.cwd, task.pattern, migration);
 
   const fileResults: Array<FileAction> = files
     .map((file) => {
@@ -43,6 +43,7 @@ export const runRenameTask: RunTask<RenameTask> = (task, migration) => {
         cwd: migration.options.cwd,
         fileName: renamedFile.fileName || file.fileName,
         source: file.source,
+        migration,
       });
 
       const isRenamed = !isEqual(newFile.fileName, file.fileName);
@@ -54,10 +55,13 @@ export const runRenameTask: RunTask<RenameTask> = (task, migration) => {
           newFile,
         });
 
+        migration.fs.renameSync(file.path, newFile.path);
+
         return {
           type: task.type,
           originalFile: file,
           newFile,
+          task,
         };
       }
 

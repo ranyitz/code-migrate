@@ -22,7 +22,7 @@ export type TransformTask = {
 };
 
 export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
-  const files = getFiles(migration.options.cwd, task.pattern);
+  const files = getFiles(migration.options.cwd, task.pattern, migration);
 
   const fileResults: Array<FileAction> = files
     .map((file) => {
@@ -53,6 +53,7 @@ export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
         cwd: migration.options.cwd,
         fileName: file.fileName,
         source,
+        migration,
       });
 
       const isRenamed = !isEqual(newFile.fileName, file.fileName);
@@ -63,13 +64,13 @@ export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
           originalFile: file,
           newFile,
           type: task.type,
+          task,
         };
 
-        migration.events.emit('transform-success-change', {
-          task,
-          ...fileAction,
-        });
+        migration.events.emit('transform-success-change', fileAction);
 
+        migration.fs.removeSync(file.path);
+        migration.fs.writeFileSync(newFile.path, newFile.source);
         return fileAction;
       }
 

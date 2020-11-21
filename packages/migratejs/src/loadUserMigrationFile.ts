@@ -13,7 +13,7 @@ export const loadUserMigrationFile = (
 ) => {
   // Load user's migration file
   const migrate: Migrate = (title, fn) => {
-    fn(migration.registerTaskMethods);
+    fn(migration.registerTaskMethods, migration.options);
   };
 
   // @ts-expect-error not sure how to type this

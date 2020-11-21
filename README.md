@@ -13,4 +13,7 @@ Writing automatic migration is usually painfull and you need to take care of man
 * warn/check ()
 * migratejs-tools (support ast related operations)
 * Separate testing from prod code
-* Parallalize tasks that needs to run on many files (more than 50 [configured] files will run in parallel)
+* consider adding a `read` task for case the user only wants to retrieve information
+* add a way to create scopes for a single logical task
+* consider having ensure method
+

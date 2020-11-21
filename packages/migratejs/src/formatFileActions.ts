@@ -4,7 +4,7 @@ import { FileAction } from './types';
 export const formatSingleFileAction = (fileAction: FileAction) => {
   switch (fileAction.type) {
     case 'transform': {
-      const { originalFile, newFile } = fileAction;
+      const { originalFile, newFile, task } = fileAction;
 
       let fileNameChange = '';
 
@@ -14,23 +14,27 @@ export const formatSingleFileAction = (fileAction: FileAction) => {
 
       return `${chalk.blue('transform:')} ${fileNameChange} ${
         newFile.fileName
-      }`;
+      } ${chalk.dim(task.title)}`;
     }
 
     case 'create': {
-      const { newFile } = fileAction;
-      return `${chalk.green('create:')} ${newFile.fileName}`;
+      const { newFile, task } = fileAction;
+      return `${chalk.green('create:    ')} ${newFile.fileName} ${chalk.dim(
+        task.title
+      )}`;
     }
 
     case 'remove': {
-      return `${chalk.red('remove:')} ${fileAction.file.fileName}`;
+      return `${chalk.red('remove:    ')} ${
+        fileAction.file.fileName
+      } ${chalk.dim(fileAction.task.title)}`;
     }
 
     case 'rename': {
-      const { originalFile, newFile } = fileAction;
-      return `${chalk.yellow('rename:')} ${originalFile.fileName} -> ${
+      const { originalFile, newFile, task } = fileAction;
+      return `${chalk.yellow('rename:    ')} ${originalFile.fileName} -> ${
         newFile.fileName
-      }`;
+      } ${chalk.dim(task.title)}`;
     }
 
     default: {

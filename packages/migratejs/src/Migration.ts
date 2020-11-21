@@ -11,8 +11,8 @@ import type {
   Task,
 } from './types';
 import { isPattern } from './utils';
-import { executeFileAction } from './executeFileAction';
 import { reporter } from './reporter';
+import { VirtualFileSystem } from './VirtualFileSystem';
 
 export type RegisterTasks = {
   transform: RegisterTransformTask;
@@ -25,18 +25,20 @@ export type RegisterTasks = {
 // by the user in order to register migration tasks
 export type Migrate = (
   title: string,
-  fn: (RegisterTasks: RegisterTasks) => void
+  fn: (RegisterTasks: RegisterTasks, options: Options) => void
 ) => void;
 
 export class Migration {
   tasks: Array<Task>;
   options: Options;
   events: MigrationEmitter;
+  fs: VirtualFileSystem;
 
   constructor(options: Options) {
     this.tasks = [];
     this.options = options;
     this.events = new MigrationEmitter(this);
+    this.fs = new VirtualFileSystem({ cwd: options.cwd });
   }
 
   transform: RegisterTransformTask = (title, pattern, transformFn) => {
@@ -88,15 +90,15 @@ You must supply a createFunction as the third argument`
     return fileActions;
   }
 
-  execute(fileActions: Array<FileAction>) {
-    fileActions.forEach(executeFileAction);
+  write() {
+    this.fs.writeChangesToDisc();
   }
 
   run() {
-    const fileActions = this.prepare();
+    this.prepare();
     // TODO - Map all actions and ask regarding overrides on create
 
-    this.execute(fileActions);
+    this.write();
   }
 
   static create(options: Options): Migration {

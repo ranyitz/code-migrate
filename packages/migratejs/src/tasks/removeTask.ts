@@ -14,7 +14,7 @@ export type RemoveTask = {
 };
 
 export const runRemoveTask: RunTask<RemoveTask> = (task, migration) => {
-  const files = getFiles(migration.options.cwd, task.pattern);
+  const files = getFiles(migration.options.cwd, task.pattern, migration);
 
   const fileResults: Array<FileAction> = files
     .map((file) => {
@@ -34,9 +34,11 @@ export const runRemoveTask: RunTask<RemoveTask> = (task, migration) => {
         file,
       });
 
+      migration.fs.removeSync(file.path);
       return {
         type: task.type,
         file,
+        task,
       };
     })
     .filter(isTruthy);

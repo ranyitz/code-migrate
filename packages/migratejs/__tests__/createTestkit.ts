@@ -79,11 +79,13 @@ export class MigrationTestkit {
     const expectedFiles = globby.sync('**/*', {
       cwd: afterDirectory,
       gitignore: true,
+      ignore: ['**/node_modules/**'],
     });
 
     const resultFiles = globby.sync('**/*', {
       cwd: workingDir,
       gitignore: true,
+      ignore: ['**/node_modules/**'],
     });
 
     expectedFiles.forEach((fileName) => {

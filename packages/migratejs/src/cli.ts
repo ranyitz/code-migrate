@@ -117,5 +117,5 @@ import { loadUserMigrationFile } from './loadUserMigrationFile';
     }
   }
 
-  migration.execute(fileActions);
+  migration.write();
 })();

@@ -45,18 +45,22 @@ export type FileAction =
       type: 'transform';
       originalFile: File;
       newFile: File;
+      task: Task;
     }
   | {
       type: 'rename';
       originalFile: File;
       newFile: File;
+      task: Task;
     }
   | {
       type: 'remove';
       file: File;
+      task: Task;
     }
   | {
       type: 'create';
       originalFile?: File;
       newFile: File;
+      task: Task;
     };
