@@ -1,5 +1,6 @@
 import fs from 'fs-extra';
 import os from 'os';
+import { PackageJson } from 'type-fest';
 
 const strigifyJson = (object: Record<string, any>) =>
   JSON.stringify(object, null, 2).replace(/\n/g, os.EOL) + os.EOL;
@@ -43,9 +44,23 @@ migrate('yoshi-bm-flow', ({ transform, rename }) => {
   }
   // });
 
-  // transform('yoshi-bm bin to yoshi-flow-bm');
+  transform('yoshi-bm bin to yoshi-flow-bm', 'package.json', ({ source }) => {
+    const config: PackageJson = JSON.parse(source);
 
-  // rename('appDefId to appDefinitionId');
+    for (const [key, value] of Object.entries(config.scripts!)) {
+      config.scripts![key] = value.replace('yoshi-bm', 'yoshi-flow-bm');
+    }
+
+    return { source: strigifyJson(config) };
+  });
+
+  transform('appDefId to appDefinitionId', 'application.json', ({ source }) => {
+    const config = JSON.parse(source);
+    config.appDefinitionId = config.appDefId;
+    delete config.appDefId;
+
+    return { source: strigifyJson(config) };
+  });
   // rename('useBILogger to useBi');
 
   // TODO: exec('npm run lint --fix');
