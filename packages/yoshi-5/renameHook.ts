@@ -1,5 +1,5 @@
 import * as recast from 'recast';
-import { builders as b } from 'ast-types';
+import { namedTypes as n, builders as b } from 'ast-types';
 import type { NodePath } from 'ast-types/lib/node-path';
 
 export const renameHook = (
@@ -7,7 +7,9 @@ export const renameHook = (
   before: string,
   after: string
 ): string => {
-  const ast = recast.parse(source);
+  const ast = recast.parse(source, {
+    parser: require('./parser'),
+  });
 
   let importedBiLogger = false;
 
@@ -17,7 +19,11 @@ export const renameHook = (
         return false;
       }
 
-      path.parent.get('id', 'properties').map((property: NodePath<any>) => {
+      if (!n.ObjectPattern.check(path.parent.get('id').value)) {
+        return false;
+      }
+
+      path.parent.get('id', 'properties')?.map((property: NodePath<any>) => {
         if (property.get('value').value.name === before) {
           importedBiLogger = true;
           property.replace(b.identifier(after));
@@ -30,7 +36,7 @@ export const renameHook = (
       path.get('specifiers').map((specifier: NodePath<any>) => {
         const imported = specifier.get('imported');
 
-        if (imported.value.name === before) {
+        if (imported?.value?.name === before) {
           importedBiLogger = true;
           imported.replace(b.identifier(after));
         }

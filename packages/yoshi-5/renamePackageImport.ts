@@ -6,7 +6,9 @@ export const renamePackageImport = (
   before: string,
   after: string
 ) => {
-  const ast = recast.parse(source);
+  const ast = recast.parse(source, {
+    parser: require('./parser'),
+  });
 
   recast.visit(ast, {
     visitCallExpression: (path) => {

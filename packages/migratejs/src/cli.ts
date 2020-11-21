@@ -7,7 +7,7 @@ import path from 'path';
 import chalk from 'chalk';
 import fs from 'fs-extra';
 import prompts from 'prompts';
-import { Migrate, Migration } from './Migration';
+import { Migration } from './Migration';
 import { formatFileActions } from './formatFileActions';
 import { loadUserMigrationFile } from './loadUserMigrationFile';
 
@@ -56,7 +56,13 @@ import { loadUserMigrationFile } from './loadUserMigrationFile';
     process.exit(0);
   }
 
-  const migrationFileAbsolutePath = path.join(process.cwd(), migrationFile);
+  let migrationFileAbsolutePath;
+
+  if (!path.isAbsolute(migrationFile)) {
+    migrationFileAbsolutePath = path.join(process.cwd(), migrationFile);
+  } else {
+    migrationFileAbsolutePath = migrationFile;
+  }
 
   if (!fs.existsSync(migrationFileAbsolutePath)) {
     console.error(

@@ -1,4 +1,4 @@
-import { blue, bold, green, red } from 'chalk';
+import { blue, bold, dim, green, red } from 'chalk';
 import { Migration } from './Migration';
 
 export const reporter = (migration: Migration): void => {
@@ -23,13 +23,11 @@ export const reporter = (migration: Migration): void => {
   // console.log(bold(task.title));
   // });
 
-  // events.on('transform-success-change', ({ originalFile, newFile }) => {
-  // console.log(
-  //   `${green('✔')} ${originalFile.fileName} -> ${newFile.fileName}`
-  // );
-  // });
+  events.on('transform-success-change', ({ newFile }) => {
+    // console.log(`${green('✔')} ${newFile.fileName}`);
+  });
 
-  // events.on('transform-success-noop', ({ file }) => {
-  // console.log(`${blue('noop')} ${file.fileName}`);
-  // });
+  events.on('transform-success-noop', ({ file }) => {
+    // console.log(`${blue('-')} ${dim(file.fileName)}`);
+  });
 };
