@@ -1,0 +1,7 @@
+{
+  "name": "project",
+  "scripts": {
+    "build": "yoshi-bm build",
+    "start": "yoshi-bm start"
+  }
+}

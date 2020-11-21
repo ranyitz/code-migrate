@@ -7,13 +7,8 @@ Writing automatic migration is usually painfull and you need to take care of man
 
 
 ### Tasks
-* CLI
 * exec (run commands)
 * warn/check ()
-* support dry-run mode
-* Ask whether to change the following files by default
-* Improve logging
-* support --yes option to not ask in CI
 * migratejs-tools (support ast related operations)
 * Separate testing from prod code
 * Parallalize tasks that needs to run on many files (more than 50 [configured] files will run in parallel)

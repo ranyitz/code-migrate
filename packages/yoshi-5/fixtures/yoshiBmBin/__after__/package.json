@@ -1,0 +1,7 @@
+{
+  "name": "project",
+  "scripts": {
+    "build": "yoshi-flow-bm build",
+    "start": "yoshi-flow-bm start"
+  }
+}
