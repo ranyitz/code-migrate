@@ -4,7 +4,10 @@ import { RunTask } from './runTask';
 import { FileAction, Pattern } from '../types';
 import { isTruthy } from '../utils';
 
-export type RenameReturnValue = { fileName?: string };
+/**
+ * filename
+ */
+export type RenameReturnValue = string;
 
 export type RenameFn = ({
   fileName,
@@ -18,6 +21,7 @@ export type RenameTask = {
   pattern: Pattern;
   fn: RenameFn;
 };
+
 export const runRenameTask: RunTask<RenameTask> = (task, migration) => {
   const files = getFiles(migration.options.cwd, task.pattern, migration);
 
@@ -25,7 +29,7 @@ export const runRenameTask: RunTask<RenameTask> = (task, migration) => {
     .map((file) => {
       migration.events.emit('rename-start', { file, task });
 
-      let renamedFile: RenameReturnValue = {};
+      let renamedFile: RenameReturnValue;
 
       try {
         renamedFile = task.fn(file);
@@ -41,7 +45,7 @@ export const runRenameTask: RunTask<RenameTask> = (task, migration) => {
 
       const newFile = new File({
         cwd: migration.options.cwd,
-        fileName: renamedFile.fileName || file.fileName,
+        fileName: renamedFile || file.fileName,
         source: file.source,
         migration,
       });

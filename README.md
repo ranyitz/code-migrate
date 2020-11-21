@@ -16,4 +16,5 @@ Writing automatic migration is usually painfull and you need to take care of man
 * consider adding a `read` task for case the user only wants to retrieve information
 * add a way to create scopes for a single logical task
 * consider having ensure method
+* group output according to task
 

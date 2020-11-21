@@ -12,8 +12,6 @@ import type {
 
 export type Pattern = string | string[];
 
-export type CreateReturnValue = { fileName: string; source: string };
-
 export type Options = { cwd: string };
 
 export type TaskType = 'transform' | 'rename' | 'remove' | 'create';

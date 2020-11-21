@@ -6,7 +6,7 @@ import { renamePackageImport } from './renamePackageImport';
 
 migrate('yoshi-flow-bm', ({ transform, rename }, { cwd }) => {
   rename('.module.json to .application.json', '.module.json', () => {
-    return { fileName: `.application.json` };
+    return `.application.json`;
   });
 
   // This must be before any other codemods that relay on yoshi-flow-bm
