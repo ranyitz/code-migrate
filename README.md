@@ -1,6 +1,10 @@
 # 🧃 Code Migrate
 A framework for declaratively writing codebase migrations on JavaScript/NodeJS based projects.
 
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/11733036/99916433-de780180-2d12-11eb-8d5a-e0cf77c2dafc.gif" alt="code-migrate"/>
+</p>
+
 ## Why
 Writing an automatic migration script usually takes time. Besides implementing the transformations to the code/configuration, you also need to handle other concerns like publishing a CLI application, generating a report, handling errors during the migration process, writing tests, and more.
 
