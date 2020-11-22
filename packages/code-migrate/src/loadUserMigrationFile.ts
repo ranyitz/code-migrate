@@ -28,7 +28,7 @@ export const loadUserMigrationFile = (
     dir: migration.options.cwd,
   });
 
-  if (jest) {
+  if (typeof jest !== 'undefined') {
     jest.doMock('code-migrate', () => {
       return {
         __esModule: true,
