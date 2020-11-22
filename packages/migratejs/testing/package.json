@@ -1,0 +1,4 @@
+{
+  "main": "../build/testing/createTestKit.js",
+  "types": "../build/testing/createTestKit.d.ts"
+}
