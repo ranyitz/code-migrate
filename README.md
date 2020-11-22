@@ -1,20 +1,20 @@
 # 🧃 Code Migrate
-A framework for writing codebase migrations on JavaScript/Node based projects.
+A framework for writing codebase migrations on JavaScript/NodeJS based projects.
 
 ## The problems
-Writing automatic migration on big codebases usually takes time. In order to write a good migration script you need to take care of many concerns like interacting with the user, write a CLI, have proper testing and more.
+Writing automatic migration on big codebases usually takes time. To write a good migration script you need to take care of many concerns like interacting with the user, write a CLI, have proper testing, and more.
 
 This usually results in giving up on adding an automatic migration and instead, just providing a migration guide. If you're maintaining a library or a toolkit, you'd want to provide automatic migration between major versions, especially for those semantic API changes.
 
 ## Features
 
-* The migration is separated into two parts, the first one is to process all of the tasks and the second is writing them to the file-system. This ensures that in case of an error, nothing will be written to the file-system. It also lets the user to approve the migration via prompt from the CLI.
+* The migration is separated into two parts, the first one is to process all of the tasks and the second is writing them to the file-system. This ensures that in case of an error, nothing will be written to the file-system. It also lets the user approve the migration via a prompt from the CLI.
 
-* Even though nothing written on the first part, all fs operation are written the a virtual file system which make sure that tasks that dependent on each other will work as expected.
+* Even though nothing is written on the first part, all file system operations are written to a virtual file system which makes sure that tasks that depend on each other will work as expected.
 
 * Code Migrate creates a beautiful report of the changes sorted by tasks.
 
-* There is a testkit that helps with the process of writing the migration. You can define your `__before__` and `__after__` directories and use TDD in order to implement the migration.
+* There is a testkit that helps with the process of writing the migration. You can define your `__before__` and `__after__` directories and use TDD to implement the migration with fewer mistakes and with a quick feedback loop.
 
 ## CLI
 ```
@@ -69,7 +69,7 @@ declare let migrate: import('code-migrate').Migrate;
 ## API
 
 ### migrate
-Similarly to the way test runners work, Code Migrate will expose a global migrate function. Us it to define your migration.
+Similar to the way test runners work, Code Migrate will expose a global migrate function. Us it to define your migration.
 
 ```ts
 type Migrate = (
@@ -87,7 +87,7 @@ type Migrate = (
 
 ```
 ### tasks
-migration is a series of tasks from the follwing list
+migration is a series of tasks from the following list
 
 #### transform
 Change the source code of a file or multiple files
@@ -135,9 +135,9 @@ type Create = (
 ```
 ### Future plans and ideas
 * `exec` task (run custom commands)
-* improve testsing
+* improve testing
 * `warn`/`check` task
 * code-migrate-tools (support AST related operations)
-* consider adding a `read` task for case the user only wants to retrieve information
+* Consider adding a `read` task for case the user only wants to retrieve information
 * add a way to create scopes for a single logical task
 
