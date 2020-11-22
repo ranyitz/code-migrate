@@ -59,6 +59,13 @@ migrate(
 );
 ```
 
+## Setup Types
+Add this line to any `d.ts` file required in your `tsconfig.json` `files`/`include` arrays.
+
+```ts
+declare let migrate: import('code-migrate').Migrate;
+```
+
 ## API
 
 ### migrate

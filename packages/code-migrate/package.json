@@ -10,8 +10,7 @@
     "src",
     "build",
     "testing",
-    "bin",
-    "migrate.d.ts"
+    "bin"
   ],
   "license": "MIT",
   "scripts": {
