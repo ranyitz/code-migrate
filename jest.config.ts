@@ -8,7 +8,4 @@ export default {
   testMatch: ['**/__tests__/**/*.test.ts'],
   modulePathIgnorePatterns: ['build', '__before__', '__after__'],
   resetModules: true,
-  moduleNameMapper: {
-    'code-migrate/testing': '<rootDir>/packages/code-migrate/testing',
-  },
 };

@@ -1,5 +1,5 @@
 import { resolveFixture } from './utils';
-import { createTestkit } from '../src/testing/createTestkit';
+import { createTestkit } from 'code-migrate/testing';
 
 test('remove', () => {
   const testkit = createTestkit();
