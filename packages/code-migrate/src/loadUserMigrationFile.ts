@@ -1,6 +1,7 @@
 import { register as tsNodeRegister } from 'ts-node';
 import importFresh from 'import-fresh';
-import { Migrate, Migration } from './Migration';
+import { Migration } from './Migration';
+import type { Migrate } from './migrate';
 
 /**
  *
@@ -26,6 +27,19 @@ export const loadUserMigrationFile = (
     transpileOnly: true,
     dir: migration.options.cwd,
   });
+
+  if (jest) {
+    jest.doMock('code-migrate', () => {
+      return {
+        __esModule: true,
+        migrate,
+      };
+    });
+  } else {
+    require('mock-require')('code-migrate', {
+      migrate,
+    });
+  }
 
   importFresh(migrationFile);
 };

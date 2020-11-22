@@ -21,16 +21,6 @@ export type RegisterTasks = {
   create: RegisterCreateTask;
 };
 
-// The global migrate function which is used
-// by the user in order to register migration tasks
-export type Migrate = (
-  title: string,
-  fn: (
-    RegisterTasks: RegisterTasks,
-    options: Options & { fs: VirtualFileSystem }
-  ) => void
-) => void;
-
 export class Migration {
   tasks: Array<Task>;
   options: Options;

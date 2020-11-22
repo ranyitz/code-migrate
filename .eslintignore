@@ -1,2 +1,4 @@
 fixtures/sample-project
 build
+example/**/double.js
+example/**/single.js
