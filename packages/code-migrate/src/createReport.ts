@@ -7,26 +7,20 @@ export const formatSingleFileAction = (fileAction: FileAction) => {
     case 'transform': {
       const { newFile } = fileAction;
 
-      // return newFile.fileName;
       return `${chalk.blue('transform:')} ${newFile.fileName}`;
     }
 
     case 'create': {
       const { newFile } = fileAction;
-      return newFile.fileName;
-      // return `${chalk.green('create:    ')} ${newFile.fileName}`;
+      return `${chalk.green('create:')} ${newFile.fileName}`;
     }
 
     case 'remove': {
-      return fileAction.file.fileName;
-      // return `${chalk.red('remove:    ')} ${
-      //   fileAction.file.fileName
-      // } ${chalk.dim(fileAction.task.title)}`;
+      return `${chalk.red('remove:')} ${fileAction.file.fileName}`;
     }
 
     case 'rename': {
       const { originalFile, newFile } = fileAction;
-      // return `${originalFile.fileName} -> ${newFile.fileName}`;
       return `${chalk.yellow('rename:')} ${originalFile.fileName} -> ${
         newFile.fileName
       }`;

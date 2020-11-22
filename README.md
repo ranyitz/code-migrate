@@ -21,13 +21,13 @@ Providing a polished experience usually results in a lot of work which we can no
 ## CLI
 ```
   Usage
-    $ migrate <path/to/migration.ts>
+    $ npx code-migrate <path/to/migration.ts>
 
   Options
     --version, -v   Version number
     --help, -h      Displays this message
     --dry, -d       Dry-run mode, does not modify files
-    --yes, -y       Skip all confirmation prompts. Useful in CI to automatically answer the confirmation prompt
+    --yes, -y       Skip all confirmation prompts
     --cwd           Runs the migration on this directory [defaults to process.cwd()]
 ```
 
