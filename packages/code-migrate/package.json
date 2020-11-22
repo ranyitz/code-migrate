@@ -1,17 +1,17 @@
 {
-  "name": "migratejs",
+  "name": "code-migrate",
   "version": "0.0.1",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "bin": {
-    "migrate": "bin/migratejs"
+    "migrate": "bin/migrate"
   },
   "files": [
     "src",
     "build",
     "testing",
     "bin",
-    "migratejs.d.ts"
+    "migrate.d.ts"
   ],
   "license": "MIT",
   "scripts": {

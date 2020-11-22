@@ -5,5 +5,5 @@
     "rootDir": "./",
     "noEmit": true
   },
-  "include": ["./migratejs.d.ts", "__tests__", "src"]
+  "include": ["./migrate.d.ts", "__tests__", "src"]
 }

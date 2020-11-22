@@ -1,5 +1,5 @@
 {
-  "name": "migratejs-monorepo",
+  "name": "code-migrate-monorepo",
   "private": true,
   "workspaces": [
     "packages/*"
@@ -7,8 +7,8 @@
   "scripts": {
     "build-clean": "rm -rf ./packages/*/build ./packages/*/tsconfig.tsbuildinfo",
     "clean": "yarn build-clean && rm -rf ./packages/*/node_modules && rm -rf ./node_modules",
-    "watch": "yarn tsc -b --watch --incremental packages/migratejs/tsconfig.prod.json",
-    "build": "yarn tsc -b packages/migratejs/tsconfig.prod.json",
+    "watch": "yarn tsc -b --watch --incremental packages/code-migrate/tsconfig.prod.json",
+    "build": "yarn tsc -b packages/code-migrate/tsconfig.prod.json",
     "lint": "eslint .",
     "test": "jest"
   },

@@ -1,4 +1,4 @@
-# Migratejs
+# Code Migrate
 A framework for writing codebase migrations on JavaScript/Node based projects.
 
 ## The problems
@@ -12,7 +12,7 @@ This usually results in giving up on adding an automatic migration and instead, 
 
 * Even though nothing written on the first part, all fs operation are written the a virtual file system which make sure that tasks that dependent on each other will work as expected.
 
-* migratejs creates a beautiful report of the changes sorted by tasks.
+* Code Migrate creates a beautiful report of the changes sorted by tasks.
 
 * There is a testkit that helps with the process of writing the migration. You can define your `__before__` and `__after__` directories and use TDD in order to implement the migration.
 
@@ -62,7 +62,7 @@ migrate(
 ## API
 
 ### migrate
-Similarly to the way test runners work, migratejs will expose a global migrate function. Us it to define your migration.
+Similarly to the way test runners work, Code Migrate will expose a global migrate function. Us it to define your migration.
 
 ```ts
 type Migrate = (
@@ -130,7 +130,7 @@ type Create = (
 * `exec` task (run custom commands)
 * improve testsing
 * `warn`/`check` task
-* migratejs-tools (support AST related operations)
+* code-migrate-tools (support AST related operations)
 * consider adding a `read` task for case the user only wants to retrieve information
 * add a way to create scopes for a single logical task
 
