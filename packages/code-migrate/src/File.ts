@@ -74,6 +74,7 @@ export const getFiles = (
     cwd,
     gitignore: true,
     ignore: ['**/node_modules/**'],
+    dot: true,
     // @ts-expect-error
     fs: migration.fs.fileSystemAdapterMethods,
   });
