@@ -1,4 +1,4 @@
-# Code Migrate
+# 🧃 Code Migrate
 A framework for writing codebase migrations on JavaScript/Node based projects.
 
 ## The problems
