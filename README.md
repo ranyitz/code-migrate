@@ -1,7 +1,7 @@
 # 🧃 Code Migrate
 A framework for writing codebase migrations on JavaScript/NodeJS based projects.
 
-## The problems
+## Why
 Writing automatic migration on big codebases usually takes time. To write a good migration script you need to take care of many concerns like interacting with the user, write a CLI, have proper testing, and more.
 
 This usually results in giving up on adding an automatic migration and instead, just providing a migration guide. If you're maintaining a library or a toolkit, you'd want to provide automatic migration between major versions, especially for those semantic API changes.
