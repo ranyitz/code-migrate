@@ -35,7 +35,19 @@ Providing a polished experience usually results in a lot of work which we can no
     --cwd           Runs the migration on this directory [defaults to process.cwd()]
 ```
 
-## Writing a migration
+## Node API
+### runMigration
+Run a migration programatically
+```ts
+type RunMigration = ({
+  cwd: string;
+  migrationFilePath: string;
+  dry: boolean;
+  yes: boolean;
+}) => Promise<void>;
+```
+
+## Writing a migration file
 
 ```ts
 import { migrate } from 'code-migrate';
@@ -89,8 +101,6 @@ For TypeScript and autocompletion add this line to any `d.ts` file required in y
 ```ts
 declare let migrate: import('code-migrate').Migrate;
 ```
-
-## API
 
 ### migrate
 Similar to the way test runners work, Code Migrate will expose a global migrate function, you can also import it from `code-migrate` module, which will only work in the context of the runner. Use it to define your migration tasks.

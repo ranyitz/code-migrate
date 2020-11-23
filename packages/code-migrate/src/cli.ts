@@ -6,11 +6,7 @@ import arg from 'arg';
 import path from 'path';
 import chalk from 'chalk';
 import fs from 'fs-extra';
-import prompts from 'prompts';
-import { Migration } from './Migration';
-import { createReport } from './createReport';
-import { loadUserMigrationFile } from './loadUserMigrationFile';
-import { isEmpty } from 'lodash';
+import { runMigration } from './runMigration';
 
 (async function () {
   const args = arg(
@@ -85,46 +81,10 @@ import { isEmpty } from 'lodash';
 
   const cwd = cwdAbsolutePath || process.cwd();
 
-  const migration = Migration.create({ cwd });
-
-  loadUserMigrationFile(migration, migrationFileAbsolutePath);
-
-  const fileActions = migration.prepare();
-
-  if (args['--dry']) {
-    console.log(chalk.bold('dry-run mode, no files will be modified'));
-    console.log();
-    console.log(createReport(fileActions));
-
-    process.exit(0);
-  }
-
-  console.log();
-  console.log(createReport(fileActions));
-
-  if (isEmpty(fileActions)) {
-    process.exit(0);
-  }
-
-  if (!args['--yes']) {
-    // space the prompt
-    console.log();
-    const response = await prompts({
-      type: 'confirm',
-      name: 'value',
-      message: 'Do you want to perform the migration on the above files?',
-      initial: true,
-    });
-
-    if (!response.value) {
-      console.log('');
-      console.log(chalk.red('Migration aborted'));
-      process.exit(1);
-    }
-  }
-
-  migration.write();
-
-  console.log();
-  console.log(chalk.green('The migration was done successfully 🎉'));
+  await runMigration({
+    cwd,
+    migrationFilePath: migrationFileAbsolutePath,
+    dry: !!args['--dry'],
+    yes: !!args['--yes'],
+  });
 })();

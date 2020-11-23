@@ -12,11 +12,16 @@ export type Migrate = (
   ) => void
 ) => void;
 
-export declare const migrate: Migrate;
+/**
+ * @param title The title of the migration
+ * @param fn callback function that accepts the tasks to register
+ *
+ */
+export const migrate: Migrate = () => {
+  throw new Error(
+    `Do not use "migrate" outside of the code-migrate environment.
+  Please try the following command:
 
-throw new Error(
-  `Do not import "code-migrate" outside of the code-migrate environment.
-Please try the following command:
-
-      npx code-migrate <path/to/migration.ts>\n`
-);
+        npx code-migrate <path/to/migration.ts>\n`
+  );
+};
