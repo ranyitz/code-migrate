@@ -53,6 +53,7 @@ interface MigrationEvents {
     task: Task;
   }) => void;
   ['create-start']: ({ file, task }: { file?: File; task: Task }) => void;
+  ['create-success-cancle']: ({ task }: { task: Task }) => void;
   ['create-success']: ({
     newFile,
     task,

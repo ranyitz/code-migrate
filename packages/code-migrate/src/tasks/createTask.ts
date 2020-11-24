@@ -2,6 +2,7 @@ import { File, getFiles } from '../File';
 import { RunTask } from './runTask';
 import { FileAction, Pattern } from '../types';
 import { isTruthy } from '../utils';
+import { isNull, isUndefined } from 'lodash';
 
 export type CreateReturnValue = { source?: string; fileName?: string };
 
@@ -58,13 +59,18 @@ export const runCreateTask: RunTask<CreateTask> = (task, migration) => {
       return null;
     }
 
+    if (isNull(createdFile)) {
+      migration.events.emit('create-success-cancle', { task });
+      return null;
+    }
+
     if (!createdFile.fileName) {
       throw new Error(
         'the return value of a create function needs to contain an object with { fileName: <string> }'
       );
     }
 
-    if (!createdFile.source) {
+    if (isUndefined(createdFile.source)) {
       throw new Error(
         'the return value of a create function needs to contain an object with { source: <string> }'
       );

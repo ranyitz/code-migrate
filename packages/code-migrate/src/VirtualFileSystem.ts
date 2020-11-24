@@ -95,6 +95,8 @@ export class VirtualFileSystem implements FileSystemAdapter {
     const file = this.getFile(path);
     file.data = data;
     file.action = 'write';
+    // @ts-expect-error
+    file.stats = new StatsLike();
   }
 
   removeSync(path: string): void {
