@@ -4,7 +4,7 @@ import { FileAction, Pattern } from '../types';
 import { isTruthy } from '../utils';
 import { isNull, isUndefined } from 'lodash';
 
-export type CreateReturnValue = { source?: string; fileName?: string };
+export type CreateReturnValue = { source?: string; fileName?: string } | null;
 
 export type EmptyCreateFn = () => CreateReturnValue;
 

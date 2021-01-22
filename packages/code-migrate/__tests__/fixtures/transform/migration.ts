@@ -1,4 +1,5 @@
 import path from 'path';
+import { migrate } from 'code-migrate';
 
 migrate('transform', ({ transform }) => {
   transform(

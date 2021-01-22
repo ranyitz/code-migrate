@@ -5,7 +5,10 @@ import { runRenameTask } from './renameTask';
 import { runCreateTask } from './createTask';
 import { runRemoveTask } from './removeTask';
 
-export function runTask(task: Task, migration: Migration): Array<FileAction> {
+export function runSingleTask(
+  task: Task,
+  migration: Migration
+): Array<FileAction> {
   let chosenRunTask: RunTask<any>;
 
   switch (task.type) {

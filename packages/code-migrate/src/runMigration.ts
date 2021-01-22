@@ -36,7 +36,7 @@ export const runMigration: RunMigration = async ({
 
   loadUserMigrationFile(migration, migrationFilePath);
 
-  const fileActions = migration.prepare();
+  const fileActions = migration.getMigrationInstructions();
 
   if (dry) {
     console.log(chalk.bold('dry-run mode, no files will be modified'));

@@ -1,5 +1,4 @@
-import { flatMap } from 'lodash';
-import { runTask } from './tasks/runTask';
+import { runSingleTask } from './tasks/runTask';
 import { MigrationEmitter } from './MigrationEmitter';
 import type {
   Options,
@@ -22,31 +21,38 @@ export type RegisterTasks = {
 };
 
 export class Migration {
-  tasks: Array<Task>;
+  instructions: Array<FileAction>;
   options: Options;
   events: MigrationEmitter;
   fs: VirtualFileSystem;
 
   constructor(options: Options) {
-    this.tasks = [];
+    this.instructions = [];
     this.options = options;
     this.events = new MigrationEmitter(this);
     this.fs = new VirtualFileSystem({ cwd: options.cwd });
   }
 
+  runTask(task: Task) {
+    this.events.emit('task-start', { task });
+    this.instructions.push(...runSingleTask(task, this));
+  }
+
   transform: RegisterTransformTask = (title, pattern, transformFn) => {
-    this.tasks.push({ type: 'transform', title, pattern, fn: transformFn });
+    this.runTask({ type: 'transform', title, pattern, fn: transformFn });
   };
 
   rename: RegisterRenameTask = (title, pattern, renameFn) => {
-    this.tasks.push({ type: 'rename', title, pattern, fn: renameFn });
+    this.runTask({ type: 'rename', title, pattern, fn: renameFn });
   };
 
   remove: RegisterRemoveTask = (title, pattern) => {
-    this.tasks.push({ type: 'remove', title, pattern });
+    this.runTask({ type: 'remove', title, pattern });
   };
 
   create: RegisterCreateTask = (title, patternOrCreateFn, createFn) => {
+    let task: Task;
+
     if (isPattern(patternOrCreateFn)) {
       if (!createFn) {
         throw new Error(
@@ -55,15 +61,17 @@ You must supply a createFunction as the third argument`
         );
       }
 
-      this.tasks.push({
+      task = {
         type: 'create',
         title,
         pattern: patternOrCreateFn,
         fn: createFn,
-      });
+      };
     } else {
-      this.tasks.push({ type: 'create', title, fn: patternOrCreateFn });
+      task = { type: 'create', title, fn: patternOrCreateFn };
     }
+
+    this.runTask(task);
   };
 
   registerTaskMethods: RegisterTasks = {
@@ -73,14 +81,8 @@ You must supply a createFunction as the third argument`
     create: this.create,
   };
 
-  prepare() {
-    const fileActions: Array<FileAction> = flatMap(this.tasks, (task) => {
-      this.events.emit('task-start', { task });
-
-      return runTask(task, this);
-    });
-
-    return fileActions;
+  getMigrationInstructions(): FileAction[] {
+    return this.instructions;
   }
 
   write() {
@@ -88,7 +90,6 @@ You must supply a createFunction as the third argument`
   }
 
   run() {
-    this.prepare();
     // TODO - Map all actions and ask regarding overrides on create
 
     this.write();

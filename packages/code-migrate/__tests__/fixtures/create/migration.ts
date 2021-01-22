@@ -1,3 +1,5 @@
+import { migrate } from 'code-migrate';
+
 migrate('create', ({ create }) => {
   create(
     'create another file with added an bar',
