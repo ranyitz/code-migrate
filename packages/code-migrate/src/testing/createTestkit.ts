@@ -1,3 +1,5 @@
+process.env.NODE_ENV = 'test';
+
 import path from 'path';
 import tempy from 'tempy';
 import fs from 'fs-extra';

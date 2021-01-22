@@ -14,7 +14,9 @@ export const loadUserMigrationFile = (
 ) => {
   // Load user's migration file
   const migrate: Migrate = (title, fn) => {
-    console.log(`Starting: ${title}`);
+    if (process.env.NODE_ENV !== 'test') {
+      console.log(`Starting: ${title}`);
+    }
 
     fn(migration.registerMethods, {
       ...migration.options,
