@@ -11,6 +11,8 @@ import type {
   TransformTask,
 } from './tasks';
 
+import type { AfterHookFn } from './hooks';
+
 export type Pattern = string | string[];
 
 export type Options = { cwd: string };
@@ -42,6 +44,8 @@ export type RegisterCreateTask = (
   patternOrCreateFn: EmptyCreateFn | Pattern,
   createFn?: CreateFn
 ) => void;
+
+export type RegisterAfterHook = (afterHook: AfterHookFn) => void;
 
 export type FileAction =
   | {

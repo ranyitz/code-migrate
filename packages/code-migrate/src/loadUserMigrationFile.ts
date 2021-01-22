@@ -14,7 +14,9 @@ export const loadUserMigrationFile = (
 ) => {
   // Load user's migration file
   const migrate: Migrate = (title, fn) => {
-    fn(migration.registerTaskMethods, {
+    console.log(`Starting: ${title}`);
+
+    fn(migration.registerMethods, {
       ...migration.options,
       fs: migration.fs,
     });

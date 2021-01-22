@@ -70,7 +70,7 @@ export const runMigration: RunMigration = async ({
     }
   }
 
-  migration.write();
+  migration.run();
 
   console.log();
   console.log(chalk.green('The migration was done successfully 🎉'));

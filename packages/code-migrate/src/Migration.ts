@@ -7,30 +7,35 @@ import type {
   RegisterRemoveTask,
   RegisterRenameTask,
   RegisterTransformTask,
+  RegisterAfterHook,
   Task,
 } from './types';
 import { isPattern } from './utils';
 import { reporter } from './reporter';
 import { VirtualFileSystem } from './VirtualFileSystem';
+import { AfterHookFn } from './hooks';
 
-export type RegisterTasks = {
+export type RegisterMethods = {
   transform: RegisterTransformTask;
   rename: RegisterRenameTask;
   remove: RegisterRemoveTask;
   create: RegisterCreateTask;
+  after: RegisterAfterHook;
 };
 
 export class Migration {
-  instructions: Array<FileAction>;
   options: Options;
   events: MigrationEmitter;
   fs: VirtualFileSystem;
+  instructions: Array<FileAction>;
+  afterHooks: Array<AfterHookFn>;
 
   constructor(options: Options) {
-    this.instructions = [];
     this.options = options;
     this.events = new MigrationEmitter(this);
     this.fs = new VirtualFileSystem({ cwd: options.cwd });
+    this.instructions = [];
+    this.afterHooks = [];
   }
 
   runTask(task: Task) {
@@ -74,11 +79,16 @@ You must supply a createFunction as the third argument`
     this.runTask(task);
   };
 
-  registerTaskMethods: RegisterTasks = {
+  after: RegisterAfterHook = (afterFn: AfterHookFn) => {
+    this.afterHooks.push(afterFn);
+  };
+
+  registerMethods: RegisterMethods = {
     transform: this.transform,
     rename: this.rename,
     remove: this.remove,
     create: this.create,
+    after: this.after,
   };
 
   getMigrationInstructions(): FileAction[] {
@@ -93,6 +103,9 @@ You must supply a createFunction as the third argument`
     // TODO - Map all actions and ask regarding overrides on create
 
     this.write();
+
+    // run after write hooks
+    this.afterHooks.forEach((fn) => fn());
   }
 
   static create(options: Options): Migration {

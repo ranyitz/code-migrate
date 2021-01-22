@@ -1,4 +1,4 @@
-import { RegisterTasks } from './Migration';
+import { RegisterMethods } from './Migration';
 import { Options } from './types';
 import { VirtualFileSystem } from './VirtualFileSystem';
 
@@ -7,7 +7,7 @@ import { VirtualFileSystem } from './VirtualFileSystem';
 export type Migrate = (
   title: string,
   fn: (
-    RegisterTasks: RegisterTasks,
+    RegisterTasks: RegisterMethods,
     options: Options & { fs: VirtualFileSystem }
   ) => void
 ) => void;
