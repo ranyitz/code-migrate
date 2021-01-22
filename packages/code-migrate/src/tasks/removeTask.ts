@@ -5,10 +5,19 @@ import { isTruthy } from '../utils';
 
 export type RemoveReturnValue = { fileName?: string };
 
+export type RemoveFn = ({
+  fileName,
+  source,
+}: {
+  fileName: string;
+  source: string;
+}) => void;
+
 export type RemoveTask = {
   type: 'remove';
   title: string;
   pattern: Pattern;
+  fn?: RemoveFn;
 };
 
 export const runRemoveTask: RunTask<RemoveTask> = (task, migration) => {
@@ -26,6 +35,8 @@ export const runRemoveTask: RunTask<RemoveTask> = (task, migration) => {
 
         return null;
       }
+
+      if (task.fn) task.fn(file);
 
       migration.events.emit('remove-success', {
         task,

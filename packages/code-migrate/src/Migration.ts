@@ -46,8 +46,8 @@ export class Migration {
     this.runTask({ type: 'rename', title, pattern, fn: renameFn });
   };
 
-  remove: RegisterRemoveTask = (title, pattern) => {
-    this.runTask({ type: 'remove', title, pattern });
+  remove: RegisterRemoveTask = (title, pattern, removeFn) => {
+    this.runTask({ type: 'remove', title, pattern, fn: removeFn });
   };
 
   create: RegisterCreateTask = (title, patternOrCreateFn, createFn) => {

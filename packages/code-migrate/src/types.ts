@@ -3,6 +3,7 @@ import type {
   CreateFn,
   CreateTask,
   EmptyCreateFn,
+  RemoveFn,
   RemoveTask,
   RenameFn,
   RenameTask,
@@ -30,7 +31,11 @@ export type RegisterRenameTask = (
   renameFn: RenameFn
 ) => void;
 
-export type RegisterRemoveTask = (title: string, pattern: Pattern) => void;
+export type RegisterRemoveTask = (
+  title: string,
+  pattern: Pattern,
+  removeFn?: RemoveFn
+) => void;
 
 export type RegisterCreateTask = (
   title: string,

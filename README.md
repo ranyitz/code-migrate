@@ -154,7 +154,9 @@ type RenameFn = ({ fileName: string }) => string;
 #### remove
 Delete a file/directory or multiple files/directories
 ```ts
-type Remove = (title: string, pattern: Pattern) => void;
+type Remove = (title: string, pattern: Pattern, fn: removeFn) => void;
+
+type RemoveFn = ({ source: string; fileName: string }) => void;
 
 ```
 #### create

@@ -1,11 +1,15 @@
-import { blue, bold, dim, green, red } from 'chalk';
+import { red } from 'chalk';
 import { Migration } from './Migration';
 
 export const reporter = (migration: Migration): void => {
   const { events } = migration;
 
-  events.on('transform-fail', ({ file, error }) => {
-    console.log(`${red('X')} transform failed: ${file.fileName}`);
+  events.on('transform-fail', ({ file, error, task }) => {
+    console.log(
+      `${red('X')} transform failed on
+      task: "${task.title}"
+      file: "${file.fileName}"`
+    );
     console.error(error);
   });
 
