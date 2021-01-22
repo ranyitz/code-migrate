@@ -100,8 +100,6 @@ You must supply a createFunction as the third argument`
   }
 
   run() {
-    // TODO - Map all actions and ask regarding overrides on create
-
     this.write();
 
     // run after write hooks
