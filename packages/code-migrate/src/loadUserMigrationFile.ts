@@ -29,7 +29,6 @@ export const loadUserMigrationFile = (
 
   tsNodeRegister({
     transpileOnly: true,
-    dir: migration.options.cwd,
   });
 
   if (typeof jest !== 'undefined') {
