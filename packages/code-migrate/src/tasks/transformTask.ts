@@ -2,7 +2,7 @@ import { isEqual, isObject } from 'lodash';
 import { File, getFiles } from '../File';
 import { RunTask } from './runTask';
 import { FileAction, Pattern } from '../types';
-import { isTruthy, strigifyJson } from '../utils';
+import { strigifyJson } from '../utils';
 
 type TransformReturnValue = string | Record<string, any>;
 

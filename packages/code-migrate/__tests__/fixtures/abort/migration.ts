@@ -14,8 +14,8 @@ migrate('abort', ({ transform }) => {
     'transform world to there in foo.json',
     '*.json',
     ({ source, abort }) => {
-      // Since on of the files contain this
-      // We expect all of the transformation to be canceled
+      // since ono of the files contain this
+      // we expect all of the transformation to be aborted
       if (source.includes('foo')) {
         abort();
       }
