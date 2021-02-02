@@ -9,9 +9,11 @@ type TransformReturnValue = string | Record<string, any>;
 export type TransformFn = ({
   fileName,
   source,
+  abort,
 }: {
   fileName: string;
   source: string;
+  abort: () => void;
 }) => TransformReturnValue;
 
 export type TransformTask = {
@@ -23,65 +25,93 @@ export type TransformTask = {
 
 export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
   const files = getFiles(migration.options.cwd, task.pattern, migration);
+  let aborted = false;
 
-  const fileResults: Array<FileAction> = files
-    .map((file) => {
-      migration.events.emit('transform-start', { file, task });
+  const abort = () => {
+    aborted = true;
+  };
 
-      let transformedSource: TransformReturnValue;
+  let fileResults: Array<FileAction> = [];
 
-      try {
-        transformedSource = task.fn(file);
-      } catch (error) {
-        migration.events.emit('transform-fail', {
-          file,
-          error,
-          task,
-        });
-        return null;
-      }
+  for (let file of files) {
+    // We let the user control this callback
+    // If it was call, we want to stop looping the files
+    if (aborted) {
+      break;
+    }
 
-      let source;
+    migration.events.emit('transform-start', { file, task });
 
-      if (isObject(transformedSource)) {
-        source = strigifyJson(transformedSource);
-      } else {
-        source = transformedSource;
-      }
+    let transformedSource: TransformReturnValue;
 
-      const newFile = new File({
-        cwd: migration.options.cwd,
+    try {
+      transformedSource = task.fn({
+        source: file.source,
         fileName: file.fileName,
-        source,
-        migration,
+        abort,
       });
-
-      const isRenamed = !isEqual(newFile.fileName, file.fileName);
-      const isModified = isRenamed || !isEqual(newFile.source, file.source);
-
-      if (isModified) {
-        const fileAction = {
-          originalFile: file,
-          newFile,
-          type: task.type,
-          task,
-        };
-
-        migration.events.emit('transform-success-change', fileAction);
-
-        migration.fs.removeSync(file.path);
-        migration.fs.writeFileSync(newFile.path, newFile.source);
-        return fileAction;
-      }
-
-      migration.events.emit('transform-success-noop', {
-        task,
+    } catch (error) {
+      migration.events.emit('transform-fail', {
         file,
+        error,
+        task,
       });
+      continue;
+    }
 
-      return null;
-    })
-    .filter(isTruthy);
+    let source;
+
+    if (isObject(transformedSource)) {
+      source = strigifyJson(transformedSource);
+    } else {
+      source = transformedSource;
+    }
+
+    const newFile = new File({
+      cwd: migration.options.cwd,
+      fileName: file.fileName,
+      source,
+      migration,
+    });
+
+    const isRenamed = !isEqual(newFile.fileName, file.fileName);
+    const isModified = isRenamed || !isEqual(newFile.source, file.source);
+
+    if (isModified) {
+      const fileAction = {
+        originalFile: file,
+        newFile,
+        type: task.type,
+        task,
+      };
+
+      migration.events.emit('transform-success-change', fileAction);
+
+      fileResults.push(fileAction);
+      continue;
+    }
+
+    migration.events.emit('transform-success-noop', {
+      task,
+      file,
+    });
+  }
+
+  if (aborted) {
+    return [];
+  }
+
+  fileResults.forEach((fileAction) => {
+    if (fileAction.type !== 'transform') {
+      throw new Error('wrong action type');
+    }
+
+    migration.fs.removeSync(fileAction.originalFile.path);
+    migration.fs.writeFileSync(
+      fileAction.newFile.path,
+      fileAction.newFile.source
+    );
+  });
 
   return fileResults;
 };
