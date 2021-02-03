@@ -19,6 +19,7 @@
         "jest"
     ],
     "rules": {
+        "prefer-const": "off",
         "prettier/prettier": ["error", { "singleQuote": true }],
         "jest/no-identical-title": "error",
         "jest/prefer-to-have-length": "warn",

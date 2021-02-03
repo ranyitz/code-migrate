@@ -136,6 +136,7 @@ type Transform = (
 type TransformFn = ({
   fileName: string;
   source: string;
+  abort: () => void
 }) => string | SerializeableJsonObject;
 ```
 
@@ -224,6 +225,26 @@ it('should rename foo.json to bar.json', () => {
 });
 ```
 
+## Aborting a transformation
+There are cases that you would like to abort the whole transformation in case a single file failed. In this case you'll have the `abort` function. Calling it will abort the whole transfomation, this also means that files that were already processed won't be written to the fileSystem.
+
+```ts
+transform(
+  'attempt to migrate something complex',
+  '**/*.js',
+  ({ source, abort }) => {
+    const result = tryMigratingSomething(source)
+    
+    // In case a single file didn't pass
+    // We want to abort and don't change any *.js file
+    if (result.pass === false) {
+      abort();
+    }
+
+    return result.source;
+  }
+);
+```
 ## Future plans and ideas
 * `exec` task (run custom commands, like lint --fix)
 * `warn`/`check` task that logs a warning to the console
