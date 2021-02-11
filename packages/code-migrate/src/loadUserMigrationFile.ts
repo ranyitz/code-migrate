@@ -8,42 +8,46 @@ import type { Migrate } from './migrate';
  * @param migration migration instance
  * @param migrationFile An absolute path to the users migration file
  */
-export const loadUserMigrationFile = (
+export const loadUserMigrationFile = async (
   migration: Migration,
   migrationFile: string
-) => {
-  // Load user's migration file
-  const migrate: Migrate = (title, fn) => {
-    if (process.env.NODE_ENV !== 'test') {
-      console.log(`Starting: ${title}`);
+): Promise<void> => {
+  return new Promise((resolve) => {
+    // Load user's migration file
+    const migrate: Migrate = async (title, fn) => {
+      if (process.env.NODE_ENV !== 'test') {
+        console.log(`Starting: ${title}`);
+      }
+
+      await fn(migration.registerMethods, {
+        ...migration.options,
+        fs: migration.fs,
+      });
+
+      resolve();
+    };
+
+    // @ts-expect-error not sure how to type this
+    globalThis.migrate = migrate;
+
+    tsNodeRegister({
+      transpileOnly: true,
+      ignore: [],
+    });
+
+    if (typeof jest !== 'undefined') {
+      jest.doMock('code-migrate', () => {
+        return {
+          __esModule: true,
+          migrate,
+        };
+      });
+    } else {
+      require('mock-require')('code-migrate', {
+        migrate,
+      });
     }
 
-    fn(migration.registerMethods, {
-      ...migration.options,
-      fs: migration.fs,
-    });
-  };
-
-  // @ts-expect-error not sure how to type this
-  globalThis.migrate = migrate;
-
-  tsNodeRegister({
-    transpileOnly: true,
-    ignore: [],
+    importFresh(migrationFile);
   });
-
-  if (typeof jest !== 'undefined') {
-    jest.doMock('code-migrate', () => {
-      return {
-        __esModule: true,
-        migrate,
-      };
-    });
-  } else {
-    require('mock-require')('code-migrate', {
-      migrate,
-    });
-  }
-
-  importFresh(migrationFile);
 };

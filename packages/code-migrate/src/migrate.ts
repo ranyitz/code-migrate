@@ -2,6 +2,8 @@ import { RegisterMethods } from './Migration';
 import { Options } from './types';
 import { VirtualFileSystem } from './VirtualFileSystem';
 
+type OptionalPromise<T> = T | Promise<T>;
+
 // The global migrate function which is used
 // by the user in order to register migration tasks
 export type Migrate = (
@@ -9,7 +11,7 @@ export type Migrate = (
   fn: (
     RegisterTasks: RegisterMethods,
     options: Options & { fs: VirtualFileSystem }
-  ) => void
+  ) => OptionalPromise<void>
 ) => void;
 
 /**
