@@ -220,8 +220,8 @@ const testkit = createTestkit({
   migrationFile: path.join(__dirname, 'migration.ts'),
 });
 
-it('should rename foo.json to bar.json', () => {
-  testkit.run({ fixtures: __dirname });
+it('should rename foo.json to bar.json', async () => {
+  await testkit.run({ fixtures: __dirname });
 });
 ```
 
