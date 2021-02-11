@@ -1,0 +1,7 @@
+{
+    "files.exclude": {
+      ".git": true,
+      "**/.git": false,
+      "**/node_modules": false,
+  },
+}

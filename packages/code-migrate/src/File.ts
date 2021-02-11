@@ -73,7 +73,7 @@ export const getFiles = (
   const fileNames = globby.sync(pattern, {
     cwd,
     gitignore: true,
-    ignore: ['**/node_modules/**'],
+    ignore: ['**/node_modules/**', '**/.git/**'],
     dot: true,
     // @ts-expect-error
     fs: migration.fs.fileSystemAdapterMethods,

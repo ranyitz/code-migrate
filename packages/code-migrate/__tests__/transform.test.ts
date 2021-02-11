@@ -1,10 +1,10 @@
 import { resolveFixture } from './utils';
 import { createTestkit } from 'code-migrate/testing';
 
-test('transform', () => {
+test('transform', async () => {
   const testkit = createTestkit();
 
-  testkit.run({
+  await testkit.run({
     fixtures: resolveFixture('transform'),
   });
 });
