@@ -32,7 +32,7 @@ export class MigrationTestkit {
    * @param options.fixtures an absolute path to a fixtures directory
    * which contains \_\_before__ and \_\_after__ directories
    */
-  run({ fixtures }: { fixtures: string }) {
+  async run({ fixtures }: { fixtures: string }) {
     if (!fixtures) {
       throw new Error('must provide "fixtures" path');
     }
@@ -74,7 +74,7 @@ export class MigrationTestkit {
 
     fs.copySync(beforeDirectory, workingDir);
 
-    loadUserMigrationFile(migration, migrationFile);
+    await loadUserMigrationFile(migration, migrationFile);
 
     migration.run();
 
