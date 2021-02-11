@@ -34,7 +34,7 @@ export const runMigration: RunMigration = async ({
 }) => {
   const migration = Migration.create({ cwd });
 
-  loadUserMigrationFile(migration, migrationFilePath);
+  await loadUserMigrationFile(migration, migrationFilePath);
 
   const fileActions = migration.getMigrationInstructions();
 
