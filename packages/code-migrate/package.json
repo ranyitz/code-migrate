@@ -1,6 +1,6 @@
 {
   "name": "code-migrate",
-  "version": "0.6.4",
+  "version": "0.6.5",
   "main": "build/index.js",
   "types": "build/index.d.ts",
   "bin": {
