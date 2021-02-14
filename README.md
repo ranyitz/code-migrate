@@ -207,9 +207,27 @@ migrate('my migration', ({ transform }) => {
     );
 });
 ```
+#### `createTestkit({ migrationFile: string })`
 
-The test initializes the testkit which accepts an optional path to the migration file:
+The test initializes the testkit which accepts an optional path to the migration file, otherwise, looks for a `migration.ts` file in the fixture directory.
 
+#### `testkit.test({ fixtures: string, title?: string })`
+> Creates a test supporting jest, mocha & jasmine
+```ts
+// migration.test.ts
+
+import { createTestkit } from 'code-migrate/testing';
+import path from 'path';
+
+createTestkit().test({
+  fixtures: __dirname,
+  title: 'should rename foo.json to bar.json'
+});
+```
+
+
+#### `testkit.run({ fixtures: string })`
+> Notice that this method is async, and therefore needs to be returned or awaited
 ```ts
 // migration.test.ts
 

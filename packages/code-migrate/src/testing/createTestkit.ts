@@ -119,4 +119,15 @@ ${error.toString()}`);
       }
     });
   }
+
+  /**
+   * @param options.fixtures an absolute path to a fixtures directory
+   * which contains \_\_before__ and \_\_after__ directories
+   * @param options.title test title
+   */
+  async test({ fixtures, title }: { fixtures: string; title?: string }) {
+    const name = path.basename(fixtures);
+
+    it(title ?? name, () => this.run({ fixtures }));
+  }
 }
