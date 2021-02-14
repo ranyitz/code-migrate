@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.6.4 (Feb 14, 2021)
+use the tsconfig which is relative to the migration file and not the cwd on which the command has ran ([#4](https://github.com/ranyitz/code-migrate/pull/4))
+
 ## v0.6.3 (Feb 11, 2021)
 Ignore `.git` directories when globbing ([#3](https://github.com/ranyitz/code-migrate/pull/3))
 
