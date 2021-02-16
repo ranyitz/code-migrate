@@ -7,7 +7,6 @@ const fixtures = resolveFixture('transform');
 const migrationFile = path.join(fixtures, 'migration.ts');
 
 createTestkit({
-  migrationFile,
   command: ['node', binFile, migrationFile, '--yes', '--quiet'],
 }).test({
   fixtures,
