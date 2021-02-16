@@ -57,8 +57,10 @@ type RunMigration = ({
 ```
 
 ## Writing a migration file
+write a `js`/`ts` file that call the `migrate` function.
 
 ```ts
+// migration.ts
 import { migrate } from 'code-migrate';
 
 migrate(
@@ -93,6 +95,8 @@ migrate(
   }
 );
 ```
+
+_NOTE: if you decide to use TypeScript, code-migrate will use a tsconfig.json file relative to the migration file, don't forget to add `tsconfig.json` to the files array in package.json so it will be used in the migrations_
 
 ## Use with global migrate function
 The code-migrate runner does not require that you'll import the `migrate` function, it will also work on the global:
