@@ -34,16 +34,25 @@ Providing a polished experience usually results in a lot of work which we can no
     --yes, -y       Skip all confirmation prompts
     --cwd           Runs the migration on this directory [defaults to process.cwd()]
 ```
-
 ## Node API
 ### runMigration
-Run a migration programatically
+Create a CLI application that runs your migration. You should create a bin file and [configure it through npm](https://docs.npmjs.com/cli/v7/configuring-npm/package-json#bin), from that file, call the `createCli` function to create the CLI that runs your migration.
+```ts
+type CreateCli = ({
+  binName: string;
+  migrationFile?: string;
+  version: string;
+}) => Promise<void>
+
+```
+Run a migration programatically, you can also create a custom CLI or run through node API using the `runMigration` function.
 ```ts
 type RunMigration = ({
   cwd: string;
   migrationFilePath: string;
   dry: boolean;
   yes: boolean;
+  quite: boolean
 }) => Promise<void>;
 ```
 
