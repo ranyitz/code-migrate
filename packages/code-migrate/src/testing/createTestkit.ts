@@ -5,27 +5,40 @@ import tempy from 'tempy';
 import fs from 'fs-extra';
 import globby from 'globby';
 import expect from 'expect';
+import execa from 'execa';
 import { Migration } from '../Migration';
 import { loadUserMigrationFile } from '../loadUserMigrationFile';
 
 /**
  * @param options.migrationFile an absolute path to a migration file or a relative path
  * to the fixtures directory, defaults to migration.ts
+ * @param options.command command that runs the migration.
+ * e.g. ['node', './path/to/bin.js', '-y'] -> $ node ./path/to/bin.js -y
  *
  */
 export const createTestkit = ({
   migrationFile = 'migration.ts',
+  command,
 }: {
   migrationFile?: string;
+  command?: string[];
 } = {}) => {
-  return new MigrationTestkit({ migrationFile });
+  return new MigrationTestkit({ migrationFile, command });
 };
 
 export class MigrationTestkit {
   migrationFile: string;
+  command?: string[];
 
-  constructor({ migrationFile }: { migrationFile: string }) {
+  constructor({
+    migrationFile,
+    command,
+  }: {
+    migrationFile: string;
+    command?: string[];
+  }) {
     this.migrationFile = migrationFile;
+    this.command = command;
   }
 
   /**
@@ -70,13 +83,22 @@ export class MigrationTestkit {
     }
 
     const workingDir = tempy.directory();
-    const migration = Migration.create({ cwd: workingDir });
 
     fs.copySync(beforeDirectory, workingDir);
 
-    await loadUserMigrationFile(migration, migrationFile);
+    const command = this.command;
 
-    migration.run();
+    if (command && Array.isArray(command) && command.length > 0) {
+      execa.sync(command[0], command.slice(1), {
+        cwd: workingDir,
+        stdio: 'inherit',
+      });
+    } else {
+      const migration = Migration.create({ cwd: workingDir });
+      await loadUserMigrationFile(migration, migrationFile);
+
+      migration.run();
+    }
 
     const expectedFiles = globby.sync('**/*', {
       cwd: afterDirectory,
