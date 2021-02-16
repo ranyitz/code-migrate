@@ -207,9 +207,21 @@ migrate('my migration', ({ transform }) => {
     );
 });
 ```
-#### `createTestkit({ migrationFile: string })`
+#### `createTestkit({ migrationFile: string, command: string[] })`
 
 The test initializes the testkit which accepts an optional path to the migration file, otherwise, looks for a `migration.ts` file in the fixture directory.
+
+There is an optional `command` property, when used code-migrate will run a command instead of the testkit, this also tests the CLI in an e2e manner.
+
+To run the following command 
+```bash
+$ node /absolute/path/to/bin.js -y
+```
+
+Initialize the testkit with the following command property:
+```
+command: ['node', '/absolute/path/to/bin.js', '-y']
+```
 
 #### `testkit.test({ fixtures: string, title?: string })`
 > Creates a test supporting jest, mocha & jasmine

@@ -10,7 +10,7 @@
     "watch": "yarn tsc -b --watch --incremental packages/code-migrate/tsconfig.prod.json",
     "build": "yarn tsc -b packages/code-migrate/tsconfig.prod.json",
     "lint": "eslint .",
-    "test": "jest",
+    "test": "yarn --cwd=packages/code-migrate test ",
     "createVersion": "yarn build-clean && yarn build && yarn test && lerna publish"
   },
   "devDependencies": {

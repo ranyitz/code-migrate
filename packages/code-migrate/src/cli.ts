@@ -18,12 +18,14 @@ import { runMigration } from './runMigration';
       '--cwd': String,
       '--dry': Boolean,
       '--yes': Boolean,
+      '--quiet': Boolean,
 
       // Aliases
       '-v': '--version',
       '-h': '--help',
       '-d': '--dry',
       '-y': '--yes',
+      '-q': '--quiet',
     },
     {
       permissive: false,
@@ -48,6 +50,7 @@ import { runMigration } from './runMigration';
         --dry, -d       Dry-run mode, does not modify files
         --yes, -y       Skip all confirmation prompts. Useful in CI to automatically answer the confirmation prompt
         --cwd           Runs the migration on this directory [defaults to process.cwd()]
+        --quiet, -q     Runs on quite mode (does not print results)
     `);
 
     process.exit(0);
@@ -86,5 +89,6 @@ import { runMigration } from './runMigration';
     migrationFilePath: migrationFileAbsolutePath,
     dry: !!args['--dry'],
     yes: !!args['--yes'],
+    quite: !!args['--quiet'],
   });
 })();
