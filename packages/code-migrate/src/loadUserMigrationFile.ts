@@ -1,4 +1,5 @@
 import path from 'path';
+import chalk from 'chalk';
 import { register as tsNodeRegister } from 'ts-node';
 import importFresh from 'import-fresh';
 import { Migration } from './Migration';
@@ -17,7 +18,10 @@ export const loadUserMigrationFile = async (
     // Load user's migration file
     const migrate: Migrate = async (title, fn) => {
       if (process.env.NODE_ENV !== 'test') {
-        console.log(`Starting: ${title}`);
+        console.log(`${chalk.cyan('Running:')} ~ ${title} ~`);
+        console.log(
+          `${chalk.cyan('Directory:')} ${path.basename(migration.options.cwd)}`
+        );
       }
 
       await fn(migration.registerMethods, {
