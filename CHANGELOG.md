@@ -1,5 +1,9 @@
 # Changelog
 
+## v0.7.0 (Feb 17, 2021)
+Add support for e2e tests through the testkit ([#6](https://github.com/ranyitz/code-migrate/pull/6))
+An ability to generate a CLI from code-migrate's API ([#7](https://github.com/ranyitz/code-migrate/pull/7))
+
 ## v0.6.5 (Feb 14, 2021)
 Add a `.test()` method that dynamically creates tests to the testkit ([#5](https://github.com/ranyitz/code-migrate/pull/5))
 
