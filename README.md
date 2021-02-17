@@ -5,8 +5,26 @@ A framework for declaratively writing codebase migrations on JavaScript/NodeJS b
   <img src="https://user-images.githubusercontent.com/11733036/99916433-de780180-2d12-11eb-8d5a-e0cf77c2dafc.gif" alt="code-migrate"/>
 </p>
 
-- [Why](#why)
-- [Features](#features)
+## Why
+Writing an automatic migration script usually takes time. Besides implementing the transformations to the code/configuration, you also need to handle other concerns like publishing a CLI application, generating a report, handling errors during the migration process, writing tests, and more.
+
+Providing a polished experience usually results in a lot of work which we can not always justify. In some cases, maintainers resort to either API stagnation or leaving the heavy lifting to their users. If you're maintaining a library or a toolkit, you'd want your users to upgrade with minimal effort. And you want to write the migration script in a minimal amount of time.
+
+## Features
+
+* Declarative way to define your migration tasks, leaving you with focusing only on the transformation logic.
+
+* The migration is separated into two parts, the first one is processing all of the tasks and the second is writing them to the file-system. This ensures that in case of an error, nothing will be written to the file-system. It also lets the user approve the migration via a prompt from the CLI.
+
+* Even though nothing is written while processing the tasks, all file system operations are written to a virtual file system which makes sure that tasks that depend on each other will work as expected. For example, if you change a file on the first task, the second task will see its updated version.
+
+* Code Migrate creates a beautiful report of the changes sorted by tasks.
+
+* There is a testkit that helps with the process of writing the migration. You can define `__before__` and `__after__` directories and use TDD to implement the migration with fewer mistakes and with a quick feedback loop.
+
+______________
+
+
 - [CLI](#cli)
 - [Node API](#node-api)
   * [createCli](#createcli)
@@ -27,23 +45,6 @@ A framework for declaratively writing codebase migrations on JavaScript/NodeJS b
   * [testkit.run](#testkitrun)
 - [Aborting a transformation](#aborting-a-transformation)
 
-## Why
-Writing an automatic migration script usually takes time. Besides implementing the transformations to the code/configuration, you also need to handle other concerns like publishing a CLI application, generating a report, handling errors during the migration process, writing tests, and more.
-
-Providing a polished experience usually results in a lot of work which we can not always justify. In some cases, maintainers resort to either API stagnation or leaving the heavy lifting to their users. If you're maintaining a library or a toolkit, you'd want your users to upgrade with minimal effort. And you want to write the migration script in a minimal amount of time.
-
-## Features
-
-* Declarative way to define your migration tasks, leaving you with focusing only on the transformation logic.
-
-* The migration is separated into two parts, the first one is processing all of the tasks and the second is writing them to the file-system. This ensures that in case of an error, nothing will be written to the file-system. It also lets the user approve the migration via a prompt from the CLI.
-
-* Even though nothing is written while processing the tasks, all file system operations are written to a virtual file system which makes sure that tasks that depend on each other will work as expected. For example, if you change a file on the first task, the second task will see its updated version.
-
-* Code Migrate creates a beautiful report of the changes sorted by tasks.
-
-* There is a testkit that helps with the process of writing the migration. You can define `__before__` and `__after__` directories and use TDD to implement the migration with fewer mistakes and with a quick feedback loop.
-
 ## CLI
 ```
   Usage
@@ -55,6 +56,7 @@ Providing a polished experience usually results in a lot of work which we can no
     --dry, -d       Dry-run mode, does not modify files
     --yes, -y       Skip all confirmation prompts
     --cwd           Runs the migration on this directory [defaults to process.cwd()]
+    --quiet, -q     Runs on quite mode (does not print results)
 ```
 ## Node API
 
