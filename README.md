@@ -5,6 +5,28 @@ A framework for declaratively writing codebase migrations on JavaScript/NodeJS b
   <img src="https://user-images.githubusercontent.com/11733036/99916433-de780180-2d12-11eb-8d5a-e0cf77c2dafc.gif" alt="code-migrate"/>
 </p>
 
+- [Why](#why)
+- [Features](#features)
+- [CLI](#cli)
+- [Node API](#node-api)
+  * [createCli](#createcli)
+  * [runMigration](#runmigration)
+- [Writing a migration file](#writing-a-migration-file)
+  * [migrate](#migrate)
+  * [tasks](#tasks)
+    + [transform](#transform)
+    + [rename](#rename)
+    + [remove](#remove)
+    + [create](#create)
+  * [options](#options)
+    + [fs](#fs)
+    + [cwd](#cwd)
+- [Testing](#testing)
+  * [createTestkit](#createtestkit)
+  * [testkit.test](#testkittest)
+  * [testkit.run](#testkitrun)
+- [Aborting a transformation](#aborting-a-transformation)
+
 ## Why
 Writing an automatic migration script usually takes time. Besides implementing the transformations to the code/configuration, you also need to handle other concerns like publishing a CLI application, generating a report, handling errors during the migration process, writing tests, and more.
 
@@ -35,7 +57,8 @@ Providing a polished experience usually results in a lot of work which we can no
     --cwd           Runs the migration on this directory [defaults to process.cwd()]
 ```
 ## Node API
-### runMigration
+
+### createCli
 Create a CLI application that runs your migration. You should create a bin file and [configure it through npm](https://docs.npmjs.com/cli/v7/configuring-npm/package-json#bin), from that file, call the `createCli` function to create the CLI that runs your migration.
 ```ts
 type CreateCli = ({
@@ -45,6 +68,8 @@ type CreateCli = ({
 }) => Promise<void>
 
 ```
+
+### runMigration
 Run a migration programatically, you can also create a custom CLI or run through node API using the `runMigration` function.
 ```ts
 type RunMigration = ({
@@ -98,7 +123,8 @@ migrate(
 
 _NOTE: if you decide to use TypeScript, code-migrate will use a tsconfig.json file relative to the migration file, don't forget to add `tsconfig.json` to the files array in package.json so it will be used in the migrations_
 
-## Use with global migrate function
+**Use with global `migrate` function**
+
 The code-migrate runner does not require that you'll import the `migrate` function, it will also work on the global:
 
 ```ts
@@ -185,10 +211,10 @@ type Create = (
 ```
 
 ### options
-### fs
+#### fs
 Virtual file System which implements a subset of the `fs` module API. You can use it to perform custom file system operations that will be part of the migration process. They will only be written at the end of the migration and will relay on former tasks.
 
-### cwd
+#### cwd
 The working directory in which the migration currently runs.
 
 ## Testing
@@ -196,7 +222,6 @@ Code Migrate comes with a testkit that lets you write tests for your migration. 
 
 You'll need to create fixtures of the `__before__` and the `__after__` states, the testkit expects those directories and knows how to accept a migration file and a fixtures directory as parameters.
 
-### Example
 Let's consider the following file structure:
 ```
 .
@@ -220,7 +245,10 @@ migrate('my migration', ({ transform }) => {
     );
 });
 ```
-#### `createTestkit({ migrationFile: string, command: string[] })`
+### createTestkit
+```ts
+createTestkit({ migrationFile: string, command: string[] })
+```
 
 The test initializes the testkit which accepts an optional path to the migration file, otherwise, looks for a `migration.ts` file in the fixture directory.
 
@@ -236,7 +264,10 @@ Initialize the testkit with the following command property:
 command: ['node', '/absolute/path/to/bin.js', '-y']
 ```
 
-#### `testkit.test({ fixtures: string, title?: string })`
+### testkit.test
+```ts
+testkit.test({ fixtures: string, title?: string })
+```
 > Creates a test supporting jest, mocha & jasmine
 ```ts
 // migration.test.ts
@@ -250,8 +281,10 @@ createTestkit().test({
 });
 ```
 
-
-#### `testkit.run({ fixtures: string })`
+### testkit.run
+```ts
+testkit.run({ fixtures: string })
+```
 > Notice that this method is async, and therefore needs to be returned or awaited
 ```ts
 // migration.test.ts
@@ -288,10 +321,3 @@ transform(
   }
 );
 ```
-## Future plans and ideas
-* `exec` task (run custom commands, like lint --fix)
-* `warn`/`check` task that logs a warning to the console
-* code-migrate-tools (support AST related operations)
-* Consider adding a `read` task for case the user only wants to retrieve information
-* Add a way to create scopes for a single logical task
-
