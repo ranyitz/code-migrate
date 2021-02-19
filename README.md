@@ -100,10 +100,10 @@ migrate(
     );
 
     transform(
-      'remove "use-strict"; from all .js files',
+      'remove "use strict"; from all .js files',
       '**/*.js',
       ({ source }) => {
-        return source.replace(/("|')use-strict("|');?/, '');
+        return source.replace(/("|')use strict("|');?/, '');
       }
     );
 

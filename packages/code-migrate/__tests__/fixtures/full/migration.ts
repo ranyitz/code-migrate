@@ -1,3 +1,4 @@
+// migration.ts
 import { migrate } from 'code-migrate';
 
 migrate(
@@ -13,7 +14,7 @@ migrate(
       'remove "use strict"; from all .js files',
       '**/*.js',
       ({ source }) => {
-        return source.replace(/("|')use strict("|');?/, '');
+        return source.replace(/("|')use strict("|');?/, '').trimStart();
       }
     );
 
