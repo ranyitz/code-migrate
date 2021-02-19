@@ -1,4 +1,6 @@
 import { resolveFixture } from './utils';
 import { createTestkit } from 'code-migrate/testing';
 
-createTestkit().test({ fixtures: resolveFixture('remove') });
+createTestkit({ migrationFile: 'migration.ts' }).test({
+  fixtures: resolveFixture('remove'),
+});

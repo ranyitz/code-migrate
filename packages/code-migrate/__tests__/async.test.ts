@@ -1,6 +1,6 @@
 import { resolveFixture } from './utils';
 import { createTestkit } from 'code-migrate/testing';
 
-createTestkit().test({
+createTestkit({ migrationFile: 'migration.ts' }).test({
   fixtures: resolveFixture('async'),
 });

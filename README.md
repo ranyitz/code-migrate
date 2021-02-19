@@ -277,7 +277,7 @@ testkit.test({ fixtures: string, title?: string })
 import { createTestkit } from 'code-migrate/testing';
 import path from 'path';
 
-createTestkit().test({
+createTestkit({ migrationFile: 'migration.ts' }).test({
   fixtures: __dirname,
   title: 'should rename foo.json to bar.json'
 });

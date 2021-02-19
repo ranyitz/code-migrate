@@ -1,15 +1,5 @@
-import {
-  red,
-  blue,
-  green,
-  yellow,
-  underline,
-  bold,
-  magenta,
-  supportsColor,
-  reset,
-} from 'chalk';
-import { TaskError, TaskResult, TaskType } from '../types';
+import { red, blue, underline, bold, supportsColor, reset } from 'chalk';
+import { TaskError, TaskResult } from '../types';
 import { groupBy, isEmpty } from 'lodash';
 import { Migration } from '../Migration';
 
@@ -23,19 +13,6 @@ const ERROR = supportsColor
 const PASS = supportsColor
   ? reset.inverse.bold.green(` ${PASS_TEXT} `)
   : PASS_TEXT;
-
-// const styleTaskType = (taskType: TaskType) => {
-//   switch (taskType) {
-//     case 'transform':
-//       return blue('transform');
-//     case 'create':
-//       return green('create');
-//     case 'remove':
-//       return magenta('remove');
-//     case 'rename':
-//       return yellow('rename');
-//   }
-// };
 
 export const formatSingleTaskResult = (taskResult: TaskResult) => {
   switch (taskResult.type) {
@@ -82,7 +59,13 @@ export const createReport = (migration: Migration) => {
   }
 
   if (migration.errors.length > 0) {
-    output.push(red(underline(`Errors`)));
+    output.push(
+      '⚠️  ' +
+        red(
+          `The following migration tasks were failed, but you can still migrate the rest` +
+            ' ⚠️'
+        )
+    );
 
     for (const [taskTitle, taskErrors] of Object.entries(
       groupBy(migration.errors, 'task.title')
@@ -96,7 +79,7 @@ export const createReport = (migration: Migration) => {
   }
 
   if (isEmpty(migration.results)) {
-    output.push(blue('🤷‍♂️ No changes have been made'));
+    output.push(blue('🤷‍ No changes have been made'));
   }
 
   return output.join('\n\n');

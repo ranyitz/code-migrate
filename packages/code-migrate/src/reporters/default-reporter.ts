@@ -6,7 +6,7 @@ export const defaultReporter = (migration: Migration): void => {
   const { events } = migration;
 
   events.on('migration-start', ({ title, migration }) => {
-    console.log(`${cyan('🏃‍♂️ Running:')} ${title}`);
+    console.log(`${cyan('🏃‍ Running:')} ${title}`);
     console.log(`${cyan('📁 On:')} ${migration.options.cwd}`);
   });
 

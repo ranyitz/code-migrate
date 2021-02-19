@@ -54,7 +54,7 @@ export const runMigration: RunMigration = async ({
     const response = await prompts({
       type: 'confirm',
       name: 'value',
-      message: 'Do you want to perform the migration on the above files?',
+      message: `Press 'y' to execute the migration on the above files`,
       initial: true,
     });
 

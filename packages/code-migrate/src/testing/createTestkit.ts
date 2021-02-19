@@ -9,36 +9,45 @@ import execa from 'execa';
 import { Migration } from '../Migration';
 import { loadUserMigrationFile } from '../loadUserMigrationFile';
 
+type MigrationFunction = ({ cwd }: { cwd: string }) => void | Promise<void>;
+
 /**
  * @param options.migrationFile an absolute path to a migration file or a relative path
  * to the fixtures directory, defaults to migration.ts
  * @param options.command command that runs the migration.
  * e.g. ['node', './path/to/bin.js', '-y'] -> $ node ./path/to/bin.js -y
+ * @param options.migrationFunction a function that performs the migration
  *
  */
 export const createTestkit = ({
-  migrationFile = 'migration.ts',
+  migrationFile,
   command,
+  migrationFunction,
 }: {
-  migrationFile?: string;
+  migrationFile: string;
   command?: string[];
-} = {}) => {
-  return new MigrationTestkit({ migrationFile, command });
+  migrationFunction?: MigrationFunction;
+}) => {
+  return new MigrationTestkit({ migrationFile, command, migrationFunction });
 };
 
 export class MigrationTestkit {
   migrationFile: string;
   command?: string[];
+  migrationFunction?: MigrationFunction;
 
   constructor({
     migrationFile,
     command,
+    migrationFunction,
   }: {
     migrationFile: string;
     command?: string[];
+    migrationFunction?: MigrationFunction;
   }) {
     this.migrationFile = migrationFile;
     this.command = command;
+    this.migrationFunction = migrationFunction;
   }
 
   /**
@@ -56,17 +65,6 @@ export class MigrationTestkit {
 
     if (!fs.existsSync(fixtures)) {
       throw new Error(`fixture path ${fixtures} doesn't exist`);
-    }
-
-    let migrationFile = this.migrationFile;
-
-    // join with fixtures directory in case of a relative path
-    if (!path.isAbsolute(migrationFile)) {
-      migrationFile = path.join(fixtures, migrationFile);
-    }
-
-    if (!fs.existsSync(fixtures)) {
-      throw new Error(`migration file ${migrationFile} doesn't exist`);
     }
 
     const beforeDirectory = path.join(fixtures, '__before__');
@@ -93,7 +91,20 @@ export class MigrationTestkit {
         cwd: workingDir,
         stdio: 'inherit',
       });
+    } else if (this.migrationFunction) {
+      await this.migrationFunction({ cwd: workingDir });
     } else {
+      let migrationFile = this.migrationFile;
+
+      // join with fixtures directory in case of a relative path
+      if (!path.isAbsolute(migrationFile)) {
+        migrationFile = path.join(fixtures, migrationFile);
+      }
+
+      if (!fs.existsSync(fixtures)) {
+        throw new Error(`migration file ${migrationFile} doesn't exist`);
+      }
+
       const migration = Migration.init({ cwd: workingDir, quiet: true });
       await loadUserMigrationFile(migration, migrationFile);
 
@@ -119,7 +130,7 @@ export class MigrationTestkit {
         expect(resultFiles).toContain(fileName);
       } catch (error) {
         throw new Error(`
-Migration file: ${migrationFile}
+Migration file: ${this.migrationFile}
 
 ${error.toString()}`);
       }
@@ -133,7 +144,7 @@ ${error.toString()}`);
         expect(resultFileContents).toBe(expectedFileContents);
       } catch (error) {
         throw new Error(`
-Migration file: ${migrationFile}
+Migration file: ${this.migrationFile}
 Expected file: ${expectedFilePath}
 Recieved file: ${resultFilePath}
 
