@@ -4,7 +4,7 @@ import { resolveFixture } from './utils';
 import { createTestkit } from 'code-migrate/testing';
 import stripAnsi from 'strip-ansi';
 
-const binFile = path.join(__dirname, '../bin/migrate');
+const binFile = path.join(__dirname, '../bin/code-migrate');
 
 const runMigrationAndGetOutput = async ({
   fixtures,
