@@ -2,9 +2,6 @@ import prompts from 'prompts';
 import { Migration } from './Migration';
 import { loadUserMigrationFile } from './loadUserMigrationFile';
 import { isEmpty } from 'lodash';
-import type { TaskResult } from './types';
-
-export type Results = { taskResults: TaskResult[]; options: { dry: boolean } };
 
 type RunMigration = ({
   cwd,
@@ -42,17 +39,13 @@ export const runMigration: RunMigration = async ({
 
   await loadUserMigrationFile(migration, migrationFilePath);
 
-  const taskResults = migration.getMigrationInstructions();
-
-  const results: Results = { taskResults, options: { dry } };
-
-  events.emit('migration-after-run', results);
+  events.emit('migration-after-run', { migration, options: { dry } });
 
   if (dry) {
     process.exit(0);
   }
 
-  if (isEmpty(taskResults)) {
+  if (isEmpty(migration.results)) {
     process.exit(0);
   }
 

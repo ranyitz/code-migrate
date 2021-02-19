@@ -9,6 +9,7 @@ import type {
   RegisterTransformTask,
   RegisterAfterHook,
   Task,
+  TaskError,
 } from './types';
 import { isPattern } from './utils';
 import { defaultReporter, quietReporter } from './reporters';
@@ -27,19 +28,24 @@ export class Migration {
   options: Options;
   events: MigrationEmitter;
   fs: VirtualFileSystem;
-  instructions: Array<TaskResult>;
+  results: Array<TaskResult>;
+  errors: Array<TaskError>;
   afterHooks: Array<AfterHookFn>;
 
   constructor(options: Options) {
     this.options = options;
     this.events = new MigrationEmitter(this);
     this.fs = new VirtualFileSystem({ cwd: options.cwd });
-    this.instructions = [];
+    this.results = [];
+    this.errors = [];
     this.afterHooks = [];
   }
 
   runTask(task: Task) {
-    this.instructions.push(...runSingleTask(task, this).taskResults);
+    const { taskErrors, taskResults } = runSingleTask(task, this);
+
+    this.results.push(...taskResults);
+    this.errors.push(...taskErrors);
   }
 
   transform: RegisterTransformTask = (title, pattern, transformFn) => {
@@ -89,10 +95,6 @@ You must supply a createFunction as the third argument`
     create: this.create,
     after: this.after,
   };
-
-  getMigrationInstructions(): TaskResult[] {
-    return this.instructions;
-  }
 
   write() {
     this.fs.writeChangesToDisc();

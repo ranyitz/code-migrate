@@ -2,7 +2,6 @@ import { EventEmitter } from 'events';
 import TypedEmitter from 'typed-emitter';
 import type { File } from '../File';
 import type { Migration } from '../Migration';
-import type { Results } from '../runMigration';
 import type { Task, TaskError, TaskResult } from '../types';
 
 interface MigrationEvents {
@@ -27,7 +26,13 @@ interface MigrationEvents {
     title: string;
     migration: Migration;
   }) => void;
-  ['migration-after-run']: (results: Results) => void;
+  ['migration-after-run']: ({
+    migration,
+    options,
+  }: {
+    migration: Migration;
+    options: { dry: boolean };
+  }) => void;
   ['migration-after-write']: () => void;
   ['migration-after-prompt-aborted']: () => void;
   ['migration-after-prompt-confirmed']: () => void;

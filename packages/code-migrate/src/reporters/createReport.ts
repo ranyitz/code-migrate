@@ -1,27 +1,28 @@
-import chalk from 'chalk';
-import { TaskResult } from '../types';
+import { red, blue, green, yellow, underline, bold } from 'chalk';
+import { TaskError, TaskResult } from '../types';
 import { groupBy, isEmpty } from 'lodash';
+import { Migration } from '../Migration';
 
-export const formatSingletaskResult = (taskResult: TaskResult) => {
+export const formatSingleTaskResult = (taskResult: TaskResult) => {
   switch (taskResult.type) {
     case 'transform': {
       const { newFile } = taskResult;
 
-      return `${chalk.blue('transform:')} ${newFile.fileName}`;
+      return `${blue('transform:')} ${newFile.fileName}`;
     }
 
     case 'create': {
       const { newFile } = taskResult;
-      return `${chalk.green('create:')} ${newFile.fileName}`;
+      return `${green('create:')} ${newFile.fileName}`;
     }
 
     case 'remove': {
-      return `${chalk.red('remove:')} ${taskResult.file.fileName}`;
+      return `${red('remove:')} ${taskResult.file.fileName}`;
     }
 
     case 'rename': {
       const { originalFile, newFile } = taskResult;
-      return `${chalk.yellow('rename:')} ${originalFile.fileName} -> ${
+      return `${yellow('rename:')} ${originalFile.fileName} -> ${
         newFile.fileName
       }`;
     }
@@ -32,22 +33,41 @@ export const formatSingletaskResult = (taskResult: TaskResult) => {
     }
   }
 };
+export const formatSingleTaskError = (taskError: TaskError) => {
+  return `${red('X')} ${taskError.type}: ${taskError.file?.fileName}
 
-export const createReport = (taskResults: Array<TaskResult>) => {
-  if (isEmpty(taskResults)) {
-    return chalk.blue('🤷‍♂️ the migration passed without changes');
+${taskError.error.stack}`;
+};
+
+export const createReport = (migration: Migration) => {
+  if (isEmpty(migration.results)) {
+    return blue('🤷‍♂️ the migration passed without changes');
   }
 
   const output = [];
 
-  for (const [taskTitle, tasktaskResults] of Object.entries(
-    groupBy(taskResults, 'task.title')
+  for (const [taskTitle, taskResults] of Object.entries(
+    groupBy(migration.results, 'task.title')
   )) {
     output.push(
-      chalk.underline(chalk.bold(taskTitle)) +
+      underline(bold(taskTitle)) +
         '\n' +
-        tasktaskResults.map(formatSingletaskResult).join('\n')
+        taskResults.map(formatSingleTaskResult).join('\n')
     );
+  }
+
+  if (migration.errors.length > 0) {
+    output.push(red(underline('Errors')));
+
+    for (const [taskTitle, taskErrors] of Object.entries(
+      groupBy(migration.errors, 'task.title')
+    )) {
+      output.push(
+        underline(bold(taskTitle)) +
+          '\n' +
+          taskErrors.map(formatSingleTaskError).join('\n')
+      );
+    }
   }
 
   return output.join('\n\n');
