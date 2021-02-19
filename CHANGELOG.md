@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.8.0 (Feb 20, 2021)
+Improve output and report ([#8](https://github.com/ranyitz/code-migrate/pull/8))
+
 ## v0.7.0 (Feb 17, 2021)
 Add support for e2e tests through the testkit ([#6](https://github.com/ranyitz/code-migrate/pull/6))
 An ability to generate a CLI from code-migrate's API ([#7](https://github.com/ranyitz/code-migrate/pull/7))
