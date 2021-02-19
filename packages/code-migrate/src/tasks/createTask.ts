@@ -1,7 +1,6 @@
 import { File, getFiles } from '../File';
 import { RunTask } from './runTask';
-import { FileAction, Pattern } from '../types';
-import { isTruthy } from '../utils';
+import { TaskResult, Pattern, TaskError } from '../types';
 import { isNull, isUndefined } from 'lodash';
 
 export type CreateReturnValue = { source?: string; fileName?: string } | null;
@@ -24,44 +23,58 @@ export type CreateTask = {
 };
 
 export const runCreateTask: RunTask<CreateTask> = (task, migration) => {
+  let taskResults: Array<TaskResult> = [];
+  let taskErrors: Array<TaskError> = [];
+
+  let createdFiles: CreateReturnValue[] = [];
+
   if (!task.pattern) {
-    return [createFile()].filter(isTruthy);
-  }
-
-  const files = getFiles(migration.options.cwd, task.pattern, migration);
-
-  const fileResults: Array<FileAction> = files.map(createFile).filter(isTruthy);
-
-  return fileResults;
-
-  function createFile(file?: File): FileAction | null {
-    migration.events.emit('create-start', { file, task });
-
-    let createdFile: CreateReturnValue = {};
-
     try {
-      if (file) {
-        createdFile = task.fn({
+      // @ts-expect-error
+      const createdFile = task.fn();
+      createdFiles.push(createdFile);
+    } catch (error) {
+      const taskError: TaskError = {
+        type: task.type,
+        task,
+        error,
+      };
+
+      migration.events.emit('task-fail', taskError);
+
+      taskErrors.push(taskError);
+    }
+  } else {
+    const files = getFiles(migration.options.cwd, task.pattern, migration);
+
+    for (let file of files) {
+      migration.events.emit('task-start', { file, task });
+
+      try {
+        const createdFile = task.fn({
           fileName: file.fileName,
           source: file.source,
         });
-      } else {
-        // @ts-expect-error we know that in this case, this is an EmptyCreateFn
-        createdFile = task.fn();
+
+        createdFiles.push(createdFile);
+      } catch (error) {
+        const taskError: TaskError = {
+          type: task.type,
+          task,
+          error,
+        };
+
+        migration.events.emit('task-fail', taskError);
+
+        taskErrors.push(taskError);
       }
-    } catch (error) {
-      migration.events.emit('create-fail', {
-        file,
-        error,
-        task,
-      });
-
-      return null;
     }
+  }
 
+  for (let createdFile of createdFiles) {
     if (isNull(createdFile)) {
-      migration.events.emit('create-success-cancle', { task });
-      return null;
+      migration.events.emit('create-success-abort', { task });
+      continue;
     }
 
     if (!createdFile.fileName) {
@@ -89,7 +102,7 @@ export const runCreateTask: RunTask<CreateTask> = (task, migration) => {
       migration,
     });
 
-    const fileAction: FileAction = {
+    const taskResult: TaskResult = {
       newFile,
       type: task.type,
       task,
@@ -98,15 +111,18 @@ export const runCreateTask: RunTask<CreateTask> = (task, migration) => {
     if (originalFile.exists) {
       // Add the original File to mark that the file exists
 
-      fileAction.originalFile = originalFile;
+      taskResult.originalFile = originalFile;
 
       // @ts-expect-error - we know that originalFile exists here
-      migration.events.emit('create-success-override', fileAction);
+      migration.events.emit('create-success-override', taskResult);
     }
 
-    migration.events.emit('create-success', fileAction);
+    migration.events.emit('task-success', taskResult);
 
     migration.fs.writeFileSync(newFile.path, newFile.source);
-    return fileAction;
+
+    taskResults.push(taskResult);
   }
+
+  return { taskErrors, taskResults };
 };

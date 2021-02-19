@@ -15,7 +15,7 @@ import type { AfterHookFn } from './hooks';
 
 export type Pattern = string | string[];
 
-export type Options = { cwd: string };
+export type Options = { cwd: string; quiet: boolean };
 
 export type TaskType = 'transform' | 'rename' | 'remove' | 'create';
 
@@ -47,7 +47,33 @@ export type RegisterCreateTask = (
 
 export type RegisterAfterHook = (afterHook: AfterHookFn) => void;
 
-export type FileAction =
+export type TaskError =
+  | {
+      type: 'transform';
+      file: File;
+      task: Task;
+      error: Error;
+    }
+  | {
+      type: 'rename';
+      file: File;
+      task: Task;
+      error: Error;
+    }
+  | {
+      type: 'remove';
+      file: File;
+      task: Task;
+      error: Error;
+    }
+  | {
+      type: 'create';
+      file?: File;
+      task: Task;
+      error: Error;
+    };
+
+export type TaskResult =
   | {
       type: 'transform';
       originalFile: File;

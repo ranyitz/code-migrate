@@ -2,7 +2,7 @@ import arg from 'arg';
 import path from 'path';
 import chalk from 'chalk';
 import fs from 'fs-extra';
-import { runMigration } from './runMigration';
+import { runMigration } from '../runMigration';
 
 /**
  *
@@ -63,7 +63,7 @@ export const createCli = async ({
           --dry, -d       Dry-run mode, does not modify files
           --yes, -y       Skip all confirmation prompts. Useful in CI to automatically answer the confirmation prompt
           --cwd           Runs the migration on this directory [defaults to process.cwd()]
-          --quiet, -q     Runs on quite mode (does not print results)
+          --quiet, -q     Runs on quiet mode (does not print results)
       `);
 
     process.exit(0);
@@ -102,6 +102,6 @@ export const createCli = async ({
     migrationFilePath: migrationFileAbsolutePath,
     dry: !!args['--dry'],
     yes: !!args['--yes'],
-    quite: !!args['--quiet'],
+    quiet: !!args['--quiet'],
   });
 };

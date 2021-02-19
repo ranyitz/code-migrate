@@ -11,4 +11,11 @@ migrate('create', ({ create }) => {
       };
     }
   );
+
+  create('create bar.txt', () => {
+    return {
+      fileName: 'bar.txt',
+      source: 'baz\n',
+    };
+  });
 });

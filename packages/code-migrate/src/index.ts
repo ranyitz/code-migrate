@@ -1,3 +1,3 @@
 export * from './migrate';
 export * from './runMigration';
-export * from './createCli';
+export * from './cli/createCli';

@@ -1,14 +1,19 @@
-import type { FileAction, Task } from '../types';
+import type { TaskResult, Task, TaskError } from '../types';
 import { Migration } from '../Migration';
 import { runTransformTask } from './transformTask';
 import { runRenameTask } from './renameTask';
 import { runCreateTask } from './createTask';
 import { runRemoveTask } from './removeTask';
 
+type RunTaskReturnValue = {
+  taskResults: Array<TaskResult>;
+  taskErrors: Array<TaskError>;
+};
+
 export function runSingleTask(
   task: Task,
   migration: Migration
-): Array<FileAction> {
+): RunTaskReturnValue {
   let chosenRunTask: RunTask<any>;
 
   switch (task.type) {
@@ -44,4 +49,4 @@ export function runSingleTask(
 export type RunTask<T extends Task> = (
   task: T,
   migration: Migration
-) => Array<FileAction>;
+) => RunTaskReturnValue;

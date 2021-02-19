@@ -2,5 +2,5 @@ import { createCli } from './createCli';
 
 createCli({
   binName: 'migrate',
-  version: require('../package.json').version,
+  version: require('../../package.json').version,
 });

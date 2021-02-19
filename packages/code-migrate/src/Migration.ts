@@ -1,17 +1,18 @@
 import { runSingleTask } from './tasks/runTask';
-import { MigrationEmitter } from './MigrationEmitter';
+import { MigrationEmitter } from './events';
 import type {
   Options,
-  FileAction,
+  TaskResult,
   RegisterCreateTask,
   RegisterRemoveTask,
   RegisterRenameTask,
   RegisterTransformTask,
   RegisterAfterHook,
   Task,
+  TaskError,
 } from './types';
 import { isPattern } from './utils';
-import { reporter } from './reporter';
+import { defaultReporter, quietReporter } from './reporters';
 import { VirtualFileSystem } from './VirtualFileSystem';
 import { AfterHookFn } from './hooks';
 
@@ -27,20 +28,24 @@ export class Migration {
   options: Options;
   events: MigrationEmitter;
   fs: VirtualFileSystem;
-  instructions: Array<FileAction>;
+  results: Array<TaskResult>;
+  errors: Array<TaskError>;
   afterHooks: Array<AfterHookFn>;
 
   constructor(options: Options) {
     this.options = options;
     this.events = new MigrationEmitter(this);
     this.fs = new VirtualFileSystem({ cwd: options.cwd });
-    this.instructions = [];
+    this.results = [];
+    this.errors = [];
     this.afterHooks = [];
   }
 
   runTask(task: Task) {
-    this.events.emit('task-start', { task });
-    this.instructions.push(...runSingleTask(task, this));
+    const { taskErrors, taskResults } = runSingleTask(task, this);
+
+    this.results.push(...taskResults);
+    this.errors.push(...taskErrors);
   }
 
   transform: RegisterTransformTask = (title, pattern, transformFn) => {
@@ -91,23 +96,15 @@ You must supply a createFunction as the third argument`
     after: this.after,
   };
 
-  getMigrationInstructions(): FileAction[] {
-    return this.instructions;
-  }
-
   write() {
     this.fs.writeChangesToDisc();
-  }
-
-  run() {
-    this.write();
-
-    // run after write hooks
     this.afterHooks.forEach((fn) => fn());
   }
 
-  static create(options: Options): Migration {
+  static init(options: Options): Migration {
     const migration = new Migration(options);
+
+    const reporter = options.quiet ? quietReporter : defaultReporter;
 
     reporter(migration);
 

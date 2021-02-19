@@ -1,12 +1,8 @@
 import { isEqual } from 'lodash';
 import { File, getFiles } from '../File';
 import { RunTask } from './runTask';
-import { FileAction, Pattern } from '../types';
-import { isTruthy } from '../utils';
+import { TaskResult, Pattern, TaskError } from '../types';
 
-/**
- * filename
- */
 export type RenameReturnValue = string;
 
 export type RenameFn = ({
@@ -25,58 +21,60 @@ export type RenameTask = {
 export const runRenameTask: RunTask<RenameTask> = (task, migration) => {
   const files = getFiles(migration.options.cwd, task.pattern, migration);
 
-  const fileResults: Array<FileAction> = files
-    .map((file) => {
-      migration.events.emit('rename-start', { file, task });
+  let taskResults: Array<TaskResult> = [];
+  let taskErrors: Array<TaskError> = [];
 
-      let renamedFile: RenameReturnValue;
+  for (let file of files) {
+    migration.events.emit('task-start', { file, task });
 
-      try {
-        renamedFile = task.fn(file);
-      } catch (error) {
-        migration.events.emit('rename-fail', {
-          file,
-          error,
-          task,
-        });
+    let renamedFile: RenameReturnValue;
 
-        return null;
-      }
-
-      const newFile = new File({
-        cwd: migration.options.cwd,
-        fileName: renamedFile || file.fileName,
-        source: file.source,
-        migration,
-      });
-
-      const isRenamed = !isEqual(newFile.fileName, file.fileName);
-
-      if (isRenamed) {
-        migration.events.emit('rename-success-change', {
-          task,
-          originalFile: file,
-          newFile,
-        });
-
-        migration.fs.renameSync(file.path, newFile.path);
-
-        return {
-          type: task.type,
-          originalFile: file,
-          newFile,
-          task,
-        };
-      }
-
-      migration.events.emit('rename-success-noop', {
-        task,
+    try {
+      renamedFile = task.fn(file);
+    } catch (error) {
+      const taskError: TaskError = {
+        type: task.type,
         file,
-      });
+        error,
+        task,
+      };
 
-      return null;
-    })
-    .filter(isTruthy);
+      migration.events.emit('task-fail', taskError);
 
-  return fileResults;
+      taskErrors.push(taskError);
+      continue;
+    }
+
+    const newFile = new File({
+      cwd: migration.options.cwd,
+      fileName: renamedFile || file.fileName,
+      source: file.source,
+      migration,
+    });
+
+    const isRenamed = !isEqual(newFile.fileName, file.fileName);
+
+    if (isRenamed) {
+      const taskResult = {
+        task,
+        originalFile: file,
+        newFile,
+        type: task.type,
+      };
+
+      migration.events.emit('task-success', taskResult);
+
+      migration.fs.renameSync(file.path, newFile.path);
+
+      taskResults.push(taskResult);
+      continue;
+    }
+
+    migration.events.emit('task-noop', {
+      task,
+      file,
+    });
+  }
+
+  return { taskResults, taskErrors };
 };

@@ -2,7 +2,7 @@
 A framework for declaratively writing codebase migrations on JavaScript/NodeJS based projects.
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/11733036/99916433-de780180-2d12-11eb-8d5a-e0cf77c2dafc.gif" alt="code-migrate"/>
+  <img src="https://user-images.githubusercontent.com/11733036/108572011-0975ef80-731a-11eb-8c8f-203a7f4288c7.gif" alt="code-migrate"/>
 </p>
 
 ## Why
@@ -56,7 +56,7 @@ ______________
     --dry, -d       Dry-run mode, does not modify files
     --yes, -y       Skip all confirmation prompts
     --cwd           Runs the migration on this directory [defaults to process.cwd()]
-    --quiet, -q     Runs on quite mode (does not print results)
+    --quiet, -q     Runs on quiet mode (does not print results)
 ```
 ## Node API
 
@@ -100,10 +100,10 @@ migrate(
     );
 
     transform(
-      'remove "use-strict"; from all .js files',
+      'remove "use strict"; from all .js files',
       '**/*.js',
       ({ source }) => {
-        return source.replace(/("|')use-strict("|');?/, '');
+        return source.replace(/("|')use strict("|');?/, '');
       }
     );
 
@@ -277,7 +277,7 @@ testkit.test({ fixtures: string, title?: string })
 import { createTestkit } from 'code-migrate/testing';
 import path from 'path';
 
-createTestkit().test({
+createTestkit({ migrationFile: 'migration.ts' }).test({
   fixtures: __dirname,
   title: 'should rename foo.json to bar.json'
 });
