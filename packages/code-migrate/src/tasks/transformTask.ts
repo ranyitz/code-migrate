@@ -41,7 +41,7 @@ export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
       break;
     }
 
-    migration.events.emit('transform-start', { file, task });
+    migration.events.emit('task-start', { file, task });
 
     let transformedSource: TransformReturnValue;
 
@@ -53,13 +53,13 @@ export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
       });
     } catch (error) {
       const taskError: TaskError = {
-        originalFile: file,
+        file,
         type: task.type,
         task,
         error,
       };
 
-      migration.events.emit('transform-fail', taskError);
+      migration.events.emit('task-fail', taskError);
 
       taskErrors.push(taskError);
       continue;
@@ -91,7 +91,7 @@ export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
         task,
       };
 
-      migration.events.emit('transform-success', taskResult);
+      migration.events.emit('task-success', taskResult);
 
       taskResults.push(taskResult);
       continue;

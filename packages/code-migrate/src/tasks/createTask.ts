@@ -40,7 +40,7 @@ export const runCreateTask: RunTask<CreateTask> = (task, migration) => {
         error,
       };
 
-      migration.events.emit('create-fail', taskError);
+      migration.events.emit('task-fail', taskError);
 
       taskErrors.push(taskError);
     }
@@ -48,7 +48,7 @@ export const runCreateTask: RunTask<CreateTask> = (task, migration) => {
     const files = getFiles(migration.options.cwd, task.pattern, migration);
 
     for (let file of files) {
-      migration.events.emit('create-start', { file, task });
+      migration.events.emit('task-start', { file, task });
 
       try {
         const createdFile = task.fn({
@@ -64,7 +64,7 @@ export const runCreateTask: RunTask<CreateTask> = (task, migration) => {
           error,
         };
 
-        migration.events.emit('create-fail', taskError);
+        migration.events.emit('task-fail', taskError);
 
         taskErrors.push(taskError);
       }
@@ -72,7 +72,7 @@ export const runCreateTask: RunTask<CreateTask> = (task, migration) => {
 
     for (let createdFile of createdFiles) {
       if (isNull(createdFile)) {
-        migration.events.emit('create-success-cancle', { task });
+        migration.events.emit('create-success-abort', { task });
         continue;
       }
 
@@ -116,7 +116,7 @@ export const runCreateTask: RunTask<CreateTask> = (task, migration) => {
         migration.events.emit('create-success-override', taskResult);
       }
 
-      migration.events.emit('create-success', taskResult);
+      migration.events.emit('task-success', taskResult);
 
       migration.fs.writeFileSync(newFile.path, newFile.source);
 

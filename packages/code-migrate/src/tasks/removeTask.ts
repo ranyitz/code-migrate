@@ -25,7 +25,7 @@ export const runRemoveTask: RunTask<RemoveTask> = (task, migration) => {
   const taskResults: Array<TaskResult> = [];
 
   for (let file of files) {
-    migration.events.emit('remove-start', { file, task });
+    migration.events.emit('task-start', { file, task });
 
     if (!file.exists) {
       migration.events.emit('remove-success-noop', {
@@ -38,9 +38,10 @@ export const runRemoveTask: RunTask<RemoveTask> = (task, migration) => {
 
     if (task.fn) task.fn(file);
 
-    migration.events.emit('remove-success', {
+    migration.events.emit('task-success', {
       task,
       file,
+      type: task.type,
     });
 
     migration.fs.removeSync(file.path);

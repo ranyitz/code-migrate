@@ -50,13 +50,13 @@ export type RegisterAfterHook = (afterHook: AfterHookFn) => void;
 export type TaskError =
   | {
       type: 'transform';
-      originalFile: File;
+      file: File;
       task: Task;
       error: Error;
     }
   | {
       type: 'rename';
-      originalFile: File;
+      file: File;
       task: Task;
       error: Error;
     }
@@ -68,7 +68,7 @@ export type TaskError =
     }
   | {
       type: 'create';
-      originalFile?: File;
+      file?: File;
       task: Task;
       error: Error;
     };

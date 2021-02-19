@@ -25,7 +25,7 @@ export const runRenameTask: RunTask<RenameTask> = (task, migration) => {
   let taskErrors: Array<TaskError> = [];
 
   for (let file of files) {
-    migration.events.emit('rename-start', { file, task });
+    migration.events.emit('task-start', { file, task });
 
     let renamedFile: RenameReturnValue;
 
@@ -34,12 +34,12 @@ export const runRenameTask: RunTask<RenameTask> = (task, migration) => {
     } catch (error) {
       const taskError: TaskError = {
         type: task.type,
-        originalFile: file,
+        file,
         error,
         task,
       };
 
-      migration.events.emit('rename-fail', taskError);
+      migration.events.emit('task-fail', taskError);
 
       taskErrors.push(taskError);
       continue;
@@ -62,7 +62,7 @@ export const runRenameTask: RunTask<RenameTask> = (task, migration) => {
         type: task.type,
       };
 
-      migration.events.emit('rename-success', taskResult);
+      migration.events.emit('task-success', taskResult);
 
       migration.fs.renameSync(file.path, newFile.path);
 

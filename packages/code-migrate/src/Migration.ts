@@ -1,5 +1,5 @@
 import { runSingleTask } from './tasks/runTask';
-import { MigrationEmitter, aggregateEvents } from './events';
+import { MigrationEmitter } from './events';
 import type {
   Options,
   TaskResult,
@@ -39,7 +39,6 @@ export class Migration {
   }
 
   runTask(task: Task) {
-    this.events.emit('task-start', { task });
     this.instructions.push(...runSingleTask(task, this).taskResults);
   }
 
@@ -102,8 +101,6 @@ You must supply a createFunction as the third argument`
 
   static init(options: Options): Migration {
     const migration = new Migration(options);
-
-    aggregateEvents(migration);
 
     const reporter = options.quiet ? quietReporter : defaultReporter;
 
