@@ -56,7 +56,7 @@ ______________
     --dry, -d       Dry-run mode, does not modify files
     --yes, -y       Skip all confirmation prompts
     --cwd           Runs the migration on this directory [defaults to process.cwd()]
-    --quiet, -q     Runs on quite mode (does not print results)
+    --quiet, -q     Runs on quiet mode (does not print results)
 ```
 ## Node API
 

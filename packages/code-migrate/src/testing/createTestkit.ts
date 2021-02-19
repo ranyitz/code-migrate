@@ -94,10 +94,10 @@ export class MigrationTestkit {
         stdio: 'inherit',
       });
     } else {
-      const migration = Migration.create({ cwd: workingDir });
+      const migration = Migration.init({ cwd: workingDir, quiet: true });
       await loadUserMigrationFile(migration, migrationFile);
 
-      migration.run();
+      migration.write();
     }
 
     const expectedFiles = globby.sync('**/*', {

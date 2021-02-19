@@ -1,7 +1,7 @@
 import { isEqual, isObject } from 'lodash';
 import { File, getFiles } from '../File';
 import { RunTask } from './runTask';
-import { FileAction, Pattern } from '../types';
+import { TaskResult, TaskError, Pattern } from '../types';
 import { strigifyJson } from '../utils';
 
 type TransformReturnValue = string | Record<string, any>;
@@ -31,7 +31,8 @@ export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
     aborted = true;
   };
 
-  let fileResults: Array<FileAction> = [];
+  let taskResults: Array<TaskResult> = [];
+  let taskErrors: Array<TaskError> = [];
 
   for (let file of files) {
     // We let the user control this callback
@@ -51,11 +52,16 @@ export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
         abort,
       });
     } catch (error) {
-      migration.events.emit('transform-fail', {
-        file,
-        error,
+      const taskError: TaskError = {
+        originalFile: file,
+        type: task.type,
         task,
-      });
+        error,
+      };
+
+      migration.events.emit('transform-fail', taskError);
+
+      taskErrors.push(taskError);
       continue;
     }
 
@@ -78,16 +84,16 @@ export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
     const isModified = isRenamed || !isEqual(newFile.source, file.source);
 
     if (isModified) {
-      const fileAction = {
+      const taskResult = {
         originalFile: file,
         newFile,
         type: task.type,
         task,
       };
 
-      migration.events.emit('transform-success-change', fileAction);
+      migration.events.emit('transform-success', taskResult);
 
-      fileResults.push(fileAction);
+      taskResults.push(taskResult);
       continue;
     }
 
@@ -98,20 +104,17 @@ export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
   }
 
   if (aborted) {
-    return [];
+    return { taskErrors: [], taskResults: [] };
   }
 
-  fileResults.forEach((fileAction) => {
-    if (fileAction.type !== 'transform') {
+  taskResults.forEach((result) => {
+    if (result.type !== 'transform') {
       throw new Error('wrong action type');
     }
 
-    migration.fs.removeSync(fileAction.originalFile.path);
-    migration.fs.writeFileSync(
-      fileAction.newFile.path,
-      fileAction.newFile.source
-    );
+    migration.fs.removeSync(result.originalFile.path);
+    migration.fs.writeFileSync(result.newFile.path, result.newFile.source);
   });
 
-  return fileResults;
+  return { taskResults, taskErrors };
 };

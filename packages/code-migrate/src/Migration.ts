@@ -1,8 +1,8 @@
 import { runSingleTask } from './tasks/runTask';
-import { MigrationEmitter } from './MigrationEmitter';
+import { MigrationEmitter, aggregateEvents } from './events';
 import type {
   Options,
-  FileAction,
+  TaskResult,
   RegisterCreateTask,
   RegisterRemoveTask,
   RegisterRenameTask,
@@ -11,7 +11,7 @@ import type {
   Task,
 } from './types';
 import { isPattern } from './utils';
-import { reporter } from './reporter';
+import { defaultReporter, quietReporter } from './reporters';
 import { VirtualFileSystem } from './VirtualFileSystem';
 import { AfterHookFn } from './hooks';
 
@@ -27,7 +27,7 @@ export class Migration {
   options: Options;
   events: MigrationEmitter;
   fs: VirtualFileSystem;
-  instructions: Array<FileAction>;
+  instructions: Array<TaskResult>;
   afterHooks: Array<AfterHookFn>;
 
   constructor(options: Options) {
@@ -40,7 +40,7 @@ export class Migration {
 
   runTask(task: Task) {
     this.events.emit('task-start', { task });
-    this.instructions.push(...runSingleTask(task, this));
+    this.instructions.push(...runSingleTask(task, this).taskResults);
   }
 
   transform: RegisterTransformTask = (title, pattern, transformFn) => {
@@ -91,23 +91,21 @@ You must supply a createFunction as the third argument`
     after: this.after,
   };
 
-  getMigrationInstructions(): FileAction[] {
+  getMigrationInstructions(): TaskResult[] {
     return this.instructions;
   }
 
   write() {
     this.fs.writeChangesToDisc();
-  }
-
-  run() {
-    this.write();
-
-    // run after write hooks
     this.afterHooks.forEach((fn) => fn());
   }
 
-  static create(options: Options): Migration {
+  static init(options: Options): Migration {
     const migration = new Migration(options);
+
+    aggregateEvents(migration);
+
+    const reporter = options.quiet ? quietReporter : defaultReporter;
 
     reporter(migration);
 

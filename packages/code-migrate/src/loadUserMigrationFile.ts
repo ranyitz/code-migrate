@@ -17,12 +17,7 @@ export const loadUserMigrationFile = async (
   return new Promise((resolve) => {
     // Load user's migration file
     const migrate: Migrate = async (title, fn) => {
-      if (process.env.NODE_ENV !== 'test') {
-        console.log(`${chalk.cyan('Running:')} ~ ${title} ~`);
-        console.log(
-          `${chalk.cyan('Directory:')} ${path.basename(migration.options.cwd)}`
-        );
-      }
+      migration.events.emit('migration-start', { title, migration });
 
       await fn(migration.registerMethods, {
         ...migration.options,

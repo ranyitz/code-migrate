@@ -1,22 +1,23 @@
-import chalk from 'chalk';
 import prompts from 'prompts';
 import { Migration } from './Migration';
-import { createReport } from './createReport';
 import { loadUserMigrationFile } from './loadUserMigrationFile';
 import { isEmpty } from 'lodash';
+import type { TaskResult } from './types';
+
+export type Results = { taskResults: TaskResult[]; options: { dry: boolean } };
 
 type RunMigration = ({
   cwd,
   migrationFilePath,
   dry,
   yes,
-  quite,
+  quiet,
 }: {
   cwd: string;
   migrationFilePath: string;
   dry: boolean;
   yes: boolean;
-  quite: boolean;
+  quiet: boolean;
 }) => Promise<void>;
 
 /**
@@ -26,7 +27,7 @@ type RunMigration = ({
  * @param options.dry dry run mode
  * @param options.yes do not prompt the user with confirmation
  * Run a migration
- * @param options.quite runs on quite mode (does not print the result)
+ * @param options.quiet runs on quiet mode (does not print the result)
  *
  */
 export const runMigration: RunMigration = async ({
@@ -34,34 +35,29 @@ export const runMigration: RunMigration = async ({
   migrationFilePath,
   dry,
   yes,
-  quite,
+  quiet,
 }) => {
-  const migration = Migration.create({ cwd });
+  const migration = Migration.init({ cwd, quiet });
+  const { events } = migration;
 
   await loadUserMigrationFile(migration, migrationFilePath);
 
-  const fileActions = migration.getMigrationInstructions();
+  const taskResults = migration.getMigrationInstructions();
 
-  if (!quite) {
-    if (dry) {
-      console.log(chalk.bold('dry-run mode, no files will be modified'));
-      console.log();
-      console.log(createReport(fileActions));
+  const results: Results = { taskResults, options: { dry } };
 
-      process.exit(0);
-    }
+  events.emit('migration-after-run', results);
 
-    console.log();
-    console.log(createReport(fileActions));
-  }
-
-  if (isEmpty(fileActions)) {
+  if (dry) {
     process.exit(0);
   }
 
-  if (!yes && !quite) {
-    // space the prompt
-    console.log();
+  if (isEmpty(taskResults)) {
+    process.exit(0);
+  }
+
+  if (!yes) {
+    events.emit('migration-before-prompt');
     const response = await prompts({
       type: 'confirm',
       name: 'value',
@@ -70,16 +66,14 @@ export const runMigration: RunMigration = async ({
     });
 
     if (!response.value) {
-      console.log('');
-      console.log(chalk.red('Migration aborted'));
+      events.emit('migration-after-prompt-aborted');
       process.exit(1);
     }
+
+    events.emit('migration-after-prompt-confirmed');
   }
 
-  migration.run();
+  migration.write();
 
-  if (!quite) {
-    console.log();
-    console.log(chalk.green('The migration was done successfully 🎉'));
-  }
+  events.emit('migration-after-write');
 };

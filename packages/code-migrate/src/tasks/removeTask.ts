@@ -1,7 +1,6 @@
 import { getFiles } from '../File';
 import { RunTask } from './runTask';
-import { FileAction, Pattern } from '../types';
-import { isTruthy } from '../utils';
+import { TaskResult, Pattern } from '../types';
 
 export type RemoveReturnValue = { fileName?: string };
 
@@ -23,34 +22,31 @@ export type RemoveTask = {
 export const runRemoveTask: RunTask<RemoveTask> = (task, migration) => {
   const files = getFiles(migration.options.cwd, task.pattern, migration);
 
-  const fileResults: Array<FileAction> = files
-    .map((file) => {
-      migration.events.emit('remove-start', { file, task });
+  const taskResults: Array<TaskResult> = [];
 
-      if (!file.exists) {
-        migration.events.emit('remove-success-noop', {
-          task,
-          file,
-        });
+  for (let file of files) {
+    migration.events.emit('remove-start', { file, task });
 
-        return null;
-      }
-
-      if (task.fn) task.fn(file);
-
-      migration.events.emit('remove-success', {
+    if (!file.exists) {
+      migration.events.emit('remove-success-noop', {
         task,
         file,
       });
 
-      migration.fs.removeSync(file.path);
-      return {
-        type: task.type,
-        file,
-        task,
-      };
-    })
-    .filter(isTruthy);
+      continue;
+    }
 
-  return fileResults;
+    if (task.fn) task.fn(file);
+
+    migration.events.emit('remove-success', {
+      task,
+      file,
+    });
+
+    migration.fs.removeSync(file.path);
+    const taskResult = { type: task.type, file, task };
+    taskResults.push(taskResult);
+  }
+
+  return { taskResults, taskErrors: [] };
 };
