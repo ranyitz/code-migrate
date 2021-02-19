@@ -91,6 +91,7 @@ export class VirtualFileSystem implements FileSystemAdapter {
 
     return removed;
   }
+
   writeFileSync(path: string, data: string): void {
     const file = this.getFile(path);
     file.data = data;
@@ -104,6 +105,7 @@ export class VirtualFileSystem implements FileSystemAdapter {
     file.action = 'remove';
   }
 
+  // @ts-expect-error - options type is too big
   lstatSync(path: PathLike): Stats {
     path = path.toString();
 
