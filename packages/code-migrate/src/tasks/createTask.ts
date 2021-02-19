@@ -69,59 +69,59 @@ export const runCreateTask: RunTask<CreateTask> = (task, migration) => {
         taskErrors.push(taskError);
       }
     }
+  }
 
-    for (let createdFile of createdFiles) {
-      if (isNull(createdFile)) {
-        migration.events.emit('create-success-abort', { task });
-        continue;
-      }
-
-      if (!createdFile.fileName) {
-        throw new Error(
-          'the return value of a create function needs to contain an object with { fileName: <string> }'
-        );
-      }
-
-      if (isUndefined(createdFile.source)) {
-        throw new Error(
-          'the return value of a create function needs to contain an object with { source: <string> }'
-        );
-      }
-
-      const originalFile = new File({
-        cwd: migration.options.cwd,
-        fileName: createdFile.fileName,
-        migration,
-      });
-
-      const newFile = new File({
-        cwd: migration.options.cwd,
-        fileName: createdFile.fileName,
-        source: createdFile.source,
-        migration,
-      });
-
-      const taskResult: TaskResult = {
-        newFile,
-        type: task.type,
-        task,
-      };
-
-      if (originalFile.exists) {
-        // Add the original File to mark that the file exists
-
-        taskResult.originalFile = originalFile;
-
-        // @ts-expect-error - we know that originalFile exists here
-        migration.events.emit('create-success-override', taskResult);
-      }
-
-      migration.events.emit('task-success', taskResult);
-
-      migration.fs.writeFileSync(newFile.path, newFile.source);
-
-      taskResults.push(taskResult);
+  for (let createdFile of createdFiles) {
+    if (isNull(createdFile)) {
+      migration.events.emit('create-success-abort', { task });
+      continue;
     }
+
+    if (!createdFile.fileName) {
+      throw new Error(
+        'the return value of a create function needs to contain an object with { fileName: <string> }'
+      );
+    }
+
+    if (isUndefined(createdFile.source)) {
+      throw new Error(
+        'the return value of a create function needs to contain an object with { source: <string> }'
+      );
+    }
+
+    const originalFile = new File({
+      cwd: migration.options.cwd,
+      fileName: createdFile.fileName,
+      migration,
+    });
+
+    const newFile = new File({
+      cwd: migration.options.cwd,
+      fileName: createdFile.fileName,
+      source: createdFile.source,
+      migration,
+    });
+
+    const taskResult: TaskResult = {
+      newFile,
+      type: task.type,
+      task,
+    };
+
+    if (originalFile.exists) {
+      // Add the original File to mark that the file exists
+
+      taskResult.originalFile = originalFile;
+
+      // @ts-expect-error - we know that originalFile exists here
+      migration.events.emit('create-success-override', taskResult);
+    }
+
+    migration.events.emit('task-success', taskResult);
+
+    migration.fs.writeFileSync(newFile.path, newFile.source);
+
+    taskResults.push(taskResult);
   }
 
   return { taskErrors, taskResults };
