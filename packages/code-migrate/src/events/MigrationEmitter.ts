@@ -9,14 +9,6 @@ interface MigrationEvents {
   ['task-start']: ({ file, task }: { file: File; task: Task }) => void;
   ['task-fail']: (taskError: TaskError) => void;
   ['task-success']: (taskResult: TaskResult) => void;
-  ['transform-success-noop']: ({
-    file,
-    task,
-  }: {
-    file: File;
-    task: Task;
-  }) => void;
-  ['rename-success-noop']: ({ file, task }: { file: File; task: Task }) => void;
   ['create-success-abort']: ({ task }: { task: Task }) => void;
   ['create-success-override']: ({
     originalFile,
@@ -27,7 +19,7 @@ interface MigrationEvents {
     newFile: File;
     task: Task;
   }) => void;
-  ['remove-success-noop']: ({ file, task }: { file: File; task: Task }) => void;
+  ['task-noop']: ({ file, task }: { file: File; task: Task }) => void;
   ['migration-start']: ({
     title,
     migration,

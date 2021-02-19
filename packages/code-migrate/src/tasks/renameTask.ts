@@ -70,7 +70,7 @@ export const runRenameTask: RunTask<RenameTask> = (task, migration) => {
       continue;
     }
 
-    migration.events.emit('rename-success-noop', {
+    migration.events.emit('task-noop', {
       task,
       file,
     });

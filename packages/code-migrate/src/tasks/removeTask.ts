@@ -28,7 +28,7 @@ export const runRemoveTask: RunTask<RemoveTask> = (task, migration) => {
     migration.events.emit('task-start', { file, task });
 
     if (!file.exists) {
-      migration.events.emit('remove-success-noop', {
+      migration.events.emit('task-noop', {
         task,
         file,
       });

@@ -97,7 +97,7 @@ export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
       continue;
     }
 
-    migration.events.emit('transform-success-noop', {
+    migration.events.emit('task-noop', {
       task,
       file,
     });
