@@ -1,30 +1,59 @@
-import { red, blue, green, yellow, underline, bold } from 'chalk';
-import { TaskError, TaskResult } from '../types';
+import {
+  red,
+  blue,
+  green,
+  yellow,
+  underline,
+  bold,
+  magenta,
+  supportsColor,
+  reset,
+} from 'chalk';
+import { TaskError, TaskResult, TaskType } from '../types';
 import { groupBy, isEmpty } from 'lodash';
 import { Migration } from '../Migration';
+
+const ERROR_TEXT = 'ERROR';
+const PASS_TEXT = 'PASS';
+
+const ERROR = supportsColor
+  ? reset.inverse.bold.red(` ${ERROR_TEXT} `)
+  : ERROR_TEXT;
+
+const PASS = supportsColor
+  ? reset.inverse.bold.green(` ${PASS_TEXT} `)
+  : PASS_TEXT;
+
+// const styleTaskType = (taskType: TaskType) => {
+//   switch (taskType) {
+//     case 'transform':
+//       return blue('transform');
+//     case 'create':
+//       return green('create');
+//     case 'remove':
+//       return magenta('remove');
+//     case 'rename':
+//       return yellow('rename');
+//   }
+// };
 
 export const formatSingleTaskResult = (taskResult: TaskResult) => {
   switch (taskResult.type) {
     case 'transform': {
-      const { newFile } = taskResult;
-
-      return `${blue('transform:')} ${newFile.fileName}`;
+      return `${PASS} ${taskResult.newFile.fileName}`;
     }
 
     case 'create': {
-      const { newFile } = taskResult;
-      return `${green('create:')} ${newFile.fileName}`;
+      return `${PASS} ${taskResult.newFile.fileName}`;
     }
 
     case 'remove': {
-      return `${red('remove:')} ${taskResult.file.fileName}`;
+      return `${PASS} ${taskResult.file.fileName}`;
     }
 
     case 'rename': {
       const { originalFile, newFile } = taskResult;
-      return `${yellow('rename:')} ${originalFile.fileName} -> ${
-        newFile.fileName
-      }`;
+      return `${PASS} ${originalFile.fileName} -> ${newFile.fileName}`;
     }
 
     default: {
@@ -34,16 +63,12 @@ export const formatSingleTaskResult = (taskResult: TaskResult) => {
   }
 };
 export const formatSingleTaskError = (taskError: TaskError) => {
-  return `${red('X')} ${taskError.type}: ${taskError.file?.fileName}
+  return `${ERROR} ${taskError.file?.fileName}
 
 ${taskError.error.stack}`;
 };
 
 export const createReport = (migration: Migration) => {
-  if (isEmpty(migration.results)) {
-    return blue('🤷‍♂️ the migration passed without changes');
-  }
-
   const output = [];
 
   for (const [taskTitle, taskResults] of Object.entries(
@@ -57,7 +82,7 @@ export const createReport = (migration: Migration) => {
   }
 
   if (migration.errors.length > 0) {
-    output.push(red(underline('Errors')));
+    output.push(red(underline(`Errors`)));
 
     for (const [taskTitle, taskErrors] of Object.entries(
       groupBy(migration.errors, 'task.title')
@@ -68,6 +93,10 @@ export const createReport = (migration: Migration) => {
           taskErrors.map(formatSingleTaskError).join('\n')
       );
     }
+  }
+
+  if (isEmpty(migration.results)) {
+    output.push(blue('🤷‍♂️ No changes have been made'));
   }
 
   return output.join('\n\n');
