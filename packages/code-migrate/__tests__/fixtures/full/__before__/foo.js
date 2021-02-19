@@ -1,4 +1,5 @@
 'use strict';
+/* eslint-disable */
 myFunction();
 
 function myFunction() {

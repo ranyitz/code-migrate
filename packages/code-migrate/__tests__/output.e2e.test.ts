@@ -45,7 +45,8 @@ describe('output', () => {
     expect(output).toMatch('🏃‍ Running: transform');
     expect(output).toMatch('📁 On:');
     expect(output).toMatch('transform bar to baz in json contents');
-    expect(output).toMatch('PASS  baz.json');
+    expect(output).toMatch('PASS');
+    expect(output).toMatch('baz.json');
     expect(output).toMatch('The migration was done successfully 🎉');
   });
 
@@ -61,7 +62,8 @@ describe('output', () => {
       '⚠️  The following migration tasks were failed, but you can still migrate the rest ⚠️'
     );
 
-    expect(output).toMatch('ERROR  baz.json');
+    expect(output).toMatch('ERROR');
+    expect(output).toMatch('baz.json');
     expect(output).toMatch(
       'SyntaxError: Unexpected token } in JSON at position 18'
     );

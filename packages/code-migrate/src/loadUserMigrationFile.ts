@@ -1,5 +1,4 @@
 import path from 'path';
-import chalk from 'chalk';
 import { register as tsNodeRegister } from 'ts-node';
 import importFresh from 'import-fresh';
 import { Migration } from './Migration';
