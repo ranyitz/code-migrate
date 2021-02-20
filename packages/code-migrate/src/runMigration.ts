@@ -9,12 +9,14 @@ type RunMigration = ({
   dry,
   yes,
   quiet,
+  reportFile,
 }: {
   cwd: string;
   migrationFilePath: string;
   dry: boolean;
   yes: boolean;
   quiet: boolean;
+  reportFile: string | undefined;
 }) => Promise<void>;
 
 /**
@@ -25,6 +27,7 @@ type RunMigration = ({
  * @param options.yes do not prompt the user with confirmation
  * Run a migration
  * @param options.quiet runs on quiet mode (does not print the result)
+ * @param options.reportFile Create a markdown report and output it to a file
  *
  */
 export const runMigration: RunMigration = async ({
@@ -33,13 +36,17 @@ export const runMigration: RunMigration = async ({
   dry,
   yes,
   quiet,
+  reportFile,
 }) => {
   const migration = Migration.init({ cwd, quiet });
   const { events } = migration;
 
   await loadUserMigrationFile(migration, migrationFilePath);
 
-  events.emit('migration-after-run', { migration, options: { dry } });
+  events.emit('migration-after-run', {
+    migration,
+    options: { dry, reportFile },
+  });
 
   if (dry) {
     process.exit(0);

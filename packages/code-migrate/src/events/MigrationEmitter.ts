@@ -19,19 +19,13 @@ interface MigrationEvents {
     task: Task;
   }) => void;
   ['task-noop']: ({ file, task }: { file: File; task: Task }) => void;
-  ['migration-start']: ({
-    title,
-    migration,
-  }: {
-    title: string;
-    migration: Migration;
-  }) => void;
+  ['migration-start']: ({ migration }: { migration: Migration }) => void;
   ['migration-after-run']: ({
     migration,
     options,
   }: {
     migration: Migration;
-    options: { dry: boolean };
+    options: { dry: boolean; reportFile: string | undefined };
   }) => void;
   ['migration-after-write']: () => void;
   ['migration-after-prompt-aborted']: () => void;

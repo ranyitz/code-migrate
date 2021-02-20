@@ -31,8 +31,10 @@ export class Migration {
   results: Array<TaskResult>;
   errors: Array<TaskError>;
   afterHooks: Array<AfterHookFn>;
+  title: string | null;
 
   constructor(options: Options) {
+    this.title = null;
     this.options = options;
     this.events = new MigrationEmitter(this);
     this.fs = new VirtualFileSystem({ cwd: options.cwd });

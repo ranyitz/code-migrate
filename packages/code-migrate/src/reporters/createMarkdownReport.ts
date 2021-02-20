@@ -1,36 +1,24 @@
-import { red, blue, underline, bold, supportsColor, reset } from 'chalk';
 import { TaskError, TaskResult } from '../types';
 import { groupBy, isEmpty } from 'lodash';
 import { Migration } from '../Migration';
 
-const ERROR_TEXT = 'ERROR';
-const PASS_TEXT = 'PASS';
-
-const ERROR = supportsColor
-  ? reset.inverse.bold.red(` ${ERROR_TEXT} `)
-  : ERROR_TEXT;
-
-const PASS = supportsColor
-  ? reset.inverse.bold.green(` ${PASS_TEXT} `)
-  : PASS_TEXT;
-
 export const formatSingleTaskResult = (taskResult: TaskResult) => {
   switch (taskResult.type) {
     case 'transform': {
-      return `${PASS} ${taskResult.newFile.fileName}`;
+      return `${taskResult.newFile.fileName}`;
     }
 
     case 'create': {
-      return `${PASS} ${taskResult.newFile.fileName}`;
+      return `${taskResult.newFile.fileName}`;
     }
 
     case 'remove': {
-      return `${PASS} ${taskResult.file.fileName}`;
+      return `${taskResult.file.fileName}`;
     }
 
     case 'rename': {
       const { originalFile, newFile } = taskResult;
-      return `${PASS} ${originalFile.fileName} -> ${newFile.fileName}`;
+      return `${originalFile.fileName} -> ${newFile.fileName}`;
     }
 
     default: {
@@ -41,38 +29,38 @@ export const formatSingleTaskResult = (taskResult: TaskResult) => {
 };
 
 export const formatSingleTaskError = (taskError: TaskError) => {
-  return `${ERROR} ${taskError.file?.fileName}
-
-${taskError.error.stack}`;
+  return `**ERROR** \`${taskError.file?.fileName}\`
+\`\`\`
+${taskError.error.stack}
+\`\`\``;
 };
 
-export const createReport = (migration: Migration) => {
+export const createMarkdownReport = (migration: Migration) => {
   const output = [];
+
+  output.push(`## ${migration.title}
+> ${migration.options.cwd}`);
 
   for (const [taskTitle, taskResults] of Object.entries(
     groupBy(migration.results, 'task.title')
   )) {
     output.push(
-      underline(bold(taskTitle)) +
+      `#### ${taskTitle}` +
         '\n' +
-        taskResults.map(formatSingleTaskResult).join('\n')
+        '```\n' +
+        taskResults.map(formatSingleTaskResult).join('\n') +
+        '\n```'
     );
   }
 
   if (migration.errors.length > 0) {
-    output.push(
-      '⚠️  ' +
-        red(
-          `The following migration tasks were failed, but you can still migrate the rest` +
-            ' ⚠️'
-        )
-    );
+    output.push('### ⚠️  ' + `The following migration tasks were failed`);
 
     for (const [taskTitle, taskErrors] of Object.entries(
       groupBy(migration.errors, 'task.title')
     )) {
       output.push(
-        underline(bold(taskTitle)) +
+        `#### ${taskTitle}` +
           '\n' +
           taskErrors.map(formatSingleTaskError).join('\n')
       );
@@ -80,7 +68,7 @@ export const createReport = (migration: Migration) => {
   }
 
   if (isEmpty(migration.results)) {
-    output.push(blue('🤷‍ No changes have been made'));
+    output.push('**🤷‍ No changes have been made**');
   }
 
   return output.join('\n\n');

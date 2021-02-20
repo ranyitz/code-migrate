@@ -16,7 +16,8 @@ export const loadUserMigrationFile = async (
   return new Promise((resolve) => {
     // Load user's migration file
     const migrate: Migrate = async (title, fn) => {
-      migration.events.emit('migration-start', { title, migration });
+      migration.title = title;
+      migration.events.emit('migration-start', { migration });
 
       await fn(migration.registerMethods, {
         ...migration.options,
