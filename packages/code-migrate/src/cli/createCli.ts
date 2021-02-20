@@ -53,7 +53,7 @@ export const createCli = async ({
 
   const migrationFile = customMigrationFile || args._[0];
 
-  if (!migrationFile && args['--help']) {
+  if (args['--help']) {
     console.log(`
         Usage
           $ ${binName}${migrationFile ? '' : ' <path/to/migration.ts>'}

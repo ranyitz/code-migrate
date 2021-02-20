@@ -9,10 +9,4 @@ export const quietReporter = ({ events }: Migration): void => {
     console.error();
     console.error(error);
   });
-
-  events.on('migration-after-run', ({ migration, options: { reportFile } }) => {
-    if (reportFile) {
-      writeReportFile(migration, reportFile);
-    }
-  });
 };

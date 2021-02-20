@@ -2,6 +2,7 @@ import prompts from 'prompts';
 import { Migration } from './Migration';
 import { loadUserMigrationFile } from './loadUserMigrationFile';
 import { isEmpty } from 'lodash';
+import { writeReportFile } from './reporters/writeReportFile';
 
 type RunMigration = ({
   cwd,
@@ -48,15 +49,11 @@ export const runMigration: RunMigration = async ({
     options: { dry, reportFile },
   });
 
-  if (dry) {
-    process.exit(0);
-  }
-
   if (isEmpty(migration.results)) {
     process.exit(0);
   }
 
-  if (!yes) {
+  if (!yes && !dry) {
     events.emit('migration-before-prompt');
     const response = await prompts({
       type: 'confirm',
@@ -73,7 +70,12 @@ export const runMigration: RunMigration = async ({
     events.emit('migration-after-prompt-confirmed');
   }
 
-  migration.write();
+  if (!dry) {
+    migration.write();
+    events.emit('migration-after-write');
+  }
 
-  events.emit('migration-after-write');
+  if (reportFile) {
+    writeReportFile(migration, reportFile);
+  }
 };

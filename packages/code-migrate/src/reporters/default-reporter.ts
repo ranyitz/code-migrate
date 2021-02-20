@@ -11,22 +11,15 @@ export const defaultReporter = (migration: Migration): void => {
     console.log(`${cyan('📁 On:')} ${migration.options.cwd}`);
   });
 
-  events.on(
-    'migration-after-run',
-    ({ migration, options: { dry, reportFile } }) => {
-      if (dry) {
-        console.log(bold('dry-run mode, no files will be modified'));
-        console.log();
-      }
-
+  events.on('migration-after-run', ({ migration, options: { dry } }) => {
+    if (dry) {
+      console.log(bold('dry-run mode, no files will be modified'));
       console.log();
-      console.log(createReport(migration));
-
-      if (reportFile) {
-        writeReportFile(migration, reportFile);
-      }
     }
-  );
+
+    console.log();
+    console.log(createReport(migration));
+  });
 
   events.on('migration-before-prompt', () => {
     // space the prompt
