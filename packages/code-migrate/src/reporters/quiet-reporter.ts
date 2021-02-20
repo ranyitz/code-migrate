@@ -1,6 +1,5 @@
 import { red } from 'chalk';
 import { Migration } from '../Migration';
-import { writeReportFile } from './writeReportFile';
 
 export const quietReporter = ({ events }: Migration): void => {
   events.on('task-fail', ({ error, task, file }) => {
