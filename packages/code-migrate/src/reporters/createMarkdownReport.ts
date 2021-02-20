@@ -5,15 +5,15 @@ import { Migration } from '../Migration';
 export const formatSingleTaskResult = (taskResult: TaskResult) => {
   switch (taskResult.type) {
     case 'transform': {
-      return `${taskResult.newFile.fileName}`;
+      return taskResult.newFile.fileName;
     }
 
     case 'create': {
-      return `${taskResult.newFile.fileName}`;
+      return taskResult.newFile.fileName;
     }
 
     case 'remove': {
-      return `${taskResult.file.fileName}`;
+      return taskResult.file.fileName;
     }
 
     case 'rename': {
