@@ -1,8 +1,18 @@
-# 🎒 Code Migrate
-A framework for declaratively writing codebase migrations on JavaScript/NodeJS based projects.
-
+<h1 align="center">🎒 Code Migrate</h1>
+<p align="center">A framework for declaratively writing codebase migrations on JavaScript/NodeJS based projects</p>
 <p align="center">
   <img src="https://user-images.githubusercontent.com/11733036/108572011-0975ef80-731a-11eb-8c8f-203a7f4288c7.gif" alt="code-migrate"/>
+</p>
+<p align="center">
+  <a href="https://github.com/ranyitz/code-migrate/actions/workflows/node.js.yml">
+   <img src="https://img.shields.io/github/workflow/status/ranyitz/code-migrate/Node.js%20CI?style=for-the-badge" alt="Build Status" />
+  </a>
+  <a aria-label="NPM version" href="https://www.npmjs.com/package/code-migrate">
+    <img alt="NPM version" src="https://img.shields.io/npm/v/code-migrate.svg?style=for-the-badge">
+  </a>
+  <a aria-label="License" href="https://github.com/ranyitz/code-migrate/blob/master/LICENSE">
+    <img alt="License" src="https://img.shields.io/npm/l/code-migrate.svg?style=for-the-badge">
+  </a>
 </p>
 
 ## Why
