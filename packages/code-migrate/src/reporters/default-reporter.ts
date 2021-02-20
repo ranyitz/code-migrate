@@ -27,7 +27,7 @@ export const defaultReporter = (migration: Migration): void => {
 
   events.on('migration-after-write', () => {
     console.log();
-    console.log(green('The migration was done successfully 🎉'));
+    console.log(green('The migration has been completed successfully 🎉'));
   });
 
   events.on('migration-after-prompt-aborted', () => {

@@ -4,33 +4,33 @@ import { groupBy, isEmpty } from 'lodash';
 import { Migration } from '../Migration';
 
 const ERROR_TEXT = 'ERROR';
-const PASS_TEXT = 'PASS';
+const READY_TEXT = 'READY';
 
 const ERROR = supportsColor
   ? reset.inverse.bold.red(` ${ERROR_TEXT} `)
   : ERROR_TEXT;
 
-const PASS = supportsColor
-  ? reset.inverse.bold.green(` ${PASS_TEXT} `)
-  : PASS_TEXT;
+const READY = supportsColor
+  ? reset.inverse.bold.green(` ${READY_TEXT} `)
+  : READY_TEXT;
 
 export const formatSingleTaskResult = (taskResult: TaskResult) => {
   switch (taskResult.type) {
     case 'transform': {
-      return `${PASS} ${taskResult.newFile.fileName}`;
+      return `${READY} ${taskResult.newFile.fileName}`;
     }
 
     case 'create': {
-      return `${PASS} ${taskResult.newFile.fileName}`;
+      return `${READY} ${taskResult.newFile.fileName}`;
     }
 
     case 'remove': {
-      return `${PASS} ${taskResult.file.fileName}`;
+      return `${READY} ${taskResult.file.fileName}`;
     }
 
     case 'rename': {
       const { originalFile, newFile } = taskResult;
-      return `${PASS} ${originalFile.fileName} -> ${newFile.fileName}`;
+      return `${READY} ${originalFile.fileName} -> ${newFile.fileName}`;
     }
 
     default: {

@@ -45,9 +45,9 @@ describe('output', () => {
     expect(output).toMatch('🏃‍ Running: transform');
     expect(output).toMatch('📁 On:');
     expect(output).toMatch('transform bar to baz in json contents');
-    expect(output).toMatch('PASS');
+    expect(output).toMatch('READY');
     expect(output).toMatch('baz.json');
-    expect(output).toMatch('The migration was done successfully 🎉');
+    expect(output).toMatch('The migration has been completed successfully 🎉');
   });
 
   it('error', async () => {
