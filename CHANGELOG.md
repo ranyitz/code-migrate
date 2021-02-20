@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.9.0 (Feb 20, 2021)
+Added the `--reportFile` option to generate a markdown report file ([#9](https://github.com/ranyitz/code-migrate/pull/9))
+
 ## v0.8.0 (Feb 20, 2021)
 Improve output and report ([#8](https://github.com/ranyitz/code-migrate/pull/8))
 
