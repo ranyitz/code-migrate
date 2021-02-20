@@ -54,7 +54,7 @@ export class MigrationTestkit {
    * @param options.fixtures an absolute path to a fixtures directory
    * which contains \_\_before__ and \_\_after__ directories
    */
-  async run({ fixtures }: { fixtures: string }) {
+  async run({ fixtures }: { fixtures: string }): Promise<{ cwd: string }> {
     if (!fixtures) {
       throw new Error('must provide "fixtures" path');
     }
@@ -151,6 +151,10 @@ Recieved file: ${resultFilePath}
 ${error.toString()}`);
       }
     });
+
+    return {
+      cwd: workingDir,
+    };
   }
 
   /**

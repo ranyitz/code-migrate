@@ -57,6 +57,7 @@ ______________
     --yes, -y       Skip all confirmation prompts
     --cwd           Runs the migration on this directory [defaults to process.cwd()]
     --quiet, -q     Runs on quiet mode (does not print results)
+    --reportFile    Create a markdown report and output it to a file [for example "report.md"]
 ```
 ## Node API
 
@@ -80,6 +81,7 @@ type RunMigration = ({
   dry: boolean;
   yes: boolean;
   quite: boolean
+  reportFile: string;
 }) => Promise<void>;
 ```
 

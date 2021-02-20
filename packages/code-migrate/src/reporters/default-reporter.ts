@@ -5,15 +5,15 @@ import { Migration } from '../Migration';
 export const defaultReporter = (migration: Migration): void => {
   const { events } = migration;
 
-  events.on('migration-start', ({ title, migration }) => {
-    console.log(`${cyan('🏃‍ Running:')} ${title}`);
+  events.on('migration-start', ({ migration }) => {
+    console.log(`${cyan('🏃‍ Running:')} ${migration.title}`);
     console.log(`${cyan('📁 On:')} ${migration.options.cwd}`);
   });
 
   events.on('migration-after-run', ({ migration, options: { dry } }) => {
     if (dry) {
-      console.log(bold('dry-run mode, no files will be modified'));
       console.log();
+      console.log(bold('dry-run mode, no files will be modified'));
     }
 
     console.log();
