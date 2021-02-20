@@ -7,7 +7,7 @@ const binFile = path.join(__dirname, '../bin/code-migrate');
 const fixtures = resolveFixture('full-with-errors');
 const migrationFile = path.join(fixtures, 'migration.ts');
 
-describe('reportFile markdown report', async () => {
+test('reportFile markdown report', async () => {
   const testkit = createTestkit({
     migrationFile,
     command: [
