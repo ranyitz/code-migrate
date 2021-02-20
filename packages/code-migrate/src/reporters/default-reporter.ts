@@ -1,7 +1,6 @@
 import { bold, cyan, green, red } from 'chalk';
 import { createReport } from './createReport';
 import { Migration } from '../Migration';
-import { writeReportFile } from './writeReportFile';
 
 export const defaultReporter = (migration: Migration): void => {
   const { events } = migration;
