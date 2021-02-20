@@ -2,6 +2,7 @@ import path from 'path';
 import { resolveFixture } from './utils';
 import { createTestkit } from 'code-migrate/testing';
 import fs from 'fs-extra';
+import execa from 'execa';
 
 const binFile = path.join(__dirname, '../bin/code-migrate');
 const fixtures = resolveFixture('full-with-errors');
@@ -10,14 +11,15 @@ const migrationFile = path.join(fixtures, 'migration.ts');
 test('reportFile markdown report', async () => {
   const testkit = createTestkit({
     migrationFile,
-    command: [
-      'node',
-      binFile,
-      migrationFile,
-      '--yes',
-      '--quiet',
-      '--reportFile=report.md',
-    ],
+    migrationFunction: async ({ cwd }) => {
+      await execa(
+        'node',
+        [binFile, migrationFile, '--yes', '--reportFile=report.md'],
+        {
+          cwd,
+        }
+      );
+    },
   });
 
   const { cwd } = await testkit.run({
