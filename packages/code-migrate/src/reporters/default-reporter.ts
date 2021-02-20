@@ -13,8 +13,8 @@ export const defaultReporter = (migration: Migration): void => {
 
   events.on('migration-after-run', ({ migration, options: { dry } }) => {
     if (dry) {
-      console.log(bold('dry-run mode, no files will be modified'));
       console.log();
+      console.log(bold('dry-run mode, no files will be modified'));
     }
 
     console.log();
