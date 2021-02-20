@@ -1,7 +1,7 @@
 <h1 align="center">🎒 Code Migrate</h1>
 <p align="center">A framework for declaratively writing codebase migrations on JavaScript/NodeJS based projects</p>
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/11733036/108572011-0975ef80-731a-11eb-8c8f-203a7f4288c7.gif" alt="code-migrate"/>
+  <img src="https://user-images.githubusercontent.com/11733036/108603924-5fe33c80-73b3-11eb-910c-a8766c987260.gif" alt="code-migrate"/>
 </p>
 <p align="center">
   <a href="https://github.com/ranyitz/code-migrate/actions/workflows/node.js.yml">
