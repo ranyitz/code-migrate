@@ -63,7 +63,7 @@ export const createCli = async ({
           --dry, -d       Dry-run mode, does not modify files
           --yes, -y       Skip all confirmation prompts. Useful in CI to automatically answer the confirmation prompt
           --cwd           Runs the migration on this directory [defaults to process.cwd()]
-          --reporter      Choose a reporter ("default"/"quiet"/"markdown")
+          --reporter      Choose a reporter ("default"/"quiet"/"markdown"/"path/to/custom/reporter")
           --reportFile    Create a markdown report and output it to a file [for example "report.md"]
       `);
 
