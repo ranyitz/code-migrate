@@ -66,7 +66,6 @@ ______________
     --dry, -d       Dry-run mode, does not modify files
     --yes, -y       Skip all confirmation prompts
     --cwd           Runs the migration on this directory [defaults to process.cwd()]
-    --quiet, -q     Runs on quiet mode (does not print results)
     --reporter      Choose a reporter ("default"/"quiet"/"markdown")
     --reportFile    Create a markdown report and output it to a file [for example "report.md"]
 ```
