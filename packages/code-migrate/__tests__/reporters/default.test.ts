@@ -6,7 +6,7 @@ import {
 } from '../utils';
 
 const sanitizeDynamicContent = (output: string) => {
-  output = output.replace(/📁 On: ([\w/\-_]+)/, '📁 On: /static-directory');
+  output = output.split('\n').slice(2).join('\n');
   return sanitizeStacktrace(output);
 };
 
