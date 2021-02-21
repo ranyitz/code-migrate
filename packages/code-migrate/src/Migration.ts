@@ -12,7 +12,7 @@ import type {
   TaskError,
 } from './types';
 import { isPattern } from './utils';
-import { defaultReporter, quietReporter } from './reporters';
+import { getReporter } from './reporters';
 import { VirtualFileSystem } from './VirtualFileSystem';
 import { AfterHookFn } from './hooks';
 
@@ -106,7 +106,9 @@ You must supply a createFunction as the third argument`
   static init(options: Options): Migration {
     const migration = new Migration(options);
 
-    const reporter = options.quiet ? quietReporter : defaultReporter;
+    const reporter = getReporter(options.reporter, {
+      cwd: options.cwd,
+    });
 
     reporter(migration);
 
