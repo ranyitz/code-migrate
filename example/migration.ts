@@ -1,3 +1,4 @@
+// migration.ts
 import { migrate } from 'code-migrate';
 
 migrate(
@@ -13,7 +14,7 @@ migrate(
       'remove "use strict"; from all .js files',
       '**/*.js',
       ({ source }) => {
-        return source.replace(/("|')use strict("|');?/, '');
+        return source.replace(/("|')use strict("|');?/, '').trimStart();
       }
     );
 
@@ -21,6 +22,10 @@ migrate(
 
     rename('rename the main config to cool config', 'main-config.json', () => {
       return 'cool-config.json';
+    });
+
+    transform('parse config and fail', 'cool-config.json', ({ source }) => {
+      return JSON.parse(source);
     });
 
     create('create an .env file', () => {
