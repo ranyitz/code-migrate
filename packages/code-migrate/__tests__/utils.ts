@@ -1,5 +1,9 @@
 import execa from 'execa';
 import path from 'path';
+import stripAnsi from 'strip-ansi';
+// TODO: Replace this package with native call after node v.15
+// @ts-expect-error no types
+import replaceAll from 'string.prototype.replaceall';
 import { createTestkit } from '../src/testing/createTestkit';
 
 const binFile = path.join(__dirname, '../bin/code-migrate');
@@ -43,5 +47,13 @@ export const runMigrationAndGetOutput = async ({
     fixtures,
   });
 
-  return output;
+  return stripAnsi(output);
+};
+
+export const sanitizeStacktrace = (output: string) => {
+  return replaceAll(
+    output,
+    / {3}at( [\w.<>\d~!_:-]+)? \(?[\w.<>\d~!_/\\:-]+\)?/gim,
+    '   at function (/path/to/file)'
+  );
 };
