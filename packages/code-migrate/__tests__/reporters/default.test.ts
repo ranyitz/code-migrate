@@ -1,14 +1,5 @@
 import path from 'path';
-import {
-  resolveFixture,
-  runMigrationAndGetOutput,
-  sanitizeStacktrace,
-} from '../utils';
-
-const sanitizeDynamicContent = (output: string) => {
-  output = output.split('\n').slice(2).join('\n');
-  return sanitizeStacktrace(output);
-};
+import { resolveFixture, runMigrationAndGetOutput } from '../utils';
 
 describe('default reporter', () => {
   it('passing', async () => {
@@ -20,7 +11,11 @@ describe('default reporter', () => {
       migrationFile,
     });
 
-    expect(sanitizeDynamicContent(output)).toMatchSnapshot();
+    expect(output).toMatch('🏃‍ Running: transform');
+    expect(output).toMatch('📁 On:');
+    expect(output).toMatch('baz.json');
+    expect(output).toMatch('READY');
+    expect(output).toMatch('The migration has been completed successfully');
   });
 
   it('error', async () => {
@@ -32,6 +27,12 @@ describe('default reporter', () => {
       migrationFile,
     });
 
-    expect(sanitizeDynamicContent(output)).toMatchSnapshot();
+    expect(output).toMatch('🏃‍ Running: error');
+    expect(output).toMatch('📁 On:');
+    expect(output).toMatch(
+      'The following migration tasks were failed, but you can still migrate the rest'
+    );
+    expect(output).toMatch('ERROR');
+    expect(output).toMatch('baz.json');
   });
 });

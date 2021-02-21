@@ -1,5 +1,6 @@
 import execa from 'execa';
 import path from 'path';
+import stripAnsi from 'strip-ansi';
 // TODO: Replace this package with native call after node v.15
 // @ts-expect-error no types
 import replaceAll from 'string.prototype.replaceall';
@@ -46,7 +47,7 @@ export const runMigrationAndGetOutput = async ({
     fixtures,
   });
 
-  return output;
+  return stripAnsi(output);
 };
 
 export const sanitizeStacktrace = (output: string) => {
