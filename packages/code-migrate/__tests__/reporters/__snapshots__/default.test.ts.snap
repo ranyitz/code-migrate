@@ -1,13 +1,13 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`default reporter error 1`] = `
-"🏃‍ Running: error
-📁 On: /static-directory
+"[36m🏃‍ Running:[39m error
+[36m📁 On:[39m /private/var/folders/c9/j6lpydg50kx0g_thp5q0nt880000gp/T/e045da9720f38ccf2ffce9a8230a89f0
 
-⚠️  The following migration tasks were failed, but you can still migrate the rest ⚠️
+⚠️  [31mThe following migration tasks were failed, but you can still migrate the rest ⚠️[39m
 
-transform bar to baz in json contents
- ERROR  baz.json
+[4m[1mtransform bar to baz in json contents[22m[24m
+[0m[7m[1m[31m ERROR [39m[22m[27m[0m baz.json
 
 SyntaxError: Unexpected token } in JSON at position 18
     at function (/path/to/file)
@@ -21,15 +21,15 @@ SyntaxError: Unexpected token } in JSON at position 18
     at function (/path/to/file)
     at function (/path/to/file)
 
-🤷‍ No changes have been made"
+[34m🤷‍ No changes have been made[39m"
 `;
 
 exports[`default reporter passing 1`] = `
-"🏃‍ Running: transform
-📁 On: /static-directory
+"[36m🏃‍ Running:[39m transform
+[36m📁 On:[39m /private/var/folders/c9/j6lpydg50kx0g_thp5q0nt880000gp/T/7decc604b1247bd2d79f03829df5ac45
 
-transform bar to baz in json contents
- READY  baz.json
+[4m[1mtransform bar to baz in json contents[22m[24m
+[0m[7m[1m[32m READY [39m[22m[27m[0m baz.json
 
-The migration has been completed successfully 🎉"
+[32mThe migration has been completed successfully 🎉[39m"
 `;
