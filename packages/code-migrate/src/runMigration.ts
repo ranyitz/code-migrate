@@ -9,14 +9,12 @@ type RunMigration = ({
   migrationFilePath,
   dry,
   yes,
-  quiet,
   reportFile,
 }: {
   cwd: string;
   migrationFilePath: string;
   dry: boolean;
   yes: boolean;
-  quiet: boolean;
   reportFile: string | undefined;
   reporter: string | undefined;
 }) => Promise<void>;
@@ -28,7 +26,6 @@ type RunMigration = ({
  * @param options.dry Dry run mode
  * @param options.yes Do not prompt the user with confirmation
  * Run a migration
- * @param options.quiet Runs on quiet mode (does not print the result)
  * @param options.reporter Use a custom reporter ("default"/"quiet"/"markdown")
  * @param options.reportFile Create a markdown report and output it to a file
  *
@@ -38,11 +35,10 @@ export const runMigration: RunMigration = async ({
   migrationFilePath,
   dry,
   yes,
-  quiet,
   reporter,
   reportFile,
 }) => {
-  const migration = Migration.init({ cwd, quiet, reporter });
+  const migration = Migration.init({ cwd, reporter });
   const { events } = migration;
 
   await loadUserMigrationFile(migration, migrationFilePath);

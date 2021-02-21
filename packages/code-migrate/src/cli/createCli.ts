@@ -31,7 +31,6 @@ export const createCli = async ({
       '--cwd': String,
       '--dry': Boolean,
       '--yes': Boolean,
-      '--quiet': Boolean,
       '--reportFile': String,
       '--reporter': String,
 
@@ -40,7 +39,6 @@ export const createCli = async ({
       '-h': '--help',
       '-d': '--dry',
       '-y': '--yes',
-      '-q': '--quiet',
     },
     {
       permissive: false,
@@ -65,7 +63,6 @@ export const createCli = async ({
           --dry, -d       Dry-run mode, does not modify files
           --yes, -y       Skip all confirmation prompts. Useful in CI to automatically answer the confirmation prompt
           --cwd           Runs the migration on this directory [defaults to process.cwd()]
-          --quiet, -q     Use the quiet reporter (does not print results)
           --reporter      Choose a reporter ("default"/"quiet"/"markdown")
           --reportFile    Create a markdown report and output it to a file [for example "report.md"]
       `);
@@ -106,7 +103,6 @@ export const createCli = async ({
     migrationFilePath: migrationFileAbsolutePath,
     dry: !!args['--dry'],
     yes: !!args['--yes'],
-    quiet: !!args['--quiet'],
     reportFile: args['--reportFile'],
     reporter: args['--reporter'],
   });

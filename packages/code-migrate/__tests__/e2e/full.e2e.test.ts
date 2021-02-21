@@ -8,7 +8,7 @@ const migrationFile = path.join(fixtures, 'migration.ts');
 
 createTestkit({
   migrationFile,
-  command: ['node', binFile, migrationFile, '--yes', '--quiet'],
+  command: ['node', binFile, migrationFile, '--yes', '--reporter=quiet'],
 }).test({
   fixtures,
 });

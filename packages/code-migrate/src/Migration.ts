@@ -108,7 +108,6 @@ You must supply a createFunction as the third argument`
 
     const reporter = getReporter(options.reporter, {
       cwd: options.cwd,
-      quiet: options.quiet,
     });
 
     reporter(migration);

@@ -105,7 +105,7 @@ export class MigrationTestkit {
         throw new Error(`migration file ${migrationFile} doesn't exist`);
       }
 
-      const migration = Migration.init({ cwd: workingDir, quiet: true });
+      const migration = Migration.init({ cwd: workingDir, reporter: 'quiet' });
       await loadUserMigrationFile(migration, migrationFile);
 
       migration.write();

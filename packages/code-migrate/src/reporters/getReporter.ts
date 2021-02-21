@@ -10,10 +10,8 @@ const reporters: Record<string, Reporter> = {
 
 export const getReporter = (
   reporterName: string | undefined = 'default',
-  { cwd, quiet }: { cwd: string; quiet: boolean }
+  { cwd }: { cwd: string }
 ) => {
-  if (quiet) reporterName = 'quiet';
-
   if (reporterName in reporters) {
     return reporters[reporterName];
   } else {
