@@ -29,10 +29,12 @@ export const formatSingleTaskResult = (taskResult: TaskResult) => {
 };
 
 export const formatSingleTaskError = (taskError: TaskError) => {
-  return `**ERROR** \`${taskError.file?.fileName}\`
-\`\`\`
-${taskError.error.stack}
-\`\`\``;
+  return (
+    `**ERROR** \`${taskError.file?.fileName}\`\n` +
+    '```\n' +
+    taskError.error.stack +
+    '\n```'
+  );
 };
 
 export const createMarkdownReport = (migration: Migration) => {

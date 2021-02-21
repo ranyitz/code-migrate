@@ -1,0 +1,38 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`markdown reporter error 1`] = `
+"
+## error
+> /static-directory
+
+### ⚠️  The following migration tasks were failed
+
+#### transform bar to baz in json contents
+**ERROR** \`baz.json\`
+\`\`\`
+SyntaxError: Unexpected token } in JSON at position 18
+    at function (/path/to/file)
+    at function (/path/to/file)
+    at function (/path/to/file)
+    at function (/path/to/file)
+    at function (/path/to/file)
+    at function (/path/to/file)
+    at function (/path/to/file)
+    at function (/path/to/file)
+    at function (/path/to/file)
+    at function (/path/to/file)
+\`\`\`
+
+**🤷‍ No changes have been made**"
+`;
+
+exports[`markdown reporter passing 1`] = `
+"
+## transform
+> /static-directory
+
+#### transform bar to baz in json contents
+\`\`\`
+baz.json
+\`\`\`"
+`;

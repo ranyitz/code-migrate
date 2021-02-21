@@ -15,7 +15,7 @@ import type { AfterHookFn } from './hooks';
 
 export type Pattern = string | string[];
 
-export type Options = { cwd: string; quiet: boolean };
+export type Options = { cwd: string; quiet: boolean; reporter?: string };
 
 export type TaskType = 'transform' | 'rename' | 'remove' | 'create';
 

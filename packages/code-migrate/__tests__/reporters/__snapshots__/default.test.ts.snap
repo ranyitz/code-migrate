@@ -1,0 +1,35 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`default reporter error 1`] = `
+"🏃‍ Running: error
+📁 On: /static-directory
+
+⚠️  The following migration tasks were failed, but you can still migrate the rest ⚠️
+
+transform bar to baz in json contents
+ ERROR  baz.json
+
+SyntaxError: Unexpected token } in JSON at position 18
+    at function (/path/to/file)
+    at function (/path/to/file)
+    at function (/path/to/file)
+    at function (/path/to/file)
+    at function (/path/to/file)
+    at function (/path/to/file)
+    at function (/path/to/file)
+    at function (/path/to/file)
+    at function (/path/to/file)
+    at function (/path/to/file)
+
+🤷‍ No changes have been made"
+`;
+
+exports[`default reporter passing 1`] = `
+"🏃‍ Running: transform
+📁 On: /static-directory
+
+transform bar to baz in json contents
+ READY  baz.json
+
+The migration has been completed successfully 🎉"
+`;
