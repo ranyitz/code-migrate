@@ -1,7 +1,10 @@
 # Changelog
 
+## v0.10.1 (Feb 23, 2021)
+Support not bringing TypeScript as a dependency for `js` migration files ([#12](https://github.com/ranyitz/code-migrate/pull/12))
+
 ## v0.10.0 (Feb 21, 2021)
-Support markdown reporter ([#10](https://github.com/ranyitz/code-migrate/pull/10))
+Support markdown reporter ([#11](https://github.com/ranyitz/code-migrate/pull/11))
 
 ## v0.9.0 (Feb 20, 2021)
 Added the `--reportFile` option to generate a markdown report file ([#9](https://github.com/ranyitz/code-migrate/pull/9))
