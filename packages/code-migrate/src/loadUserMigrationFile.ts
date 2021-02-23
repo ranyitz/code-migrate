@@ -1,5 +1,4 @@
 import path from 'path';
-import { register as tsNodeRegister } from 'ts-node';
 import importFresh from 'import-fresh';
 import { Migration } from './Migration';
 import type { Migrate } from './migrate';
@@ -30,11 +29,13 @@ export const loadUserMigrationFile = async (
     // @ts-expect-error not sure how to type this
     globalThis.migrate = migrate;
 
-    tsNodeRegister({
-      dir: path.dirname(migrationFile),
-      transpileOnly: true,
-      ignore: [],
-    });
+    if (migrationFile.endsWith('.ts')) {
+      require('ts-node').register({
+        dir: path.dirname(migrationFile),
+        transpileOnly: true,
+        ignore: [],
+      });
+    }
 
     if (typeof jest !== 'undefined') {
       jest.doMock('code-migrate', () => {
