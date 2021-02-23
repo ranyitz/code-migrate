@@ -1,5 +1,4 @@
 import path from 'path';
-import { register as tsNodeRegister } from 'ts-node';
 import importFresh from 'import-fresh';
 import { Migration } from './Migration';
 import type { Migrate } from './migrate';
@@ -31,7 +30,7 @@ export const loadUserMigrationFile = async (
     globalThis.migrate = migrate;
 
     if (migrationFile.endsWith('.ts')) {
-      tsNodeRegister({
+      require('ts-node').register({
         dir: path.dirname(migrationFile),
         transpileOnly: true,
         ignore: [],
