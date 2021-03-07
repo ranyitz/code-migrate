@@ -78,8 +78,24 @@ type CreateCli = ({
   binName: string;
   migrationFile?: string;
   version: string;
+  subCommands?: Record<string, { migrationFile: string }>;
 }) => Promise<void>
+```
 
+#### subCommands
+> The migrationFile provided on for createCli functions as the default command
+
+If you want your CLI to include sub commands, for example `my-migration-cli foo` you can define it like that:
+```ts
+createCli({
+  binName: 'my-migration-cli',
+  version: require('package.json').version,
+  subCommands: {
+    foo: {
+      migrationFile: './path/to/foo.js'
+    }
+  }
+})
 ```
 
 ### runMigration
