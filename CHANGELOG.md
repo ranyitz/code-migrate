@@ -1,5 +1,8 @@
 # Changelog
 
+## v0.11.0 (Mar 7, 2021)
+Support not bringing TypeScript as a dependency for `js` migration files ([#12](https://github.com/ranyitz/code-migrate/pull/12))
+
 ## v0.10.1 (Feb 23, 2021)
 Support not bringing TypeScript as a dependency for `js` migration files ([#12](https://github.com/ranyitz/code-migrate/pull/12))
 
