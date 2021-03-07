@@ -6,6 +6,11 @@ import stripAnsi from 'strip-ansi';
 import replaceAll from 'string.prototype.replaceall';
 import { createTestkit } from '../src/testing/createTestkit';
 
+const root = path.join(__dirname, '../../../');
+
+export const tsNodeBin = path.join(root, 'node_modules/.bin/ts-node');
+export const tsConfigPath = path.join(root, 'tsconfig.json');
+
 const binFile = path.join(__dirname, '../bin/code-migrate');
 
 export const resolveFixture = (fixtureName: string): string => {
