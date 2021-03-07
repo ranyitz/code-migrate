@@ -8,15 +8,19 @@ import { runMigration } from '../runMigration';
  *
  * @param options.binName the name of the bin file, as presented in the --help output
  * @param options.migrationFile absolute path to the migrationFile
+ * @param options.version path to the verison of the CLI (package.json's version)
+ * @param options.subCommands create sub commands for multiple migrations on the same application
  */
 export const createCli = async ({
   binName,
   migrationFile: customMigrationFile,
   version,
+  subCommands,
 }: {
   binName: string;
   migrationFile?: string;
   version: string;
+  subCommands?: Record<string, { migrationFile: string }>;
 }) => {
   process.on('unhandledRejection', (error) => {
     throw error;
@@ -50,12 +54,44 @@ export const createCli = async ({
     process.exit(0);
   }
 
-  const migrationFile = customMigrationFile || args._[0];
+  const subCommand = args._[0];
+
+  let migrationFile: string;
+
+  if (subCommand && subCommands) {
+    if (subCommand in subCommands) {
+      migrationFile = subCommands[subCommand].migrationFile;
+    } else {
+      console.log(chalk.red`unknown command ${chalk.bold(subCommand)}`);
+      console.log(chalk.red`Please use one of the following sub commands:`);
+
+      Object.keys(subCommands).forEach((subCommand) => {
+        console.log(chalk.red` > ${subCommand}`);
+      });
+
+      process.exit(1);
+    }
+  } else {
+    migrationFile = customMigrationFile || args._[0];
+  }
+
+  let helpUsage = binName;
+
+  if (subCommands) {
+    const subCommandsString = Object.keys(subCommands).join('|');
+    if (migrationFile) {
+      helpUsage += ` [${subCommandsString}]`;
+    } else {
+      helpUsage += ` <${subCommandsString}>`;
+    }
+  } else if (!migrationFile) {
+    helpUsage += ' <path/to/migration.ts>';
+  }
 
   if (args['--help']) {
     console.log(`
         Usage
-          $ ${binName}${migrationFile ? '' : ' <path/to/migration.ts>'}
+          $ ${helpUsage}
 
         Options
           --version, -v   Version number

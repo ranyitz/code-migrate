@@ -8,6 +8,7 @@ import expect from 'expect';
 import execa from 'execa';
 import { Migration } from '../Migration';
 import { loadUserMigrationFile } from '../loadUserMigrationFile';
+import chalk from 'chalk';
 
 type MigrationFunction = ({ cwd }: { cwd: string }) => void | Promise<void>;
 
@@ -87,10 +88,20 @@ export class MigrationTestkit {
     const command = this.command;
 
     if (command && Array.isArray(command) && command.length > 0) {
-      execa.sync(command[0], command.slice(1), {
-        cwd: workingDir,
-        stdio: 'inherit',
-      });
+      try {
+        execa.sync(command[0], command.slice(1), {
+          cwd: workingDir,
+          stdio: 'inherit',
+        });
+      } catch (error) {
+        console.error(
+          chalk.red(`The following command failed with errors:
+${command.join(' ')}`)
+        );
+
+        // Look at the output of the command in order to understand the cause of the problem
+        throw new Error(error);
+      }
     } else if (this.migrationFunction) {
       await this.migrationFunction({ cwd: workingDir });
     } else {
