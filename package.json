@@ -5,6 +5,7 @@
     "packages/*"
   ],
   "scripts": {
+    "prepare": "husky install",
     "build-clean": "rm -rf ./packages/*/build ./packages/*/tsconfig.tsbuildinfo",
     "clean": "yarn build-clean && rm -rf ./packages/*/node_modules && rm -rf ./node_modules",
     "watch": "yarn tsc -b --watch --incremental packages/code-migrate/tsconfig.prod.json",
