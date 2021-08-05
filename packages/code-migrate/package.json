@@ -3,6 +3,10 @@
   "version": "0.11.0",
   "main": "build/index.js",
   "types": "build/index.d.ts",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ranyitz/code-migrate.git"
+  },
   "bin": {
     "code-migrate": "bin/code-migrate"
   },
