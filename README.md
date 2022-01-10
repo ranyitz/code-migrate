@@ -1,5 +1,5 @@
 <h1 align="center">🎒 Code Migrate</h1>
-<p align="center">A framework for declaratively writing codebase migrations on JavaScript/NodeJS based projects</p>
+<p align="center">A framework for writing codebase migrations on JavaScript/NodeJS based projects</p>
 <p align="center">
   <img src="https://user-images.githubusercontent.com/11733036/108603924-5fe33c80-73b3-11eb-910c-a8766c987260.gif" alt="code-migrate"/>
 </p>
