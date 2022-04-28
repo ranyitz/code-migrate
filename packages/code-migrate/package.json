@@ -7,9 +7,7 @@
     "type": "git",
     "url": "git://github.com/ranyitz/code-migrate.git"
   },
-  "bin": {
-    "code-migrate": "bin/code-migrate"
-  },
+  "bin": "bin/code-migrate",
   "files": [
     "src",
     "build",
