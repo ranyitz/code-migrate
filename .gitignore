@@ -10,3 +10,5 @@ tsconfig.prod.tsbuildinfo
 !.yarn/releases
 !.yarn/sdks
 !.yarn/versions
+yarn-error.log
+.eslintcache
