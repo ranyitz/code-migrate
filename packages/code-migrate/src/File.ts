@@ -83,7 +83,7 @@ export const getFiles = (
     return [];
   }
 
-  const files: Array<File> = fileNames.map((fileName) => {
+  const files: Array<File> = fileNames.map((fileName: string) => {
     return new File({ cwd, fileName, migration });
   });
 

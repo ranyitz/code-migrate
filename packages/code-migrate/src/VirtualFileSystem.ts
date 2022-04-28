@@ -105,7 +105,6 @@ export class VirtualFileSystem implements FileSystemAdapter {
     file.action = 'remove';
   }
 
-  // @ts-expect-error - options type is too big
   lstatSync(path: PathLike): Stats {
     path = path.toString();
 
