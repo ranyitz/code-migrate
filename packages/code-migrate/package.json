@@ -34,7 +34,7 @@
     "mock-require": "^3.0.3",
     "prompts": "^2.4.0",
     "tempy": "^1.0.0",
-    "ts-node": "^9.0.0"
+    "ts-node": "^10.7.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.4",
