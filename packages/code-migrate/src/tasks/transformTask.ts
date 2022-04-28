@@ -51,7 +51,7 @@ export const runTransformTask: RunTask<TransformTask> = (task, migration) => {
         fileName: file.fileName,
         abort,
       });
-    } catch (error) {
+    } catch (error: any) {
       const taskError: TaskError = {
         file,
         type: task.type,

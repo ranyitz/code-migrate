@@ -93,7 +93,7 @@ export class MigrationTestkit {
           cwd: workingDir,
           stdio: 'inherit',
         });
-      } catch (error) {
+      } catch (error: any) {
         console.error(
           chalk.red(`The following command failed with errors:
 ${command.join(' ')}`)
@@ -139,7 +139,7 @@ ${command.join(' ')}`)
     expectedFiles.forEach((fileName) => {
       try {
         expect(resultFiles).toContain(fileName);
-      } catch (error) {
+      } catch (error: any) {
         throw new Error(`
 Migration file: ${this.migrationFile}
 
@@ -153,7 +153,7 @@ ${error.toString()}`);
 
       try {
         expect(resultFileContents).toBe(expectedFileContents);
-      } catch (error) {
+      } catch (error: any) {
         throw new Error(`
 Migration file: ${this.migrationFile}
 Expected file: ${expectedFilePath}

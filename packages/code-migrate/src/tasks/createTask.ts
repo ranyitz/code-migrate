@@ -33,7 +33,7 @@ export const runCreateTask: RunTask<CreateTask> = (task, migration) => {
       // @ts-expect-error
       const createdFile = task.fn();
       createdFiles.push(createdFile);
-    } catch (error) {
+    } catch (error: any) {
       const taskError: TaskError = {
         type: task.type,
         task,
@@ -57,7 +57,7 @@ export const runCreateTask: RunTask<CreateTask> = (task, migration) => {
         });
 
         createdFiles.push(createdFile);
-      } catch (error) {
+      } catch (error: any) {
         const taskError: TaskError = {
           type: task.type,
           task,

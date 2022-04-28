@@ -1,8 +1,9 @@
 {
-    "files.exclude": {
-      ".git": true,
-      "**/.git": false,
-      "**/node_modules": false,
+  "files.exclude": {
+    ".git": true,
+    "**/.git": false,
+    "**/node_modules": false
   },
-  "typescript.tsdk": "node_modules/typescript/lib",
+  "editor.formatOnSave": false,
+  "typescript.tsdk": "node_modules/typescript/lib"
 }

@@ -7,9 +7,7 @@
     "type": "git",
     "url": "git://github.com/ranyitz/code-migrate.git"
   },
-  "bin": {
-    "code-migrate": "bin/code-migrate"
-  },
+  "bin": "bin/code-migrate",
   "files": [
     "src",
     "build",
@@ -28,6 +26,7 @@
     "chalk": "^4.1.0",
     "execa": "^5.0.0",
     "expect": "^26.6.2",
+    "fast-glob": "^3.2.11",
     "fs-extra": "^9.0.1",
     "globby": "^11.0.1",
     "import-fresh": "^3.2.2",
@@ -35,13 +34,14 @@
     "mock-require": "^3.0.3",
     "prompts": "^2.4.0",
     "tempy": "^1.0.0",
-    "ts-node": "^9.0.0"
+    "ts-node": "^10.7.0"
   },
   "devDependencies": {
     "@types/fs-extra": "^9.0.4",
     "@types/globby": "^9.1.0",
     "@types/lodash": "^4.14.165",
     "@types/prompts": "^2.0.9",
+    "jest": "^28.0.2",
     "prompts": "^2.4.0",
     "string.prototype.replaceall": "^1.0.4",
     "strip-ansi": "^6.0.0",

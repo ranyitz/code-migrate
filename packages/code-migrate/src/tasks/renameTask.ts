@@ -31,7 +31,7 @@ export const runRenameTask: RunTask<RenameTask> = (task, migration) => {
 
     try {
       renamedFile = task.fn(file);
-    } catch (error) {
+    } catch (error: any) {
       const taskError: TaskError = {
         type: task.type,
         file,
