@@ -26,6 +26,7 @@
     "chalk": "^4.1.0",
     "execa": "^5.0.0",
     "expect": "^26.6.2",
+    "fast-glob": "^3.2.11",
     "fs-extra": "^9.0.1",
     "globby": "^11.0.1",
     "import-fresh": "^3.2.2",
